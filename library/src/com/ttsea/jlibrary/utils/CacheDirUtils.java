@@ -1,0 +1,140 @@
+package com.ttsea.jlibrary.utils;
+
+import android.content.Context;
+
+import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.common.SdStatus;
+
+import java.io.File;
+
+/**
+ * 缓存目录单元，这里可以获取app的缓存目录 <br/>
+ * <p>
+ * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
+ * <b>date:</b> 2016/2/16 17:06 <br/>
+ * <b>author:</b> Jason <br/>
+ * <b>version:</b> 1.0
+ */
+public class CacheDirUtils {
+    private static String TAG = "Utils.CacheDirUtils";
+
+    /**
+     * release版本所有的缓存数据都存在该目录下，如: /data/data/[packagename]/cache
+     */
+    public static String CACHE_DIR;
+    /**
+     * 调试模式下，所有的缓存数据都存在该目录下
+     */
+    public static final String CACHE_DIR_DEBUG = "JLibraryDebug";
+    /**
+     * 所有的图片缓存都存在该目录，在调试模式中，该目录存在于{@link #CACHE_DIR_DEBUG}中；
+     * 正式情况存在于{@link #CACHE_DIR}中
+     */
+    public static final String CACHE_IMAGE_DIR = "images";
+    /**
+     * 所有的数据缓存都存在该目录，在调试模式中 该目录存在于{@link #CACHE_DIR_DEBUG}中，
+     * 正式情况存在于{@link #CACHE_DIR}中
+     */
+    public static final String CACHE_DATA_DIR = "datas";
+    /**
+     * 需要存在SD卡里的数据目录
+     */
+    private static final String SD_DATA_DIR = "JLibrary";
+    /**
+     * 临时目录
+     */
+    private static final String TEMP_DIR = "tmp";
+
+    /**
+     * 获取缓存的根目录，返回的是绝对地址<br/>
+     * 在调试模式的时候返回的是SD卡的{@link #CACHE_DIR_DEBUG}目录
+     *
+     * @param context 上下文
+     * @return String
+     */
+    public static String getCacheDir(Context context) {
+        if (JLog.isDebugMode()) {
+            String exSDdir = SdStatus.getExternalStorageAbsoluteDir();
+            if (exSDdir != null) {
+                CACHE_DIR = exSDdir + File.separator + CACHE_DIR_DEBUG;
+                createDirIfNeed(CACHE_DIR);
+                return CACHE_DIR;
+            }
+        }
+        if (CACHE_DIR == null) {
+            CACHE_DIR = context.getCacheDir().getAbsolutePath();
+            createDirIfNeed(CACHE_DIR);
+        }
+        return CACHE_DIR;
+    }
+
+
+    /**
+     * 获取图片的缓存目录，返回的是绝对地址<br/>
+     * 在调试模式的时候返回的是SD卡的{@link #CACHE_DIR_DEBUG}目录下的CACHE_IMAGE_DIR
+     *
+     * @param context 上下文
+     * @return String
+     */
+    public static String getImageCacheDir(Context context) {
+        String dirPath = getCacheDir(context) + File.separator + CACHE_IMAGE_DIR;
+        createDirIfNeed(dirPath);
+        return dirPath;
+    }
+
+    /**
+     * 获取数据缓存的目录，返回的是绝对地址<br/>
+     * 在调试模式的时候返回的是SD卡的{@link #CACHE_DIR_DEBUG}目录下的CACHE_DATA_DIR
+     *
+     * @param context 上下文
+     * @return String
+     */
+    public static String getDataCacheDir(Context context) {
+        String dirPath = getCacheDir(context) + File.separator + CACHE_DATA_DIR;
+        createDirIfNeed(dirPath);
+        return dirPath;
+    }
+
+    /**
+     * 获取需要存放在SD卡里的数据的目录
+     *
+     * @param context 上下文
+     * @return String
+     */
+    public static String getSdDataDir(Context context) {
+        String exSDdir = SdStatus.getExternalStorageAbsoluteDir();
+        if (exSDdir == null) {
+            return getCacheDir(context);
+        }
+
+        String sdDataDir = exSDdir + File.separator + SD_DATA_DIR;
+        createDirIfNeed(sdDataDir);
+
+        return sdDataDir;
+    }
+
+    public static String getTempDir(Context context) {
+        String dirPath = getSdDataDir(context) + File.separator + TEMP_DIR;
+        createDirIfNeed(dirPath);
+        return dirPath;
+    }
+
+    /**
+     * 如果该目录不存在，则创建
+     *
+     * @param dirPath
+     * @return 创建成功:true，创建失败:false
+     */
+    private static boolean createDirIfNeed(String dirPath) {
+        File dir = new File(dirPath);
+        if (!dir.exists()) {
+            if (dir.mkdirs()) {
+                JLog.d(TAG, "createDirIfNeed, create success, dir:" + dirPath);
+                return true;
+            }
+            JLog.d(TAG, "createDirIfNeed, create failed, dir:" + dirPath);
+            return false;
+        }
+        return true;
+    }
+}

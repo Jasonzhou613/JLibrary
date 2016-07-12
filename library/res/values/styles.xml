@@ -1,0 +1,32 @@
+<resources>
+
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+    </style>
+
+    <style name="AppTheme" parent="AppBaseTheme">
+    </style>
+
+    <!-- MyProgressDialog样式 start -->
+    <style name="my_progress_dialog_theme" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+    <!-- MyProgressDialog样式 end -->
+
+    <!-- MyDialog样式 start-->
+    <style name="my_dialog_theme" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@drawable/my_dialog_bg</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+    <!-- MyDialog样式 end-->
+
+    <!-- MyAlertDialog样式 start-->
+    <style name="my_alert_dialog" parent="android:style/Theme.Dialog">
+        <item name="android:background">#00000000</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+    <!-- MyAlertDialog样式 end-->
+
+</resources>

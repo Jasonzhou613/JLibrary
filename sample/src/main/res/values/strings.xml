@@ -1,0 +1,12 @@
+<resources>
+
+    <string name="app_name">JLibrary.sample</string>
+    <string name="test">test</string>
+    <string name="app_info">app info</string>
+    <string name="exit_app">exit app</string>
+    <string name="component">component</string>
+    <string name="show_alter_dialog">show alter dialog</string>
+    <string name="show_dialog">show dialog</string>
+    <string name="show_progress">show progress</string>
+
+</resources>

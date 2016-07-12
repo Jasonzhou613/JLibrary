@@ -1,0 +1,105 @@
+package com.ttsea.jlibrary.sample;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
+import com.ttsea.jlibrary.base.BaseActivity;
+import com.ttsea.jlibrary.common.AppInformation;
+import com.ttsea.jlibrary.common.ExitApplication;
+import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.utils.CacheDirUtils;
+
+public class MainActivity extends BaseActivity implements View.OnClickListener {
+    private final String TAG = "MainActivity";
+
+    private Button btnTest;
+    private Button btnAppInfo;
+    private Button btnExit;
+    private Button btnComponent;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        initView();
+    }
+
+    private void initView() {
+        btnTest = (Button) findViewById(R.id.btnTest);
+        btnAppInfo = (Button) findViewById(R.id.btnAppInfo);
+        btnExit = (Button) findViewById(R.id.btnExit);
+        btnComponent = (Button) findViewById(R.id.btnComponent);
+
+        btnTest.setOnClickListener(this);
+        btnAppInfo.setOnClickListener(this);
+        btnExit.setOnClickListener(this);
+        btnComponent.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent;
+        Bundle bundle;
+        switch (v.getId()) {
+
+            case R.id.btnTest:
+                test();
+                break;
+
+            case R.id.btnAppInfo:
+                showAppInfo();
+                break;
+
+            case R.id.btnExit:
+                ExitApplication.getInstance().exitApplication();
+                break;
+
+            case R.id.btnComponent:
+                intent = new Intent(mActivity, ComponentActivity.class);
+                startActivity(intent);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private void test() {
+//         JLog.d(TAG, "isPackageInstalled:" + ApkUtils.isPackageInstalled(mActivity, "com.huiweishang.ws"));
+//         ApkUtils.install(mActivity, new File(""));
+//         ApkUtils.launch(mActivity, "com.huiweishang.ws");
+
+//        JLog.d(TAG, "getCacheDir:" + CacheDirUtils.getCacheDir(mActivity));
+//        JLog.d(TAG, "getDataCacheDir:" + CacheDirUtils.getDataCacheDir(mActivity));
+//        JLog.d(TAG, "getImageCacheDir:" + CacheDirUtils.getImageCacheDir(mActivity));
+//        JLog.d(TAG, "getImageCacheDir:" + CacheDirUtils.getSdDataDir(mActivity));
+//        JLog.d(TAG, "getTempDir:" + CacheDirUtils.getTempDir(mActivity));
+
+//        JLog.d(TAG, "getFloat:" + DigitUtils.getFloat(5.153456f, 5));
+
+//        JLog.d(TAG, "randomString:" + RandomUtils.randomString(5));
+//        JLog.d(TAG, "limitInt:" + RandomUtils.limitInt(5));
+
+//        JToast.makeTextTop(mActivity, "top", 50);
+//        JToast.makeTextBottom(mActivity, "botom", 50);
+//        JToast.makeTextLeft(mActivity, "left");
+//        JToast.makeTextRight(mActivity, "right");
+//        JToast.makeTextCenter(mActivity, "center");
+    }
+
+    private void showAppInfo() {
+        AppInformation appInfomation = new AppInformation(this);
+        appInfomation.getPackageName();
+        appInfomation.getVersionName();
+        appInfomation.getVersionCode();
+
+        JLog.d(TAG, "cacheDir:" + CacheDirUtils.getCacheDir(this) +
+                ", dataCacheDir:" + CacheDirUtils.getDataCacheDir(this) +
+                ", imageCacheDir:" + CacheDirUtils.getImageCacheDir(this) +
+                ", tmpDir:" + CacheDirUtils.getTempDir(this)
+        );
+    }
+}
