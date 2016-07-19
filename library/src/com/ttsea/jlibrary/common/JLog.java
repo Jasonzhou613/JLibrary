@@ -1,6 +1,7 @@
 package com.ttsea.jlibrary.common;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.util.Log;
 
 import com.ttsea.jlibrary.utils.CacheDirUtils;
@@ -224,5 +225,21 @@ public class JLog {
         File dbFile = context.getDatabasePath(dbName);
         copyFile(dbFile.getAbsolutePath(), CacheDirUtils.getCacheDir(context)
                 + File.separator + "db");
+    }
+
+    public static void printCursor(Cursor c) {
+        if (!DEBUG || c == null) {
+            return;
+        }
+
+        JLog.d(TAG, "cursorCount:" + c.getCount());
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+            int columnCount = c.getColumnCount();
+            String columnInfo = "";
+            for (int i = 0; i < columnCount; i++) {
+                columnInfo = columnInfo + "columnName:" + c.getColumnName(i) + "-columnValue:" + c.getString(i) + ", ";
+            }
+            JLog.d(TAG, columnInfo);
+        }
     }
 }

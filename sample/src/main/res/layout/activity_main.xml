@@ -28,6 +28,11 @@
             style="@style/btn_style"
             android:text="@string/component"/>
 
+        <Button
+            android:id="@+id/btnPhoto"
+            style="@style/btn_style"
+            android:text="@string/photo"/>
+
     </LinearLayout>
 
 </ScrollView>

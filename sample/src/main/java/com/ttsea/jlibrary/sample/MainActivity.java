@@ -18,6 +18,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Button btnAppInfo;
     private Button btnExit;
     private Button btnComponent;
+    private Button btnPhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +33,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         btnAppInfo = (Button) findViewById(R.id.btnAppInfo);
         btnExit = (Button) findViewById(R.id.btnExit);
         btnComponent = (Button) findViewById(R.id.btnComponent);
+        btnPhoto = (Button) findViewById(R.id.btnPhoto);
 
         btnTest.setOnClickListener(this);
         btnAppInfo.setOnClickListener(this);
         btnExit.setOnClickListener(this);
         btnComponent.setOnClickListener(this);
+        btnPhoto.setOnClickListener(this);
     }
 
     @Override
@@ -59,6 +62,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             case R.id.btnComponent:
                 intent = new Intent(mActivity, ComponentActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.btnPhoto:
+                intent = new Intent(mActivity, PhotoActivity.class);
                 startActivity(intent);
                 break;
 
