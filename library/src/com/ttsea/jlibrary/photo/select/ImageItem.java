@@ -1,5 +1,7 @@
 package com.ttsea.jlibrary.photo.select;
 
+import com.ttsea.jlibrary.utils.Utils;
+
 import java.io.Serializable;
 
 public class ImageItem implements Serializable {
@@ -53,6 +55,18 @@ public class ImageItem implements Serializable {
 
     public void setSelected(boolean selected) {
         isSelected = selected;
+    }
+
+    public boolean isNetWorkImage() {
+        if (Utils.isEmpty(path)) {
+            return false;
+        }
+        if (path.toLowerCase().startsWith("http")
+                || path.toLowerCase().startsWith("https")) {
+            return true;
+        }
+
+        return false;
     }
 
     @Override

@@ -114,7 +114,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 
     private void selectPhoto() {
         ImageConfig config = new ImageConfig.Builder(this)
-                .setMutiSelect(false)
+                .setMutiSelect(true)
                 .setMaxSize(9)
                 .setShowCamera(true)
                 .setRequestCode(100)
@@ -122,11 +122,11 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 .setCrop(true)
                 //.setImagePath()
                 .setOutPutPath(CacheDirUtils.getTempDir(mActivity) + File.separator + "photo")
-                .setAspectX(1)
+                .setAspectX(2)
                 .setAspectY(1)
                 .setOutputX(500)
                 .setOutputY(500)
-                .setImageSuffix(".png")
+                .setImageSuffix(".nomedia")
                 .setReturnData(false)
                 .setFixedAspectRatio(true)
 
