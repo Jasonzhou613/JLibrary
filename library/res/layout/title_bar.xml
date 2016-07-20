@@ -15,14 +15,14 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/titleBarBack"
+            android:id="@+id/btnLeft"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentLeft="true"
             android:background="@drawable/imageselector_back"/>
 
         <TextView
-            android:id="@+id/titleBarName"
+            android:id="@+id/tvTitleBarName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -31,10 +31,10 @@
             android:gravity="center"
             android:text="@string/image_picture"
             android:textColor="@color/white"
-            android:textSize="18sp"/>
+            android:textSize="16sp"/>
 
         <Button
-            android:id="@+id/titleBarOK"
+            android:id="@+id/btnRight"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_alignParentRight="true"
@@ -42,7 +42,7 @@
             android:minWidth="48dp"
             android:text="@string/finish"
             android:textColor="@color/white"
-            android:textSize="16sp"/>
+            android:textSize="14sp"/>
 
     </RelativeLayout>
 </LinearLayout>

@@ -61,4 +61,8 @@
     <string name="image_open_camera_fail">相册初始化失败!</string>
     <!-- Photo end -->
 
+    <!-- Photo Crop 剪切图片，start -->
+    <string name="crop_crop_image">剪切图片</string>
+    <!-- Photo Crop 剪切图片，start -->
+
 </resources>

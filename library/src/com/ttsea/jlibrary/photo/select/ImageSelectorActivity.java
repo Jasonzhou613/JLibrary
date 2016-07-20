@@ -1,22 +1,23 @@
 package com.ttsea.jlibrary.photo.select;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.ttsea.jlibrary.R;
+import com.ttsea.jlibrary.base.BaseFragmentActivity;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.photo.crop.CropConstants;
 
 import java.io.File;
 import java.util.ArrayList;
 
-public class ImageSelectorActivity extends FragmentActivity implements View.OnClickListener,
+public class ImageSelectorActivity extends BaseFragmentActivity implements View.OnClickListener,
         ImageSelectorFragment.OnImageSelectListener {
     private final String TAG = "ImageSelectorActivity";
 
@@ -24,9 +25,9 @@ public class ImageSelectorActivity extends FragmentActivity implements View.OnCl
     private ImageConfig imageConfig;
 
     private View llyTitleBar;
-    private Button titleBarBack;
-    private Button titleBarOK;
-    private TextView titleBarName;
+    private Button btnLeft;
+    private Button btnRight;
+    private TextView tvTitleBarName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,16 +44,16 @@ public class ImageSelectorActivity extends FragmentActivity implements View.OnCl
     }
 
     private void initView() {
-        titleBarBack = (Button) findViewById(R.id.titleBarBack);
-        titleBarOK = (Button) findViewById(R.id.titleBarOK);
-        titleBarName = (TextView) findViewById(R.id.titleBarName);
+        btnLeft = (Button) findViewById(R.id.btnLeft);
+        btnRight = (Button) findViewById(R.id.btnRight);
+        tvTitleBarName = (TextView) findViewById(R.id.tvTitleBarName);
         llyTitleBar = findViewById(R.id.llyTitleBar);
 
-        titleBarBack.setOnClickListener(this);
-        titleBarOK.setOnClickListener(this);
+        btnLeft.setOnClickListener(this);
+        btnRight.setOnClickListener(this);
 
-        titleBarOK.setTextColor(imageConfig.getTitleSubmitTextColor());
-        titleBarName.setTextColor(imageConfig.getTitleTextColor());
+        btnRight.setTextColor(imageConfig.getTitleSubmitTextColor());
+        tvTitleBarName.setTextColor(imageConfig.getTitleTextColor());
         llyTitleBar.setBackgroundColor(imageConfig.getTitleBgColor());
 
         selectedList = imageConfig.getPathList();
@@ -60,32 +61,40 @@ public class ImageSelectorActivity extends FragmentActivity implements View.OnCl
             selectedList = new ArrayList<String>();
         }
 
-        refreshtitleBarOKStatus();
+        refreshBtnRightStatus();
     }
 
     /** 跳转到剪切图片页面 */
     private void crop(File imageFile) {
-//        //cropImagePath = file.getAbsolutePath();
-//        Intent intent = new Intent("com.android.camera.action.CROP");
-//        intent.setDataAndType(Uri.fromFile(new File(imagePath)), "image/*");
-//        intent.putExtra("crop", "true");
-//        intent.putExtra("aspectX", aspectX);
-//        intent.putExtra("aspectY", aspectY);
-//        intent.putExtra("outputX", outputX);
-//        intent.putExtra("outputY", outputY);
-//        intent.putExtra("return-data", false);
-//        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-//        startActivityForResult(intent, ImageSelector.IMAGE_CROP_CODE);
+        String imagePath = imageFile.getAbsolutePath();
+        Intent intent = new Intent(CropConstants.ACTION_CROP);
+        intent.setDataAndType(Uri.fromFile(new File(imagePath)), "image/*");
+        intent.putExtra(CropConstants.OUT_PUT_PATH, imageConfig.getOutPutPath());
+        intent.putExtra(CropConstants.ASPECT_X, imageConfig.getAspectX());
+        intent.putExtra(CropConstants.ASPECT_Y, imageConfig.getAspectY());
+        intent.putExtra(CropConstants.OUTPUT_X, imageConfig.getOutputX());
+        intent.putExtra(CropConstants.OUTPUT_Y, imageConfig.getOutputY());
+        intent.putExtra(CropConstants.IMAGE_SUFFIX, imageConfig.getImageSuffix());
+        intent.putExtra(CropConstants.RETURN_DATA, false);
+        intent.putExtra(CropConstants.RETURN_DATA, false);
+
+        startActivityForResult(intent, CropConstants.REQUEST_CODE_CROP_IMAGE);
     }
 
-    private void refreshtitleBarOKStatus() {
-        titleBarOK.setText((getResources().getText(R.string.finish)) +
+    private void refreshBtnRightStatus() {
+        btnRight.setText((getResources().getText(R.string.finish)) +
                 "(" + selectedList.size() + "/" + imageConfig.getMaxSize() + ")");
         if (selectedList.size() == 0) {
-            //titleBarOK.setText(R.string.finish);
-            titleBarOK.setEnabled(false);
+            //btnRight.setText(R.string.finish);
+            btnRight.setEnabled(false);
         } else {
-            titleBarOK.setEnabled(true);
+            btnRight.setEnabled(true);
+        }
+
+        if (imageConfig.isMutiSelect()) {
+            btnRight.setVisibility(View.VISIBLE);
+        } else {
+            btnRight.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -114,14 +123,14 @@ public class ImageSelectorActivity extends FragmentActivity implements View.OnCl
         if (!selectedList.contains(path)) {
             selectedList.add(path);
         }
-        refreshtitleBarOKStatus();
+        refreshBtnRightStatus();
     }
 
     @Override
     public void onImageUnselected(String path) {
         JLog.d(TAG, "onImageSelected, remove path:" + path);
         selectedList.remove(path);
-        refreshtitleBarOKStatus();
+        refreshBtnRightStatus();
     }
 
     @Override
@@ -142,9 +151,9 @@ public class ImageSelectorActivity extends FragmentActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.titleBarBack) {//返回
+        if (v.getId() == R.id.btnLeft) {//返回
             onBackKeyClicked();
-        } else if (v.getId() == R.id.titleBarOK) {//完成
+        } else if (v.getId() == R.id.btnRight) {//完成
             if (selectedList != null && selectedList.size() > 0) {
                 Intent data = new Intent();
                 data.putStringArrayListExtra(ImageSelector.KEY_SELECTED_LIST, selectedList);
@@ -172,14 +181,27 @@ public class ImageSelectorActivity extends FragmentActivity implements View.OnCl
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CropConstants.REQUEST_CODE_CROP_IMAGE
-                && resultCode == CropConstants.RESULT_CODE_CROP_OK) {//剪切图片回来
-            JLog.d(TAG, "crop image back:");
-            Intent intent = new Intent();
-            //selectedList.add(cropImagePath);
-            intent.putStringArrayListExtra(ImageSelector.KEY_SELECTED_LIST, selectedList);
-            setResult(RESULT_OK, intent);
-            finish();
+        if (requestCode == CropConstants.REQUEST_CODE_CROP_IMAGE) {//剪切图片回来
+            if (resultCode == CropConstants.RESULT_CODE_CROP_OK) {
+                if (data.getData() == null) {
+                    toastMessage("剪切图片出错");
+                    return;
+                }
+                selectedList.clear();
+                selectedList.add(data.getData().getPath());
+                JLog.d(TAG, "crop image back, imagePath:" + data.getData().getPath());
+
+                Intent intent = new Intent();
+                intent.putStringArrayListExtra(ImageSelector.KEY_SELECTED_LIST, selectedList);
+                setResult(RESULT_OK, intent);
+                finish();
+
+            } else if (resultCode == CropConstants.RESULT_CODE_CROP_CANCLED) {
+
+            } else if (resultCode == CropConstants.RESULT_CODE_CROP_CANCLED) {
+                toastMessage("剪切图片出错");
+            }
+
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

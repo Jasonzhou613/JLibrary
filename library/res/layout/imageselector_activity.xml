@@ -6,7 +6,7 @@
               android:background="@color/white"
               android:orientation="vertical">
 
-    <include layout="@layout/imageselector_title_bar"/>
+    <include layout="@layout/title_bar"/>
 
     <FrameLayout
         android:id="@+id/content"

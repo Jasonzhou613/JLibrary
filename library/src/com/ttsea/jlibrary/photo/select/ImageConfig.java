@@ -58,10 +58,6 @@ public class ImageConfig implements Serializable {
         return builder.crop;
     }
 
-    public String getImagePath() {
-        return builder.imagePath;
-    }
-
     public String getOutPutPath() {
         return builder.outPutPath;
     }
@@ -119,7 +115,6 @@ public class ImageConfig implements Serializable {
 
         //剪切图片常量
         private boolean crop = false;
-        private String imagePath;
         private String outPutPath;
         private String imageSuffix;
         private int aspectX;
@@ -185,11 +180,6 @@ public class ImageConfig implements Serializable {
         /** 设置选择完图片或者拍照后是否需要剪切图片,true为需要，false为不需要，只有当mutiSelect为false时生效 */
         public Builder setCrop(boolean crop) {
             this.crop = crop;
-            return this;
-        }
-
-        public Builder setImagePath(String imagePath) {
-            this.imagePath = imagePath;
             return this;
         }
 
@@ -265,7 +255,6 @@ public class ImageConfig implements Serializable {
                     ", requestCode=" + requestCode +
                     ", pathList=" + pathList +
                     ", crop=" + crop +
-                    ", imagePath='" + imagePath + '\'' +
                     ", outPutPath='" + outPutPath + '\'' +
                     ", imageSuffix='" + imageSuffix + '\'' +
                     ", aspectX=" + aspectX +

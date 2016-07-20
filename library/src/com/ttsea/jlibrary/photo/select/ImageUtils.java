@@ -40,7 +40,7 @@ class ImageUtils {
         if (Utils.isEmpty(suffix)) {
             suffix = ".jpg";
         }
-        String fileName = "IMG_" + DateUtils.parseString(System.currentTimeMillis(), "yyyy-MM-dd_HH-mm-ss") + suffix;
+        String fileName = "IMG_" + DateUtils.parseString(System.currentTimeMillis(), "yyyyMMdd_HHmmss") + suffix;
         File file = new File(filePath, fileName);
 
         File parentFile = new File(file.getParent());

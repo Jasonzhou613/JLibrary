@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 
 public class ImageSelector {
     public static final int TAKE_PHOTO_BY_GALLERY = 0x110;
-    public static final int IMAGE_CROP_CODE = 1003;
 
     public static final String KEY_SELECTED_LIST = "selected_list";
 
