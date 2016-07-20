@@ -131,6 +131,7 @@ class ImageAdapter extends BaseAdapter {
                 }
             } else {
                 holder.ivCheck.setVisibility(View.GONE);
+                holder.ivCheck.setVisibility(View.GONE);
             }
 
             if (mItemSize > 0) {

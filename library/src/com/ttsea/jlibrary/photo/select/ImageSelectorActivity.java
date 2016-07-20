@@ -60,12 +60,7 @@ public class ImageSelectorActivity extends FragmentActivity implements View.OnCl
             selectedList = new ArrayList<String>();
         }
 
-        refreshtitleBarOKTxt();
-        if (selectedList.size() <= 0) {
-            titleBarOK.setEnabled(false);
-        } else {
-            titleBarOK.setEnabled(true);
-        }
+        refreshtitleBarOKStatus();
     }
 
     /** 跳转到剪切图片页面 */
@@ -83,12 +78,14 @@ public class ImageSelectorActivity extends FragmentActivity implements View.OnCl
 //        startActivityForResult(intent, ImageSelector.IMAGE_CROP_CODE);
     }
 
-    private void refreshtitleBarOKTxt() {
+    private void refreshtitleBarOKStatus() {
         titleBarOK.setText((getResources().getText(R.string.finish)) +
                 "(" + selectedList.size() + "/" + imageConfig.getMaxSize() + ")");
         if (selectedList.size() == 0) {
-            titleBarOK.setText(R.string.finish);
+            //titleBarOK.setText(R.string.finish);
             titleBarOK.setEnabled(false);
+        } else {
+            titleBarOK.setEnabled(true);
         }
     }
 
@@ -117,17 +114,14 @@ public class ImageSelectorActivity extends FragmentActivity implements View.OnCl
         if (!selectedList.contains(path)) {
             selectedList.add(path);
         }
-        if (selectedList.size() > 0) {
-            titleBarOK.setEnabled(true);
-        }
-        refreshtitleBarOKTxt();
+        refreshtitleBarOKStatus();
     }
 
     @Override
     public void onImageUnselected(String path) {
         JLog.d(TAG, "onImageSelected, remove path:" + path);
         selectedList.remove(path);
-        refreshtitleBarOKTxt();
+        refreshtitleBarOKStatus();
     }
 
     @Override

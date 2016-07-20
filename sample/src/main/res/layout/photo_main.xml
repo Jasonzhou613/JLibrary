@@ -13,6 +13,18 @@
             style="@style/btn_style"
             android:text="@string/select_photo"/>
 
+        <ImageView
+            android:id="@+id/ivImage"
+            android:layout_width="150dp"
+            android:layout_height="150dp"/>
+
+        <TextView
+            android:id="@+id/tvImagePath"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="12sp"/>
+
     </LinearLayout>
 
 </ScrollView>
