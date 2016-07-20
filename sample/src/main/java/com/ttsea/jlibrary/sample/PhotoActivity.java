@@ -114,7 +114,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 
     private void selectPhoto() {
         ImageConfig config = new ImageConfig.Builder(this)
-                .setMutiSelect(false)
+                .setMutiSelect(true)
                 .setMaxSize(9)
                 .setShowCamera(true)
                 .setRequestCode(100)
@@ -131,6 +131,8 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 .setFixedAspectRatio(true)
 
                 .build();
+
+        JLog.d(TAG, "config:" + config.toString());
 
         ImageSelector.open(mActivity, config);
     }

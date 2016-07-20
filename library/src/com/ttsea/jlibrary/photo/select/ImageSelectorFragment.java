@@ -28,7 +28,6 @@ import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.common.JLog;
@@ -43,7 +42,7 @@ public class ImageSelectorFragment extends Fragment {
 
     private final int LOADER_TYPE_ALL = 0;
     private final int LOADER_TYPE_CATEGORY = 1;
-    private final int REQUEST_CAMERA = 100;
+    private final int REQUEST_CODE_TAKE_CAMERA = 0x111;
 
     private Activity mActivity;
 
@@ -325,9 +324,9 @@ public class ImageSelectorFragment extends Fragment {
         if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             // 设置系统相机拍照后的输出路径
             // 创建临时文件
-            tempFile = ImageUtils.createTmpFile(getActivity(), imageConfig.getImagePath());
+            tempFile = ImageUtils.createTmpFile(imageConfig.getOutPutPath(), imageConfig.getImageSuffix());
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempFile));
-            startActivityForResult(cameraIntent, REQUEST_CAMERA);
+            startActivityForResult(cameraIntent, REQUEST_CODE_TAKE_CAMERA);
         } else {
             JToast.makeTextCenter(mActivity, getStringById(R.string.image_msg_no_camera));
         }
@@ -373,12 +372,10 @@ public class ImageSelectorFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CAMERA) {// 拍照回来
+        if (requestCode == REQUEST_CODE_TAKE_CAMERA) {// 拍照回来
             if (resultCode == Activity.RESULT_OK) {
-                if (tempFile != null) {
-                    if (onImageSelectListener != null) {
-                        onImageSelectListener.onCameraShot(tempFile);
-                    }
+                if (onImageSelectListener != null) {
+                    onImageSelectListener.onCameraShot(tempFile);
                 }
             } else {
                 if (tempFile != null && tempFile.exists()) {

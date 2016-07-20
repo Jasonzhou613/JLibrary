@@ -3,10 +3,13 @@ package com.ttsea.jlibrary.photo.select;
 import android.content.Context;
 import android.os.Environment;
 
+import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
 import com.ttsea.jlibrary.utils.DateUtils;
+import com.ttsea.jlibrary.utils.Utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -21,8 +24,7 @@ import java.util.Locale;
  * <b>last modified date:</b> 2016/7/13 10:45
  */
 class ImageUtils {
-
-    private final static String TAG = "TimeUtils";
+    private static final String TAG = "ImageUtils";
 
     public static String formatPhotoDate(String filePath) {
         File file = new File(filePath);
@@ -34,18 +36,27 @@ class ImageUtils {
         return "1970-01-01";
     }
 
-    public static File createTmpFile(Context context, String filePath) {
-        String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss", Locale.CHINA).format(new Date());
-        String externalStorageState = Environment.getExternalStorageState();
-        File dir = new File(Environment.getExternalStorageDirectory() + filePath);
-        if (externalStorageState.equals(Environment.MEDIA_MOUNTED)) {
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-            return new File(dir, timeStamp + ".jpg");
-        } else {
-            String cacheDir = CacheDirUtils.getImageCacheDir(context);
-            return new File(cacheDir, timeStamp + ".jpg");
+    public static File createTmpFile(String filePath, String suffix) {
+        if (Utils.isEmpty(suffix)) {
+            suffix = ".jpg";
         }
+        String fileName = "IMG_" + DateUtils.parseString(System.currentTimeMillis(), "yyyy-MM-dd_HH-mm-ss") + suffix;
+        File file = new File(filePath, fileName);
+
+        File parentFile = new File(file.getParent());
+        if (!parentFile.exists()) {
+            parentFile.mkdirs();
+        }
+
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                JLog.d(TAG, "IOException e:" + e.toString());
+                e.printStackTrace();
+            }
+        }
+
+        return file;
     }
 }
