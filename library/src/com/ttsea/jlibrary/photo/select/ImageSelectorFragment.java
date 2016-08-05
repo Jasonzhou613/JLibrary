@@ -50,6 +50,7 @@ public class ImageSelectorFragment extends Fragment {
     private TextView tvDate;
     private TextView btnCategory;
     private GridView gvImages;
+    private TextView tvNoPicture;
     private View popupAnchorView;
 
     private ArrayList<String> resultList;
@@ -94,6 +95,7 @@ public class ImageSelectorFragment extends Fragment {
         tvDate = (TextView) view.findViewById(R.id.tvDate);
         btnCategory = (TextView) view.findViewById(R.id.btnCategory);
         gvImages = (GridView) view.findViewById(R.id.gvImages);
+        tvNoPicture = (TextView) view.findViewById(R.id.tvNoPicture);
         popupAnchorView = view.findViewById(R.id.rlyBottomView);
 
         tvDate.setVisibility(View.GONE);
@@ -460,6 +462,15 @@ public class ImageSelectorFragment extends Fragment {
 
                     if (resultList != null && resultList.size() > 0) {
                         imageAdapter.setDefaultSelected(resultList);
+                    }
+
+                    if ((folderList == null || folderList.size() < 1)
+                            && !imageConfig.isShowCamera()) {
+                        gvImages.setVisibility(View.GONE);
+                        tvNoPicture.setVisibility(View.VISIBLE);
+                    } else {
+                        gvImages.setVisibility(View.VISIBLE);
+                        tvNoPicture.setVisibility(View.GONE);
                     }
 
                     folderAdapter.setData(folderList);

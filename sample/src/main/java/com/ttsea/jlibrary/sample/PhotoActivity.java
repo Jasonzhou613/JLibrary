@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 /**
  * //To do <br/>
- * <p/>
+ * <p>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/7/12 15:40 <br/>
  * <b>author:</b> Jason <br/>
@@ -120,7 +120,6 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 .setRequestCode(100)
 
                 .setCrop(true)
-                //.setImagePath()
                 .setOutPutPath(CacheDirUtils.getTempDir(mActivity) + File.separator + "photo")
                 .setAspectX(2)
                 .setAspectY(1)

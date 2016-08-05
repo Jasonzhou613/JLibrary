@@ -56,6 +56,7 @@
     <string name="image_sheet">张</string>
     <string name="image_shoot">拍摄照片</string>
     <string name="image_picture">图片</string>
+    <string name="image_no_picture">暂无图片</string>
     <string name="image_temp_date">2015年12月2日</string>
     <string name="image_msg_no_camera">没有系统相机</string>
     <string name="image_msg_amount_limit">已经达到最高选择数量</string>
