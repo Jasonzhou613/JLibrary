@@ -218,6 +218,7 @@ public class ImageSelectorFragment extends Fragment {
         folderPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         folderPopupWindow.setWidth(width);
         folderPopupWindow.setHeight(height);
+        folderPopupWindow.setFocusable(true);
 
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         if (params != null && params instanceof FrameLayout.LayoutParams) {

@@ -76,7 +76,6 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
         intent.putExtra(CropConstants.OUTPUT_Y, imageConfig.getOutputY());
         intent.putExtra(CropConstants.IMAGE_SUFFIX, imageConfig.getImageSuffix());
         intent.putExtra(CropConstants.RETURN_DATA, false);
-        intent.putExtra(CropConstants.RETURN_DATA, false);
 
         startActivityForResult(intent, CropConstants.REQUEST_CODE_CROP_IMAGE);
     }
@@ -85,7 +84,6 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
         btnRight.setText((getResources().getText(R.string.finish)) +
                 "(" + selectedList.size() + "/" + imageConfig.getMaxSize() + ")");
         if (selectedList.size() == 0) {
-            //btnRight.setText(R.string.finish);
             btnRight.setEnabled(false);
         } else {
             btnRight.setEnabled(true);
@@ -197,8 +195,8 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
                 finish();
 
             } else if (resultCode == CropConstants.RESULT_CODE_CROP_CANCLED) {
-
-            } else if (resultCode == CropConstants.RESULT_CODE_CROP_CANCLED) {
+                //toastMessage("取消了剪切图片");
+            } else if (resultCode == CropConstants.RESULT_CODE_CROP_ERROR) {
                 toastMessage("剪切图片出错");
             }
 
