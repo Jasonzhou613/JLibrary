@@ -71,7 +71,7 @@
             android:paddingRight="0dp"
             android:paddingTop="0dp"
             juility:cropMode="rectangle"
-            juility:fixedAspectRatio="false"
+            juility:fixedAspectRatio="true"
 
             juility:frameLineColor="#FF00CC00"
             juility:frameLineShowMode="show_always"

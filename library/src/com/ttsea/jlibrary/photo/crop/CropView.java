@@ -14,7 +14,7 @@ import com.ttsea.jlibrary.common.JLog;
 
 /**
  * 剪切框 <br/>
- * <p/>
+ * <p>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/2/19 16:16 <br/>
  * <b>author:</b> Jason <br/>
@@ -84,8 +84,8 @@ public class CropView extends View {
     /** 剪切时阴影部分的颜色 */
     private int frameShadowColor = DEFAULT_FRAME_SHADOW_COLOR;
 
-    /** 是否需要保持长宽比，默认为不保持 */
-    private boolean fixedAspectRatio = false;
+    /** 是否需要保持长宽比，默认为保持 */
+    private boolean fixedAspectRatio = true;
     private int aspectX = 1;
     private int aspectY = 1;
     //属性 end----------
@@ -364,7 +364,9 @@ public class CropView extends View {
         frameRect.right = pl + frameWidth + offsetX;
         frameRect.bottom = pt + frameHeight + offsetY;
 
-        cropImageView.setCropRect(frameRect);
+        if (cropImageView != null) {
+            cropImageView.setCropRect(frameRect);
+        }
 
         JLog.d(TAG, "setupFrameBounds, viewWidth:" + viewWidth
                 + ",\n viewHeight:" + viewHeight

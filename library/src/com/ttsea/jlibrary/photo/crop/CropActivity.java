@@ -54,7 +54,7 @@ public class CropActivity extends BaseActivity implements View.OnClickListener {
     private int outputY;
     private int cropModel;
     private boolean return_data = false;
-    private boolean fixedAspectRatio = false;
+    private boolean fixedAspectRatio = true;
 
     private final int DEFAULT_INT = 0;
     private final String DEFAULT_SUFFIX = ".jpg";
