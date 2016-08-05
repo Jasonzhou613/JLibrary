@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.common.ImageLoader;
 import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.photo.crop.CropView;
 import com.ttsea.jlibrary.photo.select.ImageConfig;
 import com.ttsea.jlibrary.photo.select.ImageItem;
 import com.ttsea.jlibrary.photo.select.ImageSelector;
@@ -114,20 +115,23 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 
     private void selectPhoto() {
         ImageConfig config = new ImageConfig.Builder(this)
-                .setMutiSelect(true)
-                .setMaxSize(9)
-                .setShowCamera(true)
-                .setRequestCode(100)
+                .setMutiSelect(false)//设置是否是多选
+                .setMaxSize(9)//多选时，最多可选数量
+                .setShowCamera(true)//是否显示拍照项
+                .setRequestCode(100)//请求code，用于onActivityResult接收
 
-                .setCrop(true)
+                .setCrop(true)//设置是否需要剪切
+                //设置剪切图片的输出路径
                 .setOutPutPath(CacheDirUtils.getTempDir(mActivity) + File.separator + "photo")
-                .setAspectX(2)
-                .setAspectY(1)
-                .setOutputX(500)
-                .setOutputY(500)
-                .setImageSuffix(".nomedia")
-                .setReturnData(false)
-                .setFixedAspectRatio(true)
+                .setAspectX(2)//设置X比例
+                .setAspectY(1)//设置Y比例
+                .setOutputX(500)//设置保存图片X最大值
+                .setOutputY(500)//设置保存图片Y最大值
+                //设置剪切模式，默认为(CROP_MODE_RECTANGLE)矩形
+                .setCropModel(CropView.CROP_MODE_RECTANGLE)
+                .setImageSuffix(".nomedia")//剪切图片后保存的后缀，默认为".jpg"
+                .setReturnData(false)//是否返回数据
+                .setFixedAspectRatio(true)//设置是否保持剪切比例，默认为false
 
                 .build();
 

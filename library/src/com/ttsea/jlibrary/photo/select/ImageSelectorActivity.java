@@ -74,8 +74,10 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
         intent.putExtra(CropConstants.ASPECT_Y, imageConfig.getAspectY());
         intent.putExtra(CropConstants.OUTPUT_X, imageConfig.getOutputX());
         intent.putExtra(CropConstants.OUTPUT_Y, imageConfig.getOutputY());
+        intent.putExtra(CropConstants.CROP_MODEL, imageConfig.getCropModel());
         intent.putExtra(CropConstants.IMAGE_SUFFIX, imageConfig.getImageSuffix());
         intent.putExtra(CropConstants.RETURN_DATA, false);
+        intent.putExtra(CropConstants.FIXED_ASPECT_RATIO, true);
 
         startActivityForResult(intent, CropConstants.REQUEST_CODE_CROP_IMAGE);
     }

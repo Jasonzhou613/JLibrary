@@ -2,7 +2,7 @@ package com.ttsea.jlibrary.photo.crop;
 
 /**
  * 剪切图片的常量 <br/>
- * <p/>
+ * <p>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/2/18 14:13 <br/>
  * <b>author:</b> Jason <br/>
@@ -64,6 +64,11 @@ public class CropConstants {
      * 是否保持长宽比，默认为false
      */
     public static final String FIXED_ASPECT_RATIO = "fixed_aspect_ratio";
+
+    /**
+     * 剪切模式，{@link CropView#CROP_MODE_OVAL} and {@link CropView#CROP_MODE_RECTANGLE}
+     */
+    public static final String CROP_MODEL = "crop_model";
 
     /** 剪切图片 request code */
     public static final int REQUEST_CODE_CROP_IMAGE = 0x101;

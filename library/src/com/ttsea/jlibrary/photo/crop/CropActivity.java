@@ -1,5 +1,6 @@
 package com.ttsea.jlibrary.photo.crop;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -51,6 +52,7 @@ public class CropActivity extends BaseActivity implements View.OnClickListener {
     private int aspectY;
     private int outputX;
     private int outputY;
+    private int cropModel;
     private boolean return_data = false;
     private boolean fixedAspectRatio = false;
 
@@ -83,6 +85,7 @@ public class CropActivity extends BaseActivity implements View.OnClickListener {
             aspectY = bundle.getInt(CropConstants.ASPECT_Y, DEFAULT_INT);
             outputX = bundle.getInt(CropConstants.OUTPUT_X, DEFAULT_INT);
             outputY = bundle.getInt(CropConstants.OUTPUT_Y, DEFAULT_INT);
+            cropModel = bundle.getInt(CropConstants.CROP_MODEL, CropView.CROP_MODE_RECTANGLE);
             return_data = bundle.getBoolean(CropConstants.RETURN_DATA, false);
             fixedAspectRatio = bundle.getBoolean(CropConstants.FIXED_ASPECT_RATIO, false);
             if (Utils.isEmpty(imagePath)) {

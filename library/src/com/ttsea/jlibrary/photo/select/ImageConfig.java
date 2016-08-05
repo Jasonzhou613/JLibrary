@@ -2,6 +2,7 @@ package com.ttsea.jlibrary.photo.select;
 
 import android.content.Context;
 
+import com.ttsea.jlibrary.photo.crop.CropView;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
 
 import java.io.Serializable;
@@ -82,6 +83,10 @@ public class ImageConfig implements Serializable {
         return builder.outputY;
     }
 
+    public int getCropModel() {
+        return builder.cropModel;
+    }
+
     public boolean isReturnData() {
         return builder.returnData;
     }
@@ -121,6 +126,7 @@ public class ImageConfig implements Serializable {
         private int aspectY;
         private int outputX;
         private int outputY;
+        private int cropModel = CropView.CROP_MODE_RECTANGLE;
         private boolean returnData = false;
         private boolean fixedAspectRatio = true;
 
@@ -189,7 +195,7 @@ public class ImageConfig implements Serializable {
             return this;
         }
 
-        /** 设置剪切图片后保存图片的路径，父路径 */
+        /** 设置剪切图片后保存的后缀名，默认为.jpg */
         public Builder setImageSuffix(String imageSuffix) {
             this.imageSuffix = imageSuffix;
             return this;
@@ -219,13 +225,21 @@ public class ImageConfig implements Serializable {
             return this;
         }
 
+        /**
+         * 设置剪切模式，{@link com.ttsea.jlibrary.photo.crop.CropView#CROP_MODE_RECTANGLE}
+         */
+        public Builder setCropModel(int cropModel) {
+            this.cropModel = cropModel;
+            return this;
+        }
+
         /** 设置是否返回data */
         public Builder setReturnData(boolean returnData) {
             this.returnData = returnData;
             return this;
         }
 
-        /** 设置剪切时是否保持长宽比例 */
+        /** 设置剪切时是否保持长宽比例，默认为false */
         public Builder setFixedAspectRatio(boolean fixedAspectRatio) {
             this.fixedAspectRatio = fixedAspectRatio;
             return this;
@@ -261,6 +275,7 @@ public class ImageConfig implements Serializable {
                     ", aspectY=" + aspectY +
                     ", outputX=" + outputX +
                     ", outputY=" + outputY +
+                    ", cropModel=" + cropModel +
                     ", returnData=" + returnData +
                     ", fixedAspectRatio=" + fixedAspectRatio +
                     '}';
