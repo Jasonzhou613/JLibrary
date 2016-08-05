@@ -625,7 +625,7 @@ public class CropView extends View {
 
     /** 判断是否触摸到剪切框的四条边界 */
     private boolean isTouchOnBounds(float x, float y) {
-        if (frameRect == null || !canDragFrameConner) {
+        if (frameRect == null) {
             return false;
         }
         int left = frameRect.left;
@@ -702,7 +702,9 @@ public class CropView extends View {
             isTouchOnBounds = isTouchOnBounds(x, y);
             isTouchOnFrameInside = isTouchOnFrameInside(x, y);
 
-            if (isTouchOnBounds || isTouchOnCorner || isTouchOnFrameInside) {
+            if (!isTouchOnBounds && !isTouchOnCorner && !isTouchOnFrameInside) {
+                touchRange = TouchRange.OUT_FRAME;
+            } else {
                 invalidate();
             }
             return;
@@ -724,9 +726,9 @@ public class CropView extends View {
     /** 移动 */
     private void onActionMove(float x, float y) {
         if (isOnTouching) {
-            if (isTouchOnBounds) {
+            if (isTouchOnBounds && canDragFrameConner) {
                 reSetBounds(downX, downY, x, y);
-            } else if (isTouchOnCorner) {
+            } else if (isTouchOnCorner && canDragFrameConner) {
                 if (fixedAspectRatio) {
                     fixedBoundsWithRatio(downX, downY, x, y);
                 } else {

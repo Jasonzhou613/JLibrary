@@ -131,9 +131,9 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 .setOutputY(500)//设置保存图片Y最大值
                 //设置剪切模式，默认为(CROP_MODE_RECTANGLE)矩形
                 .setCropModel(CropView.CROP_MODE_RECTANGLE)
-                .setImageSuffix(".nomedia")//剪切图片后保存的后缀，默认为".jpg"
+                .setImageSuffix(".nomedia")//设置剪切图片后保存和拍照保存后的后缀名，默认为".jpg"
                 .setReturnData(false)//是否返回数据
-                .setFixedAspectRatio(false)//设置是否保持剪切比例，默认为true
+                .setFixedAspectRatio(true)//设置是否保持剪切比例，默认为true
                 .setCanMoveFrame(false)
                 .setCanDragFrameConner(false)
 

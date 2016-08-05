@@ -205,7 +205,7 @@ public class ImageConfig implements Serializable {
             return this;
         }
 
-        /** 设置剪切图片后保存的后缀名，默认为.jpg */
+        /** 设置剪切图片后保存和拍照保存后的后缀名，默认为.jpg */
         public Builder setImageSuffix(String imageSuffix) {
             this.imageSuffix = imageSuffix;
             return this;
