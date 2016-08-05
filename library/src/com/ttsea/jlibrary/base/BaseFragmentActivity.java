@@ -26,7 +26,7 @@ import com.ttsea.jlibrary.debug.ViewServer;
  */
 public class BaseFragmentActivity extends FragmentActivity {
     public Activity mActivity;
-    public MyProgressDialog progressDialog;
+    private MyProgressDialog progressDialog;
     private MyDialog myDialog;
     private Toast mToast;
 
@@ -53,11 +53,11 @@ public class BaseFragmentActivity extends FragmentActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         //调试模式下，使其能够使用hierarchyview
         if (JLog.isDebugMode()) {
             ViewServer.get(mActivity).removeWindow(this);
         }
+        super.onDestroy();
     }
 
     private void init() {
@@ -179,8 +179,8 @@ public class BaseFragmentActivity extends FragmentActivity {
     /**
      * 通过字串ID获取到字串
      *
-     * @param resId
-     * @return
+     * @param resId string id
+     * @return String
      * @author Jason
      */
     public String getStringById(int resId) {
@@ -212,8 +212,8 @@ public class BaseFragmentActivity extends FragmentActivity {
     /**
      * 通过id获取颜色值
      *
-     * @param resId
-     * @return
+     * @param resId color id
+     * @return int
      */
     public int getColorById(int resId) {
         return mActivity.getResources().getColor(resId);
