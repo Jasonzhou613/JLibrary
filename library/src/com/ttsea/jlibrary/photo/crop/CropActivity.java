@@ -26,7 +26,7 @@ import java.io.IOException;
 
 /**
  * 剪切图片Activity <br/>
- * <p>
+ * <p/>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/2/18 10:42 <br/>
  * <b>author:</b> Jason <br/>
@@ -203,8 +203,8 @@ public class CropActivity extends BaseActivity implements View.OnClickListener {
     /**
      * 将bitmap保存为图片，如果保存成功则返回图片保存的uri，否则返回空
      *
-     * @param bitmap
-     * @return
+     * @param bitmap Bitmap
+     * @return Uri
      */
     private Uri saveBitmap(Bitmap bitmap) {
         if (bitmap == null) {

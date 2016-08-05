@@ -119,7 +119,6 @@ public class CropImageView extends BaseCropImageView {
             postTranslate(-distanceX, -distanceY);
             return true;
         }
-
     }
 
     private class RotateListener extends RotationGestureDetector.SimpleOnRotationGestureListener {
@@ -129,7 +128,5 @@ public class CropImageView extends BaseCropImageView {
             postRotate(rotationDetector.getAngle(), mMidPntX, mMidPntY);
             return true;
         }
-
     }
-
 }

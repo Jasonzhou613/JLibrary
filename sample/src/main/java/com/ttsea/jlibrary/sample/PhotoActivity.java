@@ -1,7 +1,6 @@
 package com.ttsea.jlibrary.sample;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,7 +13,6 @@ import com.ttsea.jlibrary.common.ImageLoader;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.photo.crop.CropView;
 import com.ttsea.jlibrary.photo.select.ImageConfig;
-import com.ttsea.jlibrary.photo.select.ImageItem;
 import com.ttsea.jlibrary.photo.select.ImageSelector;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
 
@@ -23,7 +21,7 @@ import java.util.ArrayList;
 
 /**
  * //To do <br/>
- * <p>
+ * <p/>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/7/12 15:40 <br/>
  * <b>author:</b> Jason <br/>
@@ -117,12 +115,13 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 
     private void selectPhoto() {
         ImageConfig config = new ImageConfig.Builder(this)
-                .setMutiSelect(false)//设置是否是多选
-                .setMaxSize(9)//多选时，最多可选数量
-                .setShowCamera(true)//是否显示拍照项
-                .setRequestCode(100)//请求code，用于onActivityResult接收
+                .setMutiSelect(true)//设置是否是多选，默认为：true
+                .setMaxSize(9)//多选时，最多可选数量，默认为：9
+                .setShowCamera(true)//是否显示拍照项，认为：true
+                //请求code，用于onActivityResult接收，默认为：ImageSelector.TAKE_PHOTO_BY_GALLERY
+                .setRequestCode(100)
 
-                .setCrop(true)//设置是否需要剪切
+                .setCrop(true)//设置是否需要剪切,默认为：false，单选时生效
                 //设置剪切图片的输出路径
                 .setOutPutPath(CacheDirUtils.getTempDir(mActivity) + File.separator + "photo")
                 .setAspectX(4)//设置X比例
@@ -132,10 +131,10 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 //设置剪切模式，默认为(CROP_MODE_RECTANGLE)矩形
                 .setCropModel(CropView.CROP_MODE_RECTANGLE)
                 .setImageSuffix(".nomedia")//设置剪切图片后保存和拍照保存后的后缀名，默认为".jpg"
-                .setReturnData(false)//是否返回数据
+                .setReturnData(true)//是否返回数据
                 .setFixedAspectRatio(true)//设置是否保持剪切比例，默认为true
-                .setCanMoveFrame(false)
-                .setCanDragFrameConner(false)
+                .setCanMoveFrame(false)//按住剪切框中间，是否可以拖动整个剪切框, 默认为false
+                .setCanDragFrameConner(false)//按住剪切框四个角，是否可以拖动剪切框的四个角
 
                 .build();
 

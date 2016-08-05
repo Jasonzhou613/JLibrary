@@ -139,7 +139,7 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
     public void onCameraShot(File imageFile) {
         JLog.d(TAG, "onCameraShot, filePath:" + imageFile.getAbsolutePath());
         if (imageFile != null) {
-            if (imageConfig.isCrop()) {
+            if (imageConfig.isCrop() && !imageConfig.isMutiSelect()) {
                 crop(imageFile);
             } else {
                 Intent data = new Intent();
