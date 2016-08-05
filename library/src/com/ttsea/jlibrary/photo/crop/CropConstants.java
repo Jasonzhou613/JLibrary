@@ -61,7 +61,17 @@ public class CropConstants {
     public static final String IMAGE_SUFFIX = "image_suffix";
 
     /**
-     * 是否保持长宽比，默认为false
+     * 按住剪切框中间，是否可以拖动整个剪切框
+     */
+    public static final String CAN_MOVE_FRAME = "can_move_frame";
+
+    /**
+     * 按住剪切框四个角，是否可以拖动剪切框的四个角
+     */
+    public static final String CAN_DRAG_FRAME_CONNER = "can_drag_frame_conner";
+
+    /**
+     * 是否保持长宽比
      */
     public static final String FIXED_ASPECT_RATIO = "fixed_aspect_ratio";
 

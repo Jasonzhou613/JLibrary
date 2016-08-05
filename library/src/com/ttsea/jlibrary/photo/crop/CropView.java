@@ -39,7 +39,6 @@ public class CropView extends View {
     //默认值 start----------
     private final int DEFAULT_LINE_COLOR = 0xFF00CC00;
     private final int DEFAULT_FRAME_SHADOW_COLOR = 0xBC000000;
-    private final int DEFAULT_MIN_FRAME_WIDTH = 12;
     private final int DEFAULT_FRAME_LINE_WIDTH = 4;
     private final int DEFAULT_HANDLE_LINE_WIDTH = 6;
     private final int DEFAULT_HANDLE_LINE_HEIGHT = 60;
@@ -52,8 +51,8 @@ public class CropView extends View {
     /** 剪切模式 */
     private int cropMode = CROP_MODE_RECTANGLE;
 
-    /** 剪切框的最小值 */
-    private int minFrameWidth = DEFAULT_MIN_FRAME_WIDTH;
+    /** 剪切框的最小值, 是 handleLineWidth的两倍 */
+    private int minFrameWidth;
     /** 剪切边框的显示模式 */
     private int frameLineShowMode = LINE_SHOW_MODE_SHOW_ALWAYS;
     /** 剪切边框的颜色 */
@@ -84,7 +83,11 @@ public class CropView extends View {
     /** 剪切时阴影部分的颜色 */
     private int frameShadowColor = DEFAULT_FRAME_SHADOW_COLOR;
 
-    /** 是否需要保持长宽比，默认为保持 */
+    /** 按住剪切框中间，是否可以拖动整个剪切框, 默认为false */
+    private boolean canMoveFrame = false;
+    /** 按住剪切框四个角，是否可以拖动剪切框的四个角 */
+    private boolean canDragFrameConner = false;
+    /** 是否需要保持长宽比，默认为保持，只有当canDragFrameConner未true时生效 */
     private boolean fixedAspectRatio = true;
     private int aspectX = 1;
     private int aspectY = 1;
@@ -104,6 +107,7 @@ public class CropView extends View {
     private boolean isOnTouching = false;
     private boolean isTouchOnCorner = false;
     private boolean isTouchOnBounds = false;
+    private boolean isTouchOnFrameInside = false;
 
     private float downX = 0;
     private float downY = 0;
@@ -146,6 +150,9 @@ public class CropView extends View {
     }
 
     public void setAspectX(int aspectX) {
+        if (aspectX <= 0) {
+            aspectX = 1;
+        }
         this.aspectX = aspectX;
     }
 
@@ -154,6 +161,9 @@ public class CropView extends View {
     }
 
     public void setAspectY(int aspectY) {
+        if (aspectY <= 0) {
+            aspectY = 1;
+        }
         this.aspectY = aspectY;
     }
 
@@ -162,6 +172,9 @@ public class CropView extends View {
     }
 
     public void setCropMode(int cropMode) {
+        if (cropMode != CROP_MODE_RECTANGLE && cropMode != CROP_MODE_OVAL) {
+            cropMode = CROP_MODE_RECTANGLE;
+        }
         this.cropMode = cropMode;
     }
 
@@ -171,6 +184,22 @@ public class CropView extends View {
 
     public void setFixedAspectRatio(boolean fixedAspectRatio) {
         this.fixedAspectRatio = fixedAspectRatio;
+    }
+
+    public boolean isCanMoveFrame() {
+        return canMoveFrame;
+    }
+
+    public void setCanMoveFrame(boolean canMoveFrame) {
+        this.canMoveFrame = canMoveFrame;
+    }
+
+    public boolean isCanDragFrameConner() {
+        return canDragFrameConner;
+    }
+
+    public void setCanDragFrameConner(boolean canDragFrameConner) {
+        this.canDragFrameConner = canDragFrameConner;
     }
 
     public Rect getFrameRect() {
@@ -195,7 +224,6 @@ public class CropView extends View {
 
         cropMode = a.getInt(R.styleable.CropView_cropMode, CROP_MODE_RECTANGLE);
 
-        minFrameWidth = a.getDimensionPixelOffset(R.styleable.CropView_minFrameWidth, DEFAULT_MIN_FRAME_WIDTH);
         frameLineShowMode = a.getInt(R.styleable.CropView_frameLineShowMode, LINE_SHOW_MODE_SHOW_ALWAYS);
         frameLineColor = a.getColor(R.styleable.CropView_frameLineColor, DEFAULT_LINE_COLOR);
         frameLineWidth = a.getDimensionPixelOffset(R.styleable.CropView_frameLineWidth, DEFAULT_FRAME_LINE_WIDTH);
@@ -213,7 +241,14 @@ public class CropView extends View {
 
         frameShadowColor = a.getColor(R.styleable.CropView_frameShadowColor, DEFAULT_FRAME_SHADOW_COLOR);
 
-        fixedAspectRatio = a.getBoolean(R.styleable.CropView_fixedAspectRatio, false);
+        canMoveFrame = a.getBoolean(R.styleable.CropView_canMoveFrame, false);
+        canDragFrameConner = a.getBoolean(R.styleable.CropView_canDragFrameConner, false);
+        fixedAspectRatio = a.getBoolean(R.styleable.CropView_fixedAspectRatio, true);
+
+        minFrameWidth = handleLineLength * 2 + 5;
+        if (minFrameWidth <= 0) {
+            minFrameWidth = 20;
+        }
 
         JLog.d(TAG, "cropMode:" + getCropModeByInt(cropMode)
                 + ",\n minFrameWidth:" + minFrameWidth
@@ -296,7 +331,7 @@ public class CropView extends View {
         drawFrame(canvas);
         drawHandleLine(canvas);
         drawGride(canvas);
-        //canvas.drawRect(boundsRect, framePaint);
+        //canvas.drawRect(tempRect, framePaint);
     }
 
     private void setupFrameBounds() {
@@ -321,40 +356,38 @@ public class CropView extends View {
 
         if (frameWidth < minFrameWidth) {
             JLog.e(TAG, "Invalid minFrameWidth, it should less than frameWidth");
-            minFrameWidth = frameWidth;
+            frameWidth = minFrameWidth;
         }
         if (frameHeight < minFrameWidth) {
             JLog.e(TAG, "Invalid minFrameWidth, it should less than frameHeight");
-            minFrameWidth = frameHeight;
+            frameHeight = minFrameWidth;
         }
 
-        if (fixedAspectRatio) {
-            if ((float) minFrameWidth != 0) {
-                frameWidth = (int) (frameWidth * 0.9f);
-                frameHeight = (int) (frameHeight * 0.9f);
-                float ratio = (float) aspectX / (float) aspectY;
-                float maxRatio = ((float) frameWidth) / ((float) minFrameWidth);
-                float minRatio = ((float) minFrameWidth) / ((float) frameWidth);
+//        if (fixedAspectRatio) {
+        frameWidth = (int) (frameWidth * 0.9f);
+        frameHeight = (int) (frameHeight * 0.9f);
+        float ratio = (float) aspectX / (float) aspectY;
+        float maxRatio = ((float) frameWidth) / ((float) minFrameWidth);
+        float minRatio = ((float) minFrameWidth) / ((float) frameWidth);
 
-                if (ratio > maxRatio) {
-                    JLog.e(TAG, "Invalid ratio, the ratio should less than " + maxRatio + ", will set ratio to " + maxRatio);
-                    ratio = maxRatio;
-                }
-                if (ratio < minRatio) {
-                    JLog.e(TAG, "Invalid ratio, the ratio should greater than " + minRatio + ", will set ratio to " + minRatio);
-                    ratio = minRatio;
-                }
+        if (ratio > maxRatio) {
+            JLog.e(TAG, "Invalid ratio, the ratio should less than " + maxRatio + ", will set ratio to " + maxRatio);
+            ratio = maxRatio;
+        }
+        if (ratio < minRatio) {
+            JLog.e(TAG, "Invalid ratio, the ratio should greater than " + minRatio + ", will set ratio to " + minRatio);
+            ratio = minRatio;
+        }
 
-                if (ratio < 1) {
-                    frameWidth = (int) (frameHeight * ratio);
-                } else {
-                    frameHeight = (int) (frameWidth / ratio);
-                }
-            }
+        if (ratio < 1) {
+            frameWidth = (int) (frameHeight * ratio);
         } else {
-            frameWidth = frameWidth - 100;
-            frameHeight = frameHeight - 100;
+            frameHeight = (int) (frameWidth / ratio);
         }
+//        } else {
+//            frameWidth = frameWidth - 100;
+//            frameHeight = frameHeight - 100;
+//        }
 
         int offsetX = (viewWidth - frameWidth) / 2;
         int offsetY = (viewHeight - frameHeight) / 2;
@@ -380,6 +413,8 @@ public class CropView extends View {
                 + ",\n offsetY:" + offsetY
                 + ",\n frameRect.toString:" + frameRect.toString()
                 + ",\n fixedAspectRatio:" + fixedAspectRatio
+                + ",\n canMoveFrame:" + canMoveFrame
+                + ",\n canDragFrameConner:" + canDragFrameConner
                 + ",\n aspectX:" + aspectX
                 + ",\n aspectY:" + aspectY
         );
@@ -529,7 +564,7 @@ public class CropView extends View {
             case MotionEvent.ACTION_DOWN:
                 onActionDown(event.getX(), event.getY());
                 //但触摸到四个角和四条边的时候，响应触摸事件
-                return (isTouchOnBounds || isTouchOnCorner);
+                return (isTouchOnBounds || isTouchOnCorner || isTouchOnFrameInside);
             // return true;
 
             case MotionEvent.ACTION_UP:
@@ -538,7 +573,7 @@ public class CropView extends View {
                 return true;
 
             case MotionEvent.ACTION_MOVE:
-                //onActionMove(event.getX(), event.getY());
+                onActionMove(event.getX(), event.getY());
                 return false;
 
             default:
@@ -590,7 +625,7 @@ public class CropView extends View {
 
     /** 判断是否触摸到剪切框的四条边界 */
     private boolean isTouchOnBounds(float x, float y) {
-        if (frameRect == null) {
+        if (frameRect == null || !canDragFrameConner) {
             return false;
         }
         int left = frameRect.left;
@@ -630,6 +665,33 @@ public class CropView extends View {
         return false;
     }
 
+    /** 判断是否触摸到剪切框的里面 */
+    private boolean isTouchOnFrameInside(float x, float y) {
+        if (frameRect == null || !canMoveFrame) {
+            return false;
+        }
+        int offset = handleLineLength;
+        int left = frameRect.left + offset;
+        int top = frameRect.top + offset;
+        int right = frameRect.right - offset;
+        int bottom = frameRect.bottom - 5;
+
+        int centerX = ((right - left) / 2) + left;
+        int centerY = ((bottom - top) / 2) + top;
+
+        int eX = (int) x;
+        int eY = (int) y;
+
+        Rect rect = new Rect(centerX - offset, centerY - offset, centerX + offset, centerY + offset);
+        if (rect.contains(eX, eY)) {
+            JLog.d(TAG, "isTouchOnBounds, on_frame.");
+            touchRange = TouchRange.ON_FRAME;
+            return true;
+        }
+
+        return false;
+    }
+
     /** 按下屏幕时 */
     private void onActionDown(float x, float y) {
         if (frameRect.contains((int) x, (int) y)) {
@@ -638,10 +700,9 @@ public class CropView extends View {
             isOnTouching = true;
             isTouchOnCorner = isTouchOnCorner(x, y);
             isTouchOnBounds = isTouchOnBounds(x, y);
-            if (!isTouchOnBounds && !isTouchOnCorner) {
-                touchRange = TouchRange.ON_FRAME;
-            }
-            if (isTouchOnBounds || isTouchOnCorner) {
+            isTouchOnFrameInside = isTouchOnFrameInside(x, y);
+
+            if (isTouchOnBounds || isTouchOnCorner || isTouchOnFrameInside) {
                 invalidate();
             }
             return;
@@ -654,6 +715,7 @@ public class CropView extends View {
         isOnTouching = false;
         isTouchOnCorner = false;
         isTouchOnBounds = false;
+        isTouchOnFrameInside = false;
         touchRange = TouchRange.UNKNOWN;
         cropImageView.setCropRect(frameRect, true);
         invalidate();
@@ -670,11 +732,11 @@ public class CropView extends View {
                 } else {
                     fixedBoundsWithoutRatio(downX, downY, x, y);
                 }
-            } else {
+            } else if (isTouchOnFrameInside) {
                 moveFrame(downX, downY, x, y);
             }
+            invalidate();
         }
-        invalidate();
     }
 
     /** 平移剪切框 */

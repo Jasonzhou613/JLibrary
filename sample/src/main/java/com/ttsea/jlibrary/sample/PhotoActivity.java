@@ -103,15 +103,17 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 //
 //    //剪切图片常量
 //    private boolean crop = false;
-//    private String imagePath;
 //    private String outPutPath;
 //    private String imageSuffix;
 //    private int aspectX;
 //    private int aspectY;
 //    private int outputX;
 //    private int outputY;
+//    private int cropModel = CropView.CROP_MODE_RECTANGLE;
 //    private boolean returnData = false;
 //    private boolean fixedAspectRatio = true;
+//    private boolean canMoveFrame = false;
+//    private boolean canDragFrameConner = false;
 
     private void selectPhoto() {
         ImageConfig config = new ImageConfig.Builder(this)
@@ -132,6 +134,8 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 .setImageSuffix(".nomedia")//剪切图片后保存的后缀，默认为".jpg"
                 .setReturnData(false)//是否返回数据
                 .setFixedAspectRatio(false)//设置是否保持剪切比例，默认为true
+                .setCanMoveFrame(false)
+                .setCanDragFrameConner(false)
 
                 .build();
 

@@ -70,6 +70,7 @@
             android:paddingLeft="0dp"
             android:paddingRight="0dp"
             android:paddingTop="0dp"
+            juility:canMoveFrame="false"
             juility:cropMode="rectangle"
             juility:fixedAspectRatio="true"
 
@@ -87,9 +88,7 @@
             juility:handleLineColor="#FF00CC00"
             juility:handleLineLength="20dp"
             juility:handleLineShowMode="show_always"
-            juility:handleLineWidth="2dp"
-
-            juility:minFrameWidth="4dp"/>
+            juility:handleLineWidth="2dp"/>
     </FrameLayout>
 
 </RelativeLayout>

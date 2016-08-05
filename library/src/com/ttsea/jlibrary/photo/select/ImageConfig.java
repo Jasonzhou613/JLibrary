@@ -95,6 +95,14 @@ public class ImageConfig implements Serializable {
         return builder.fixedAspectRatio;
     }
 
+    public boolean isCanMoveFrame() {
+        return builder.canMoveFrame;
+    }
+
+    public boolean isCanDragFrameConner() {
+        return builder.canDragFrameConner;
+    }
+
     @Override
     public String toString() {
         return "ImageConfig{" +
@@ -129,6 +137,8 @@ public class ImageConfig implements Serializable {
         private int cropModel = CropView.CROP_MODE_RECTANGLE;
         private boolean returnData = false;
         private boolean fixedAspectRatio = true;
+        private boolean canMoveFrame = false;
+        private boolean canDragFrameConner = false;
 
         public Builder(Context context) {
             this.mContext = context;
@@ -245,6 +255,18 @@ public class ImageConfig implements Serializable {
             return this;
         }
 
+        /** 按住剪切框中间，是否可以拖动整个剪切框, 默认为false */
+        public Builder setCanMoveFrame(boolean canMoveFrame) {
+            this.canMoveFrame = canMoveFrame;
+            return this;
+        }
+
+        /** 按住剪切框四个角，是否可以拖动剪切框的四个角 */
+        public Builder setCanDragFrameConner(boolean canDragFrameConner) {
+            this.canDragFrameConner = canDragFrameConner;
+            return this;
+        }
+
         public ImageConfig build() {
             if (this.pathList == null) {
                 this.pathList = new ArrayList<String>();
@@ -278,6 +300,8 @@ public class ImageConfig implements Serializable {
                     ", cropModel=" + cropModel +
                     ", returnData=" + returnData +
                     ", fixedAspectRatio=" + fixedAspectRatio +
+                    ", canMoveFrame=" + canMoveFrame +
+                    ", canDragFrameConner=" + canDragFrameConner +
                     '}';
         }
     }

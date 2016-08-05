@@ -53,8 +53,10 @@ public class CropActivity extends BaseActivity implements View.OnClickListener {
     private int outputX;
     private int outputY;
     private int cropModel;
-    private boolean return_data = false;
-    private boolean fixedAspectRatio = true;
+    private boolean return_data;
+    private boolean canMoveFrame = false;
+    private boolean canDragFrameConner = false;
+    private boolean fixedAspectRatio;
 
     private final int DEFAULT_INT = 0;
     private final String DEFAULT_SUFFIX = ".jpg";
@@ -87,7 +89,10 @@ public class CropActivity extends BaseActivity implements View.OnClickListener {
             outputY = bundle.getInt(CropConstants.OUTPUT_Y, DEFAULT_INT);
             cropModel = bundle.getInt(CropConstants.CROP_MODEL, CropView.CROP_MODE_RECTANGLE);
             return_data = bundle.getBoolean(CropConstants.RETURN_DATA, false);
-            fixedAspectRatio = bundle.getBoolean(CropConstants.FIXED_ASPECT_RATIO, false);
+            fixedAspectRatio = bundle.getBoolean(CropConstants.FIXED_ASPECT_RATIO, true);
+            canMoveFrame = bundle.getBoolean(CropConstants.CAN_MOVE_FRAME, false);
+            canDragFrameConner = bundle.getBoolean(CropConstants.CAN_DRAG_FRAME_CONNER, false);
+
             if (Utils.isEmpty(imagePath)) {
                 imagePath = bundle.getString(CropConstants.IMAGE_PATH);
             }
@@ -170,6 +175,9 @@ public class CropActivity extends BaseActivity implements View.OnClickListener {
         cropView.setFixedAspectRatio(fixedAspectRatio);
         cropView.setCropMode(CropView.CROP_MODE_RECTANGLE);
         cropView.setCropImageView(ivCropImageView);
+        cropView.setCropMode(cropModel);
+        cropView.setCanMoveFrame(canMoveFrame);
+        cropView.setCanDragFrameConner(canDragFrameConner);
     }
 
     @Override
@@ -199,6 +207,9 @@ public class CropActivity extends BaseActivity implements View.OnClickListener {
      * @return
      */
     private Uri saveBitmap(Bitmap bitmap) {
+        if (bitmap == null) {
+            return null;
+        }
         Uri uri = null;
         try {
             String fileName = "crop_" + DateUtils.getCurrentTime("yyyyMMdd_HHmmss") + imageSuffix;

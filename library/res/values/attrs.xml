@@ -6,8 +6,6 @@
             <enum name="rectangle" value="1"/>
             <enum name="oval" value="2"/>
         </attr>
-        <!-- 剪切框的最小值 -->
-        <attr name="minFrameWidth" format="dimension"/>
 
         <!-- 剪切边框的显示模式 -->
         <attr name="frameLineShowMode" format="integer">
@@ -51,7 +49,11 @@
         <!-- 剪切时阴影部分的颜色 -->
         <attr name="frameShadowColor" format="color"/>
 
-        <!-- 是否需要保持长宽比 -->
+        <!-- 按住剪切框中间，是否可以拖动 -->
+        <attr name="canMoveFrame" format="boolean"/>
+        <!-- 按住剪切框四个角，是否可以拖动剪切框的四个角 -->
+        <attr name="canDragFrameConner" format="boolean"/>
+        <!-- 是否需要保持长宽比，只有当canDragFrameConner为true时才生效 -->
         <attr name="fixedAspectRatio" format="boolean"/>
     </declare-styleable>
 
