@@ -13,7 +13,7 @@ import android.widget.ImageView;
  * <b>last modified date:</b> 2016/7/19 10:27
  */
 public class ImageLoader {
-    private final String TAG = "ImageLoader";
+    private final String TAG = "Common.ImageLoader";
 
     private static ImageLoader loader;
 

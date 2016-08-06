@@ -22,7 +22,7 @@ import com.ttsea.jlibrary.common.JLog;
  * <b>last modified date:</b> 2016/2/19 16:16
  */
 public class CropView extends View {
-    private final String TAG = "CropView";
+    private final String TAG = "Crop.CropView";
 
     /** 剪切模式，矩形 */
     public static final int CROP_MODE_RECTANGLE = 0x01;

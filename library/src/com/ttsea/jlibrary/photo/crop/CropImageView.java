@@ -16,7 +16,7 @@ import android.view.ScaleGestureDetector;
  * <b>last modified date:</b> 2016/2/19 16:16
  */
 public class CropImageView extends BaseCropImageView {
-    private final String TAG = "CropImageView";
+    private final String TAG = "Crop.CropImageView";
 
     private static final int DOUBLE_TAP_ZOOM_DURATION = 200;
 

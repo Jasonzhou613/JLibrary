@@ -34,11 +34,13 @@ public class BaseFragmentActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = this;
+
         ExitApplication.getInstance().addActivity(mActivity);
         //调试模式下，使其能够使用hierarchyview
         if (JLog.isDebugMode()) {
             ViewServer.get(mActivity).addWindow(this);
         }
+
         init();
     }
 
@@ -187,6 +189,16 @@ public class BaseFragmentActivity extends FragmentActivity {
         return mActivity.getResources().getString(resId);
     }
 
+    /**
+     * 通过id获取颜色值
+     *
+     * @param resId color id
+     * @return int
+     */
+    public int getColorById(int resId) {
+        return mActivity.getResources().getColor(resId);
+    }
+
     /** toast 消息 */
     public void toastMessage(String msg) {
         if (msg != null) {
@@ -209,14 +221,9 @@ public class BaseFragmentActivity extends FragmentActivity {
         mToast.show();
     }
 
-    /**
-     * 通过id获取颜色值
-     *
-     * @param resId color id
-     * @return int
-     */
-    public int getColorById(int resId) {
-        return mActivity.getResources().getColor(resId);
+    /** 单例toast，toast不会重复 */
+    public void showToast(int resId) {
+        showToast(getStringById(resId));
     }
 
     /** finish该acitivity，并且设置resultCode */

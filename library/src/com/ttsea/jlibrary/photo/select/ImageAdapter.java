@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class ImageAdapter extends BaseAdapter {
-    private final String TAG = "ImageAdapter";
+    private final String TAG = "Select.ImageAdapter";
 
     private Context context;
     private LayoutInflater mInflater;

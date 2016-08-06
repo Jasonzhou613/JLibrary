@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class FolderAdapter extends BaseAdapter {
-    private final String TAG = "FolderAdapter";
+    private final String TAG = "Select.FolderAdapter";
 
     private Context mContext;
     private LayoutInflater mLayoutInflater;

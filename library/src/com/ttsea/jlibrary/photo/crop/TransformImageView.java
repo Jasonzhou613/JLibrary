@@ -28,7 +28,7 @@ import com.ttsea.jlibrary.utils.BitmapUtils;
  * <b>last modified date:</b> 2016/2/19 16:13
  */
 class TransformImageView extends ImageView {
-    private final String TAG = "TransformImageView";
+    private final String TAG = "Crop.TransformImageView";
 
     /** 是否允许缩放，默认为true */
     private boolean canScale = true;

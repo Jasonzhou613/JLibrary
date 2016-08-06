@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImageSelectorFragment extends Fragment {
-    private final String TAG = "ImageSelectorFragment";
+    private final String TAG = "Select.ImageSelectorFragment";
 
     private final int LOADER_TYPE_ALL = 0;
     private final int LOADER_TYPE_CATEGORY = 1;

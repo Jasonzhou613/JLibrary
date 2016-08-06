@@ -16,7 +16,7 @@ import com.ttsea.jlibrary.common.JLog;
  * <b>last modified date:</b> 2016/3/4 10:11
  */
 class RectUtils {
-    private static final String TAG = "RectUtils";
+    private static final String TAG = "Crop.RectUtils";
 
     /**
      * 判断由 left,top,right,bottom组成的矩形，平移offsetX后是否还被包含在boundsRect中

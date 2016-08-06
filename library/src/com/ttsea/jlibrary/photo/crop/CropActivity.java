@@ -34,7 +34,7 @@ import java.io.IOException;
  * <b>last modified date:</b> 2016/2/18 10:42
  */
 public class CropActivity extends BaseActivity implements View.OnClickListener {
-    private final String TAG = "CropActivity";
+    private final String TAG = "Crop.CropActivity";
 
     private CropView cropView;
     private CropImageView ivCropImageView;

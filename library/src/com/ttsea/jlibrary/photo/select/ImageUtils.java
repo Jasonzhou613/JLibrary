@@ -24,7 +24,7 @@ import java.util.Locale;
  * <b>last modified date:</b> 2016/7/13 10:45
  */
 class ImageUtils {
-    private static final String TAG = "ImageUtils";
+    private static final String TAG = "Select.ImageUtils";
 
     public static String formatPhotoDate(String filePath) {
         File file = new File(filePath);

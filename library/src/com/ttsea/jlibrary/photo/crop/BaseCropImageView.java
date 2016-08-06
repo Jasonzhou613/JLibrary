@@ -21,7 +21,7 @@ import java.lang.ref.WeakReference;
  * <b>last modified date:</b> 2016/2/19 16:16
  */
 public class BaseCropImageView extends TransformImageView {
-    private final String TAG = "BaseCropImageView";
+    private final String TAG = "Crop.BaseCropImageView";
 
     private final int DEFAULT_MAX_BITMAP_SIZE = 0;
     private final int DEFAULT_IMAGE_TO_CROP_BOUNDS_ANIM_DURATION = 500;

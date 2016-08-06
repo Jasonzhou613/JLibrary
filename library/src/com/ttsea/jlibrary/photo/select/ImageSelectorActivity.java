@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class ImageSelectorActivity extends BaseFragmentActivity implements View.OnClickListener,
         ImageSelectorFragment.OnImageSelectListener {
-    private final String TAG = "ImageSelectorActivity";
+    private final String TAG = "Select.ImageSelectorActivity";
 
     private ArrayList<String> selectedList;
     private ImageConfig imageConfig;
