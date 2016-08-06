@@ -23,7 +23,6 @@ import android.view.MotionEvent;
 import android.view.View;
 
 class Compat {
-
     private static final int SIXTY_FPS_INTERVAL = 1000 / 60;
 
     public static void postOnAnimation(View view, Runnable runnable) {
@@ -56,5 +55,4 @@ class Compat {
     private static int getPointerIndexHoneyComb(int action) {
         return (action & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
     }
-
 }

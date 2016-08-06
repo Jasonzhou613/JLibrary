@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011, 2012 Chris Banes.
- * <p>
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,18 +16,19 @@
 package com.ttsea.jlibrary.photo.gallery;
 
 import android.content.Context;
-import android.util.FloatMath;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 
+import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.photo.gallery.VersionedGestureDetector.OnGestureListener;
 
-public class CupcakeGestureDetector implements GestureDetector {
+import java.util.jar.JarEntry;
 
+class CupcakeGestureDetector implements GestureDetector {
+    private final String TAG = "Gallery.CupcakeGestureDetector";
     protected OnGestureListener mListener;
-    private static final String LOG_TAG = "CupcakeGestureDetector";
     float mLastTouchX;
     float mLastTouchY;
     final float mTouchSlop;
@@ -67,7 +68,7 @@ public class CupcakeGestureDetector implements GestureDetector {
                 if (null != mVelocityTracker) {
                     mVelocityTracker.addMovement(ev);
                 } else {
-                    Log.i(LOG_TAG, "Velocity tracker is null");
+                    JLog.d(TAG, "Velocity tracker is null");
                 }
 
                 mLastTouchX = getActiveX(ev);

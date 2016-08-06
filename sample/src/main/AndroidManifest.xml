@@ -47,6 +47,16 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="com.ttsea.jlibrary.photo.gallery.GalleryActivity"
+            android:theme="@android:style/Theme.Light.NoTitleBar">
+            <intent-filter>
+                <action android:name="com.ttsea.photo.crop.action.GALLERY"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="image/*"/>
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

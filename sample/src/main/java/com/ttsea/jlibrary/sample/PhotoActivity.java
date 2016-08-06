@@ -12,12 +12,16 @@ import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.common.ImageLoader;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.photo.crop.CropView;
+import com.ttsea.jlibrary.photo.gallery.GalleryActivity;
 import com.ttsea.jlibrary.photo.select.ImageConfig;
+import com.ttsea.jlibrary.photo.select.ImageItem;
 import com.ttsea.jlibrary.photo.select.ImageSelector;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * //To do <br/>
@@ -53,6 +57,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         tvImagePath = (TextView) findViewById(R.id.tvImagePath);
 
         btnSelect.setOnClickListener(this);
+        ivImage.setOnClickListener(this);
     }
 
     private void initData() {
@@ -87,9 +92,33 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 selectPhoto();
                 break;
 
+            case R.id.ivImage:
+                browseImages(selectedList);
+                break;
+
             default:
                 break;
         }
+    }
+
+    private void browseImages(ArrayList<String> list) {
+        if (list == null || list.size() < 1) {
+            toastMessage(R.string.image_no_picture);
+            return;
+        }
+        List<ImageItem> items = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            File file = new File(list.get(i));
+            ImageItem imageItem = new ImageItem(list.get(i), file.getName(), file.lastModified());
+            items.add(imageItem);
+        }
+
+        Intent intent = new Intent(mActivity, GalleryActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(GalleryActivity.KEY_SELECTED_LIST, (Serializable) items);
+        bundle.putInt(GalleryActivity.KEY_SELECTED_POSITION, 0);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, 1001);
     }
 
 //    private boolean mutiSelect = true;
@@ -167,7 +196,6 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 }
                 onSelectImageBack(selectedList);
             }
-
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

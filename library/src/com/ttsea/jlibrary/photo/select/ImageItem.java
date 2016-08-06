@@ -65,7 +65,6 @@ public class ImageItem implements Serializable {
                 || path.toLowerCase().startsWith("https")) {
             return true;
         }
-
         return false;
     }
 

@@ -32,7 +32,6 @@ package com.ttsea.jlibrary.photo.gallery;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.util.FloatMath;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.ScaleGestureDetector.OnScaleGestureListener;
@@ -40,7 +39,7 @@ import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 
 public abstract class VersionedGestureDetector {
-    static final String LOG_TAG = "VersionedGestureDetector";
+    static final String TAG = "Gallery.VersionedGestureDetector";
     OnGestureListener mListener;
 
     public static VersionedGestureDetector newInstance(Context context,
