@@ -4,19 +4,6 @@
                 android:layout_height="match_parent"
                 android:background="@android:color/black">
 
-    <TextView
-        android:id="@+id/tvDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#CC000000"
-        android:hint="@string/image_temp_date"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10sp"
-        android:paddingTop="5dp"
-        android:textColor="@color/gray"
-        android:textColorHint="@color/gray"
-        android:textSize="14sp"/>
-
     <RelativeLayout
         android:id="@+id/rlyBottomView"
         android:layout_width="match_parent"
@@ -61,6 +48,20 @@
         android:layout_centerInParent="true"
         android:text="@string/image_no_picture"
         android:textColor="@color/white"
+        android:textSize="14sp"
         android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#CC000000"
+        android:hint="@string/image_temp_date"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10sp"
+        android:paddingTop="5dp"
+        android:textColor="@color/gray"
+        android:textColorHint="@color/gray"
+        android:textSize="14sp"/>
 
 </RelativeLayout>
