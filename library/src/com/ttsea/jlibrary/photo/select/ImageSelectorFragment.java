@@ -109,7 +109,7 @@ public class ImageSelectorFragment extends Fragment {
         imageList = new ArrayList<>();
 
         imageConfig = ImageSelector.getImageConfig();
-        folderAdapter = new FolderAdapter(mActivity, imageConfig);
+        folderAdapter = new FolderAdapter(mActivity);
         imageAdapter = new ImageAdapter(mActivity, imageList);
         imageAdapter.setShowCamera(imageConfig.isShowCamera());
         imageAdapter.setShowSelectIndicator(imageConfig.isMutiSelect());

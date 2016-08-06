@@ -22,11 +22,9 @@ class FolderAdapter extends BaseAdapter {
     private List<Folder> folderList;
 
     private int lastSelected = 0;
-    private ImageConfig mImageConfig;
 
-    public FolderAdapter(Context context, ImageConfig imageConfig) {
+    public FolderAdapter(Context context) {
         this.mContext = context;
-        this.mImageConfig = imageConfig;
 
         init();
     }
