@@ -35,6 +35,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 
     private ImageView ivImage;
     private TextView tvImagePath;
+    private ArrayList<String> selectedList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         setContentView(R.layout.photo_main);
 
         initView();
+        initData();
     }
 
     private void initView() {
@@ -51,6 +53,10 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         tvImagePath = (TextView) findViewById(R.id.tvImagePath);
 
         btnSelect.setOnClickListener(this);
+    }
+
+    private void initData() {
+        selectedList = new ArrayList<>();
     }
 
     private void onSelectImageBack(ArrayList<String> list) {
@@ -120,6 +126,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 .setShowCamera(true)//是否显示拍照项，认为：true
                 //请求code，用于onActivityResult接收，默认为：ImageSelector.TAKE_PHOTO_BY_GALLERY
                 .setRequestCode(100)
+                .setPathList(selectedList)
 
                 .setCrop(true)//设置是否需要剪切,默认为：false，单选时生效
                 //设置剪切图片的输出路径
@@ -154,7 +161,11 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                     return;
                 }
                 ArrayList<String> list = data.getStringArrayListExtra(ImageSelector.KEY_SELECTED_LIST);
-                onSelectImageBack(list);
+                if (list != null) {
+                    selectedList.clear();
+                    selectedList.addAll(list);
+                }
+                onSelectImageBack(selectedList);
             }
 
         }

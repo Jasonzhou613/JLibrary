@@ -112,6 +112,7 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
             crop(new File(path));
         } else {
             Intent data = new Intent();
+            selectedList.clear();
             selectedList.add(path);
             data.putStringArrayListExtra(ImageSelector.KEY_SELECTED_LIST, selectedList);
             setResult(RESULT_OK, data);

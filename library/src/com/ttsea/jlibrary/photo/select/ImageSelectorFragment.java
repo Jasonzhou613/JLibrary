@@ -490,12 +490,16 @@ public class ImageSelectorFragment extends Fragment {
 
     public interface OnImageSelectListener {
 
+        /** 单选时，选择图片后触发 */
         void onSingleImageSelected(String path);
 
+        /** 多选时，选择图片后触发 */
         void onImageSelected(String path);
 
+        /** 取消选择图片后触发 */
         void onImageUnselected(String path);
 
+        /** 拍照后触发 */
         void onCameraShot(File imageFile);
     }
 }
