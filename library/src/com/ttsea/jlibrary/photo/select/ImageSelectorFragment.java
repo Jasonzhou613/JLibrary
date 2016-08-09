@@ -28,6 +28,7 @@ import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.common.JLog;
@@ -53,9 +54,9 @@ public class ImageSelectorFragment extends Fragment {
     private TextView tvNoPicture;
     private View popupAnchorView;
 
-    private ArrayList<String> resultList;
-    private List<Folder> folderList;
+    private List<ImageItem> resultList;
     private List<ImageItem> imageList;
+    private List<Folder> folderList;
 
     private OnImageSelectListener onImageSelectListener;
     private ImageAdapter imageAdapter;
@@ -194,6 +195,10 @@ public class ImageSelectorFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (imageAdapter.isShowCamera()) {
                     if (i == 0) {
+                        if (resultList.size() >= imageConfig.getMaxSize()) {
+                            JToast.makeTextCenter(mActivity, getStringById(R.string.image_msg_amount_limit));
+                            return;
+                        }
                         showCameraAction();
                     } else {
                         ImageItem image = (ImageItem) adapterView.getAdapter().getItem(i);
@@ -338,26 +343,26 @@ public class ImageSelectorFragment extends Fragment {
     private void selectImageFromGrid(ImageItem image, boolean isMulti) {
         if (image != null) {
             if (isMulti) {
-                if (resultList.contains(image.getPath())) {
-                    resultList.remove(image.getPath());
+                if (resultList.contains(image)) {
+                    resultList.remove(image);
                     if (onImageSelectListener != null) {
-                        onImageSelectListener.onImageUnselected(image.getPath());
+                        onImageSelectListener.onImageUnselected(image);
                     }
                 } else {
-                    if (imageConfig.getMaxSize() == resultList.size()) {
+                    if (resultList.size() >= imageConfig.getMaxSize()) {
                         JToast.makeTextCenter(mActivity, getStringById(R.string.image_msg_amount_limit));
                         return;
                     }
 
-                    resultList.add(image.getPath());
+                    resultList.add(image);
                     if (onImageSelectListener != null) {
-                        onImageSelectListener.onImageSelected(image.getPath());
+                        onImageSelectListener.onImageSelected(image);
                     }
                 }
                 imageAdapter.selectOrRemoveImage(image);
             } else {
                 if (onImageSelectListener != null) {
-                    onImageSelectListener.onSingleImageSelected(image.getPath());
+                    onImageSelectListener.onSingleImageSelected(image);
                 }
             }
         }
@@ -491,13 +496,13 @@ public class ImageSelectorFragment extends Fragment {
     public interface OnImageSelectListener {
 
         /** 单选时，选择图片后触发 */
-        void onSingleImageSelected(String path);
+        void onSingleImageSelected(ImageItem image);
 
         /** 多选时，选择图片后触发 */
-        void onImageSelected(String path);
+        void onImageSelected(ImageItem image);
 
         /** 取消选择图片后触发 */
-        void onImageUnselected(String path);
+        void onImageUnselected(ImageItem image);
 
         /** 拍照后触发 */
         void onCameraShot(File imageFile);

@@ -45,5 +45,15 @@
             android:textColor="@color/white"
             android:textSize="14sp"/>
 
+        <Button
+            android:id="@+id/btnRight02"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_toLeftOf="@+id/btnRight"
+            android:background="@color/transparent"
+            android:minWidth="48dp"
+            android:textColor="@color/white"
+            android:textSize="14sp"/>
+
     </RelativeLayout>
 </LinearLayout>

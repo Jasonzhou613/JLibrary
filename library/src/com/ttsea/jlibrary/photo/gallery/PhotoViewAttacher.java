@@ -170,7 +170,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
      * when the ImageView is no longer used. A good example is from
      * {@link View#onDetachedFromWindow()} or from
      * {@link android.app.Activity#onDestroy()}. This is automatically called if
-     * you are using {@link uk.co.senab.photoview.PhotoView}.
+     * you are using {@link PhotoView}.
      */
     @SuppressLint("NewApi")
     // @SuppressWarnings("deprecation")

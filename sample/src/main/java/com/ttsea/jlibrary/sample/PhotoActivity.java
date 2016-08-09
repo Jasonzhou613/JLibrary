@@ -3,6 +3,7 @@ package com.ttsea.jlibrary.sample;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,6 +14,7 @@ import com.ttsea.jlibrary.common.ImageLoader;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.photo.crop.CropView;
 import com.ttsea.jlibrary.photo.gallery.GalleryActivity;
+import com.ttsea.jlibrary.photo.gallery.GalleryConstants;
 import com.ttsea.jlibrary.photo.select.ImageConfig;
 import com.ttsea.jlibrary.photo.select.ImageItem;
 import com.ttsea.jlibrary.photo.select.ImageSelector;
@@ -39,7 +41,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 
     private ImageView ivImage;
     private TextView tvImagePath;
-    private ArrayList<String> selectedList;
+    private List<ImageItem> selectedList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,20 +66,21 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         selectedList = new ArrayList<>();
     }
 
-    private void onSelectImageBack(ArrayList<String> list) {
+    private void onSelectImageBack(List<ImageItem> list) {
         if (list == null) {
             toastMessage("选择图片出错");
             return;
         }
+        JLog.d(TAG, "list size:" + list.size());
         if (list.size() < 1) {
             toastMessage("未选择图片");
             return;
         }
 
-        ImageLoader.getInstance().displayImage(mActivity, "file://" + list.get(0), ivImage);
+        ImageLoader.getInstance().displayImage(mActivity, "file://" + list.get(0).getPath(), ivImage);
         String paths = "";
         for (int i = 0; i < list.size(); i++) {
-            paths = paths + "\n" + list.get(i);
+            paths = paths + "\n" + list.get(i).getPath();
         }
         tvImagePath.setText(paths);
     }
@@ -101,52 +104,20 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         }
     }
 
-    private void browseImages(ArrayList<String> list) {
-        if (list == null || list.size() < 1) {
+    private void browseImages(List<ImageItem> listImage) {
+        if (listImage == null || listImage.size() < 1) {
             toastMessage(R.string.image_no_picture);
             return;
         }
-        List<ImageItem> items = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            File file = new File(list.get(i));
-            ImageItem imageItem = new ImageItem(list.get(i), file.getName(), file.lastModified());
-            items.add(imageItem);
-        }
-
         Intent intent = new Intent(mActivity, GalleryActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(GalleryActivity.KEY_SELECTED_LIST, (Serializable) items);
-        bundle.putInt(GalleryActivity.KEY_SELECTED_POSITION, 0);
+        bundle.putSerializable(GalleryConstants.KEY_SELECTED_LIST, (Serializable) listImage);
+        bundle.putInt(GalleryConstants.KEY_SELECTED_POSITION, 0);
+        bundle.putBoolean(GalleryConstants.KEY_CAN_SAVE, true);
+        bundle.putBoolean(GalleryConstants.KEY_CAN_del, true);
         intent.putExtras(bundle);
-        startActivityForResult(intent, 1001);
+        startActivityForResult(intent, 101);
     }
-
-//    private boolean mutiSelect = true;
-//    private boolean showCamera = true;
-//    private int maxSize = 9;
-//
-//    private int titleBgColor = 0xFF000000;
-//    private int titleNameTextColor = 0xFFFFFFFF;
-//    private int titleOKTextColor = 0xFFFFFFFF;
-//    private int steepToolBarColor = 0xFF000000;
-//
-//    private int requestCode = ImageSelector.TAKE_PHOTO_BY_GALLERY;
-//
-//    private ArrayList<String> pathList;
-//
-//    //剪切图片常量
-//    private boolean crop = false;
-//    private String outPutPath;
-//    private String imageSuffix;
-//    private int aspectX;
-//    private int aspectY;
-//    private int outputX;
-//    private int outputY;
-//    private int cropModel = CropView.CROP_MODE_RECTANGLE;
-//    private boolean returnData = false;
-//    private boolean fixedAspectRatio = true;
-//    private boolean canMoveFrame = false;
-//    private boolean canDragFrameConner = false;
 
     private void selectPhoto() {
         ImageConfig config = new ImageConfig.Builder(this)
@@ -157,7 +128,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 .setRequestCode(100)
                 .setPathList(selectedList)
 
-                .setCrop(true)//设置是否需要剪切,默认为：false，单选时生效
+                .setCrop(false)//设置是否需要剪切,默认为：false，单选时生效
                 //设置剪切图片的输出路径
                 .setOutPutPath(CacheDirUtils.getTempDir(mActivity) + File.separator + "photo")
                 .setAspectX(4)//设置X比例
@@ -181,7 +152,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 100) {
+        if (requestCode == 100) {//选择图片回来
             if (resultCode == Activity.RESULT_CANCELED) {
                 toastMessage("你取消了选择图片");
             } else if (resultCode == Activity.RESULT_OK) {
@@ -189,13 +160,18 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                     toastMessage("选择图片出错");
                     return;
                 }
-                ArrayList<String> list = data.getStringArrayListExtra(ImageSelector.KEY_SELECTED_LIST);
+
+                List<ImageItem> list = (List<ImageItem>) data.getExtras()
+                        .getSerializable(ImageSelector.KEY_SELECTED_LIST);
+                ;
                 if (list != null) {
                     selectedList.clear();
                     selectedList.addAll(list);
                 }
                 onSelectImageBack(selectedList);
             }
+        } else if (requestCode == 101 && data != null) {
+
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

@@ -7,6 +7,7 @@ import com.ttsea.jlibrary.utils.CacheDirUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ImageConfig implements Serializable {
     private Builder builder;
@@ -51,7 +52,7 @@ public class ImageConfig implements Serializable {
         return builder.requestCode;
     }
 
-    public ArrayList<String> getPathList() {
+    public List<ImageItem> getPathList() {
         return builder.pathList;
     }
 
@@ -124,7 +125,7 @@ public class ImageConfig implements Serializable {
 
         private int requestCode = ImageSelector.TAKE_PHOTO_BY_GALLERY;
 
-        private ArrayList<String> pathList;
+        private List<ImageItem> pathList;
 
         //剪切图片常量
         private boolean crop = false;
@@ -188,7 +189,7 @@ public class ImageConfig implements Serializable {
             return this;
         }
 
-        public Builder setPathList(ArrayList<String> pathList) {
+        public Builder setPathList(List<ImageItem> pathList) {
             this.pathList = pathList;
             return this;
         }
@@ -269,7 +270,7 @@ public class ImageConfig implements Serializable {
 
         public ImageConfig build() {
             if (this.pathList == null) {
-                this.pathList = new ArrayList<String>();
+                this.pathList = new ArrayList<ImageItem>();
             }
             if (outPutPath == null) {
                 outPutPath = CacheDirUtils.getTempDir(mContext);

@@ -57,9 +57,6 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
     // 获取前一个activity传过来的position
     private int currentPosition;
 
-    public static final String KEY_SELECTED_LIST = "selected_list";
-    public static final String KEY_SELECTED_POSITION = "selected_position";
-
     @SuppressWarnings({"unchecked", "deprecation"})
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,8 +78,8 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
 
         Bundle bundle = intent.getExtras();
         selectedList = (List<ImageItem>) bundle
-                .getSerializable(KEY_SELECTED_LIST);
-        currentPosition = bundle.getInt(KEY_SELECTED_POSITION, 0);
+                .getSerializable(GalleryConstants.KEY_SELECTED_LIST);
+        currentPosition = bundle.getInt(GalleryConstants.KEY_SELECTED_POSITION, 0);
 
         if (selectedList == null || selectedList.size() == 0) {
             toastMessage(R.string.photo_not_select_pic);
@@ -169,7 +166,8 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
     private void onOkBtnClicked() {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(KEY_SELECTED_LIST, (Serializable) selectedList);
+        bundle.putSerializable(GalleryConstants.KEY_SELECTED_LIST,
+                (Serializable) selectedList);
         intent.putExtras(bundle);
         setResult(Activity.RESULT_OK, intent);
 

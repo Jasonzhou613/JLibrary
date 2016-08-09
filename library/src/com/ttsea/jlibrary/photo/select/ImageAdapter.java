@@ -43,27 +43,12 @@ class ImageAdapter extends BaseAdapter {
         selectedImageList = new ArrayList<ImageItem>();
     }
 
-    public void setDefaultSelected(ArrayList<String> resultList) {
-        for (String filePath : resultList) {
-            ImageItem image = getImageByPath(filePath);
-            if (image != null) {
-                selectedImageList.add(image);
-            }
+    public void setDefaultSelected(List<ImageItem> resultList) {
+        selectedImageList.clear();
+        if (resultList != null) {
+            selectedImageList.addAll(resultList);
         }
-        if (selectedImageList.size() > 0) {
-            notifyDataSetChanged();
-        }
-    }
-
-    private ImageItem getImageByPath(String filePath) {
-        if (imageList != null && imageList.size() > 0) {
-            for (ImageItem image : imageList) {
-                if (image.getPath().equalsIgnoreCase(filePath)) {
-                    return image;
-                }
-            }
-        }
-        return null;
+        notifyDataSetChanged();
     }
 
     public void setItemSize(int columnWidth) {

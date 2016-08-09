@@ -1,5 +1,6 @@
 package com.ttsea.jlibrary.photo.select;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,13 +16,15 @@ import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.photo.crop.CropConstants;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ImageSelectorActivity extends BaseFragmentActivity implements View.OnClickListener,
         ImageSelectorFragment.OnImageSelectListener {
     private final String TAG = "Select.ImageSelectorActivity";
 
-    private ArrayList<String> selectedList;
+    private List<ImageItem> selectedList;
     private ImageConfig imageConfig;
 
     private View llyTitleBar;
@@ -58,7 +61,7 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
 
         selectedList = imageConfig.getPathList();
         if (selectedList == null) {
-            selectedList = new ArrayList<String>();
+            selectedList = new ArrayList<ImageItem>();
         }
 
         refreshBtnRightStatus();
@@ -106,33 +109,35 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
     }
 
     @Override
-    public void onSingleImageSelected(String path) {
-        JLog.d(TAG, "onSingleImageSelected, path:" + path);
+    public void onSingleImageSelected(ImageItem image) {
+        JLog.d(TAG, "onSingleImageSelected, image:" + image.toString());
         if (imageConfig.isCrop()) {
-            crop(new File(path));
+            crop(new File(image.getPath()));
         } else {
-            Intent data = new Intent();
             selectedList.clear();
-            selectedList.add(path);
-            data.putStringArrayListExtra(ImageSelector.KEY_SELECTED_LIST, selectedList);
+            selectedList.add(image);
+            Intent data = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) selectedList);
+            data.putExtras(bundle);
             setResult(RESULT_OK, data);
             finish();
         }
     }
 
     @Override
-    public void onImageSelected(String path) {
-        JLog.d(TAG, "onImageSelected, add path:" + path);
-        if (!selectedList.contains(path)) {
-            selectedList.add(path);
+    public void onImageSelected(ImageItem image) {
+        JLog.d(TAG, "onImageSelected, add image:" + image.toString());
+        if (!selectedList.contains(image)) {
+            selectedList.add(image);
         }
         refreshBtnRightStatus();
     }
 
     @Override
-    public void onImageUnselected(String path) {
-        JLog.d(TAG, "onImageSelected, remove path:" + path);
-        selectedList.remove(path);
+    public void onImageUnselected(ImageItem image) {
+        JLog.d(TAG, "onImageSelected, remove image:" + image.toString());
+        selectedList.remove(image);
         refreshBtnRightStatus();
     }
 
@@ -143,10 +148,15 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
             if (imageConfig.isCrop() && !imageConfig.isMutiSelect()) {
                 crop(imageFile);
             } else {
+                if (!imageConfig.isMutiSelect()) {
+                    selectedList.clear();
+                }
+                selectedList.add(new ImageItem(imageFile.getAbsolutePath()));
                 Intent data = new Intent();
-                selectedList.add(imageFile.getAbsolutePath());
-                data.putStringArrayListExtra(ImageSelector.KEY_SELECTED_LIST, selectedList);
-                setResult(RESULT_OK, data);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) selectedList);
+                data.putExtras(bundle);
+                setResult(Activity.RESULT_OK, data);
                 finish();
             }
         }
@@ -159,8 +169,10 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
         } else if (v.getId() == R.id.btnRight) {//完成
             if (selectedList != null && selectedList.size() > 0) {
                 Intent data = new Intent();
-                data.putStringArrayListExtra(ImageSelector.KEY_SELECTED_LIST, selectedList);
-                setResult(RESULT_OK, data);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) selectedList);
+                data.putExtras(bundle);
+                setResult(Activity.RESULT_OK, data);
                 finish();
             }
         }
@@ -191,12 +203,14 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
                     return;
                 }
                 selectedList.clear();
-                selectedList.add(data.getData().getPath());
+                selectedList.add(new ImageItem(data.getData().getPath()));
                 JLog.d(TAG, "crop image back, imagePath:" + data.getData().getPath());
 
                 Intent intent = new Intent();
-                intent.putStringArrayListExtra(ImageSelector.KEY_SELECTED_LIST, selectedList);
-                setResult(RESULT_OK, intent);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) selectedList);
+                intent.putExtras(bundle);
+                setResult(Activity.RESULT_OK, data);
                 finish();
 
             } else if (resultCode == CropConstants.RESULT_CODE_CROP_CANCLED) {
@@ -204,7 +218,6 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
             } else if (resultCode == CropConstants.RESULT_CODE_CROP_ERROR) {
                 toastMessage("剪切图片出错");
             }
-
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

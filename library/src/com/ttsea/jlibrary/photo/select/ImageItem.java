@@ -2,6 +2,7 @@ package com.ttsea.jlibrary.photo.select;
 
 import com.ttsea.jlibrary.utils.Utils;
 
+import java.io.File;
 import java.io.Serializable;
 
 public class ImageItem implements Serializable {
@@ -15,6 +16,18 @@ public class ImageItem implements Serializable {
         this.path = path;
         this.name = name;
         this.time = time;
+    }
+
+    public ImageItem(String path) {
+        this.path = path;
+
+        File file = new File(path);
+        this.name = file.getName();
+        if (file.exists()) {
+            this.time = file.lastModified();
+        } else {
+            this.time = 0;
+        }
     }
 
     public String getPath() {
