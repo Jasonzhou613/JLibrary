@@ -114,7 +114,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         bundle.putSerializable(GalleryConstants.KEY_SELECTED_LIST, (Serializable) listImage);
         bundle.putInt(GalleryConstants.KEY_SELECTED_POSITION, 0);
         bundle.putBoolean(GalleryConstants.KEY_CAN_SAVE, true);
-        bundle.putBoolean(GalleryConstants.KEY_CAN_del, true);
+        bundle.putBoolean(GalleryConstants.KEY_CAN_DEL, true);
         intent.putExtras(bundle);
         startActivityForResult(intent, 101);
     }
@@ -128,7 +128,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 .setRequestCode(100)
                 .setPathList(selectedList)
 
-                .setCrop(false)//设置是否需要剪切,默认为：false，单选时生效
+                .setCrop(true)//设置是否需要剪切,默认为：false，单选时生效
                 //设置剪切图片的输出路径
                 .setOutPutPath(CacheDirUtils.getTempDir(mActivity) + File.separator + "photo")
                 .setAspectX(4)//设置X比例

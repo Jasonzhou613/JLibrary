@@ -33,5 +33,5 @@ public class GalleryConstants {
     /**
      * 是否显示删除图片按钮
      */
-    public static final String KEY_CAN_del = "can_save";
+    public static final String KEY_CAN_DEL = "can_del";
 }

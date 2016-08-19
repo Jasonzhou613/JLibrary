@@ -2,36 +2,54 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/photo_albumback">
+                android:background="@color/black">
 
     <include layout="@layout/title_bar"/>
-
-    <RelativeLayout
-        android:id="@+id/llyBottomView"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/black">
-
-        <Button
-            android:id="@+id/btnOK"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@color/white"
-            android:text="@string/finish"/>
-    </RelativeLayout>
 
     <com.ttsea.jlibrary.photo.gallery.ViewPagerFixed
         android:id="@+id/viwePager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/llyBottomView"
         android:layout_below="@+id/llyTitleBar"
         android:layout_centerHorizontal="true"
         android:background="@color/photo_black"
         android:unselectedAlpha="1">
     </com.ttsea.jlibrary.photo.gallery.ViewPagerFixed>
+
+    <RelativeLayout
+        android:id="@+id/llyBottomView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/translucent44">
+
+        <Button
+            android:id="@+id/btnSavePic"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/photo_btn_download_selector"/>
+
+        <TextView
+            android:id="@+id/tvIndex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="0/0"
+            android:textColor="@color/white"
+            android:textSize="12sp"/>
+
+        <Button
+            android:id="@+id/btnDelete"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/photo_btn_delete_selector"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

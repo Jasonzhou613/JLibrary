@@ -29,7 +29,12 @@
             android:layout_centerInParent="true"
             android:layout_marginLeft="48dp"
             android:layout_marginRight="48dp"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"
             android:text="@string/image_picture"
             android:textColor="@color/white"
             android:textSize="16sp"/>
@@ -46,7 +51,7 @@
             android:textSize="14sp"/>
 
         <Button
-            android:id="@+id/btnRight02"
+            android:id="@+id/btnRight2"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_toLeftOf="@+id/btnRight"

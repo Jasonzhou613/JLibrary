@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -46,16 +45,22 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
     private TextView tvTitleBarName;
     private Button btnLeft;
     private Button btnRight;
-    private Button btnOK;
+    private TextView tvIndex;
+    private Button btnSavePic;
+    private Button btnDelete;
 
     private ViewPagerFixed viwePager;
     private ArrayList<View> photoViews;
     private MyPageAdapter adapter;
 
-    // 获取前一个activity传过来的图片list
+    /** 获取前一个activity传过来的图片list */
     private List<ImageItem> selectedList;
-    // 获取前一个activity传过来的position
+    /** 获取前一个activity传过来的position */
     private int currentPosition;
+    /** 是否可保存图片, 默认为false */
+    private boolean canSave = false;
+    /** 是否可删除图片, 默认为false */
+    private boolean canDel = false;
 
     @SuppressWarnings({"unchecked", "deprecation"})
     @Override
@@ -64,22 +69,26 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
         setContentView(R.layout.photo_gallery_main);// 切屏到主界面
 
         Intent intent = getIntent();
-
-        tvTitleBarName = (TextView) findViewById(R.id.tvTitleBarName);
-        btnLeft = (Button) findViewById(R.id.btnLeft);
-        btnRight = (Button) findViewById(R.id.btnRight);
-        btnOK = (Button) findViewById(R.id.btnOK);
-        viwePager = (ViewPagerFixed) findViewById(R.id.viwePager);
-
-        btnLeft.setOnClickListener(this);
-        btnOK.setOnClickListener(this);
-        btnRight.setOnClickListener(this);
-        viwePager.setOnPageChangeListener(this);
-
         Bundle bundle = intent.getExtras();
         selectedList = (List<ImageItem>) bundle
                 .getSerializable(GalleryConstants.KEY_SELECTED_LIST);
         currentPosition = bundle.getInt(GalleryConstants.KEY_SELECTED_POSITION, 0);
+        canSave = bundle.getBoolean(GalleryConstants.KEY_CAN_SAVE, false);
+        canDel = bundle.getBoolean(GalleryConstants.KEY_CAN_DEL, false);
+
+        tvTitleBarName = (TextView) findViewById(R.id.tvTitleBarName);
+        btnLeft = (Button) findViewById(R.id.btnLeft);
+        btnRight = (Button) findViewById(R.id.btnRight);
+        viwePager = (ViewPagerFixed) findViewById(R.id.viwePager);
+        tvIndex = (TextView) findViewById(R.id.tvIndex);
+        btnSavePic = (Button) findViewById(R.id.btnSavePic);
+        btnDelete = (Button) findViewById(R.id.btnDelete);
+
+        btnLeft.setOnClickListener(this);
+        btnRight.setOnClickListener(this);
+        btnSavePic.setOnClickListener(this);
+        btnDelete.setOnClickListener(this);
+        viwePager.setOnPageChangeListener(this);
 
         if (selectedList == null || selectedList.size() == 0) {
             toastMessage(R.string.photo_not_select_pic);
@@ -92,13 +101,16 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
             return;
         }
 
+        btnSavePic.setVisibility(canSave ? View.VISIBLE : View.INVISIBLE);
+        btnDelete.setVisibility(canDel ? View.VISIBLE : View.INVISIBLE);
+
         initPhotoViews();
         adapter = new MyPageAdapter(photoViews);
         viwePager.setAdapter(adapter);
         viwePager.setPageMargin(10);
         viwePager.setCurrentItem(currentPosition);
 
-        refreshOkBtn();
+        refreshTvIndex();
     }
 
     private void initPhotoViews() {
@@ -122,44 +134,6 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
             imgView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
                     LayoutParams.MATCH_PARENT));
             photoViews.add(imgView);
-        }
-    }
-
-    public void refreshOkBtn() {
-        if (selectedList.size() == 0) {
-            btnOK.setText("完成(" + 0 + "/" + selectedList.size() + ")");
-        } else {
-            btnOK.setText("完成(" + (currentPosition + 1) + "/"
-                    + selectedList.size() + ")");
-        }
-
-        if (selectedList.size() > 0) {
-            btnOK.setEnabled(true);
-            btnOK.setTextColor(Color.WHITE);
-        } else {
-            btnOK.setEnabled(false);
-            btnOK.setTextColor(Color.parseColor("#E1E0DE"));
-        }
-    }
-
-    /** 监听返回按钮 */
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            onOkBtnClicked();
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.btnLeft || id == R.id.btnOK) {
-            onOkBtnClicked();
-        } else if (id == R.id.btnRight) {
-            onDeleteBtnClicked();
-        } else {
         }
     }
 
@@ -190,8 +164,40 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
             viwePager.setAdapter(adapter);
             viwePager.setCurrentItem(currentPosition, true);
         }
-        refreshOkBtn();
+        refreshTvIndex();
     }
+
+    public void refreshTvIndex() {
+        if (selectedList.size() <= 1) {
+            tvIndex.setVisibility(View.INVISIBLE);
+        } else {
+            tvIndex.setVisibility(View.VISIBLE);
+        }
+        tvIndex.setText((currentPosition + 1) + "/" + selectedList.size());
+    }
+
+    /** 监听返回按钮 */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            onOkBtnClicked();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.btnLeft || id == R.id.btnRight) {
+            onOkBtnClicked();
+        } else if (id == R.id.btnDelete) {
+            onDeleteBtnClicked();
+        } else if (id == R.id.btnSavePic) {
+            toastMessage("下载图片");
+        }
+    }
+
 
     @Override
     public void onPageScrollStateChanged(int arg0) {
@@ -206,7 +212,7 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
     @Override
     public void onPageSelected(int arg0) {
         currentPosition = arg0;
-        refreshOkBtn();
+        refreshTvIndex();
     }
 
     private class MyPageAdapter extends PagerAdapter {
