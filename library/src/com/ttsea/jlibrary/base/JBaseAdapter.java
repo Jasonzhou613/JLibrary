@@ -8,14 +8,14 @@ import java.util.List;
 
 /**
  * 适配器基类 <br/>
- * <p>
+ * <p/>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/8/6 9:20 <br/>
  * <b>author:</b> Jason <br/>
  * <b>version:</b> 1.0 <br/>
  * <b>last modified date:</b> 2016/8/6 9:20
  */
-abstract class JBaseAdapter<E> extends BaseAdapter {
+public abstract class JBaseAdapter<E> extends BaseAdapter {
     public final String TAG = JBaseAdapter.class.getSimpleName();
 
     public Context mContext;

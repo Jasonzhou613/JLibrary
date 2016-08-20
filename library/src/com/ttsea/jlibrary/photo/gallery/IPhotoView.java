@@ -4,7 +4,7 @@ import android.graphics.RectF;
 import android.view.View;
 import android.widget.ImageView;
 
-public interface IPhotoView {
+interface IPhotoView {
     /**
      * Returns true if the PhotoView is set to allow zooming of Photos.
      *

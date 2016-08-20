@@ -16,15 +16,12 @@
 package com.ttsea.jlibrary.photo.gallery;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.photo.gallery.VersionedGestureDetector.OnGestureListener;
-
-import java.util.jar.JarEntry;
 
 class CupcakeGestureDetector implements GestureDetector {
     private final String TAG = "Gallery.CupcakeGestureDetector";

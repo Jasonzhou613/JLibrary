@@ -31,7 +31,7 @@ import java.util.List;
  * 可以传入的参数有：<br/>
  * selected_list: 被选择了的照片列表<br/>
  * selected_position: 从哪个位置开始查看，从0开始，不能小于0，默认为0<br/>
- * <p/>
+ * <p>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2015.09.10 <br/>
  * <b>author:</b> Jason <br/>
@@ -70,8 +70,7 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        selectedList = (List<ImageItem>) bundle
-                .getSerializable(GalleryConstants.KEY_SELECTED_LIST);
+        selectedList = (List<ImageItem>) bundle.getSerializable(GalleryConstants.KEY_SELECTED_LIST);
         currentPosition = bundle.getInt(GalleryConstants.KEY_SELECTED_POSITION, 0);
         canSave = bundle.getBoolean(GalleryConstants.KEY_CAN_SAVE, false);
         canDel = bundle.getBoolean(GalleryConstants.KEY_CAN_DEL, false);
@@ -140,8 +139,7 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
     private void onOkBtnClicked() {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(GalleryConstants.KEY_SELECTED_LIST,
-                (Serializable) selectedList);
+        bundle.putSerializable(GalleryConstants.KEY_SELECTED_LIST, (Serializable) selectedList);
         intent.putExtras(bundle);
         setResult(Activity.RESULT_OK, intent);
 
@@ -156,7 +154,7 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
         } else if (currentPosition != 0) {
             currentPosition--;
         }
-        if (photoViews.size() == 0) {
+        if (selectedList.size() == 0) {
             onOkBtnClicked();
         } else {
             // adapter.notifyDataSetChanged();
@@ -192,7 +190,8 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
         if (id == R.id.btnLeft || id == R.id.btnRight) {
             onOkBtnClicked();
         } else if (id == R.id.btnDelete) {
-            onDeleteBtnClicked();
+            toastMessage("移除图片");
+            //onDeleteBtnClicked();
         } else if (id == R.id.btnSavePic) {
             toastMessage("下载图片");
         }

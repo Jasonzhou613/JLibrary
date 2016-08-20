@@ -113,7 +113,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         Bundle bundle = new Bundle();
         bundle.putSerializable(GalleryConstants.KEY_SELECTED_LIST, (Serializable) listImage);
         bundle.putInt(GalleryConstants.KEY_SELECTED_POSITION, 0);
-        bundle.putBoolean(GalleryConstants.KEY_CAN_SAVE, true);
+        bundle.putBoolean(GalleryConstants.KEY_CAN_SAVE, false);
         bundle.putBoolean(GalleryConstants.KEY_CAN_DEL, true);
         intent.putExtras(bundle);
         startActivityForResult(intent, 101);
@@ -122,7 +122,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
     private void selectPhoto() {
         ImageConfig config = new ImageConfig.Builder(this)
                 .setMutiSelect(true)//设置是否是多选，默认为：true
-                .setMaxSize(9)//多选时，最多可选数量，默认为：9
+                .setMaxSize(19)//多选时，最多可选数量，默认为：9
                 .setShowCamera(true)//是否显示拍照项，认为：true
                 //请求code，用于onActivityResult接收，默认为：ImageSelector.TAKE_PHOTO_BY_GALLERY
                 .setRequestCode(100)

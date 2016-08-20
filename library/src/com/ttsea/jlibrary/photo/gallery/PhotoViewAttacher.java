@@ -19,7 +19,7 @@ import android.widget.ImageView.ScaleType;
 
 import java.lang.ref.WeakReference;
 
-public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
+ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         VersionedGestureDetector.OnGestureListener,
         GestureDetector.OnDoubleTapListener,
         ViewTreeObserver.OnGlobalLayoutListener {

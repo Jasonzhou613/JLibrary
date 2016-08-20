@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 import com.ttsea.jlibrary.common.JLog;
 
 public class ViewPagerFixed extends android.support.v4.view.ViewPager {
-    private final String TAG = "ViewPagerFixed";
+    private final String TAG = "Gallery.ViewPagerFixed";
 
     public ViewPagerFixed(Context context) {
         super(context);

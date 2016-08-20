@@ -46,8 +46,8 @@ public class CApplication extends Application {
                 .showImageOnFail(R.color.darkGray)// 加载失败显示的图片
                 .build();
 
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
-                this).memoryCacheExtraOptions(480, 800)
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+                .memoryCacheExtraOptions(480, 800)
                 // 缓存在内存的图片的宽和高度
                 //.discCacheExtraOptions(480, 800, Bitmap.CompressFormat.PNG, 70, null)
                 // CompressFormat.PNG类型，70质量（0-100）
@@ -56,8 +56,8 @@ public class CApplication extends Application {
                 .discCacheSize(50 * 1024 * 1024)// 缓存到文件的最大数据
                 .discCacheFileCount(1000) // 文件数量
                 .discCache(new UnlimitedDiscCache(cacheDir))// 自定义缓存路径
-                .defaultDisplayImageOptions(options). // 上面的options对象，一些属性配置
-                build();
+                .defaultDisplayImageOptions(options)// 上面的options对象，一些属性配置
+                .build();
 
         ImageLoader.getInstance().init(config); // 初始化
     }
