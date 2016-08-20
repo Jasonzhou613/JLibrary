@@ -22,8 +22,8 @@ public class ImageItem implements Serializable {
         this.path = path;
 
         File file = new File(path);
-        this.name = file.getName();
         if (file.exists()) {
+            this.name = file.getName();
             this.time = file.lastModified();
         } else {
             this.time = 0;

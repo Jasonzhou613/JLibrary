@@ -1,6 +1,5 @@
 package com.ttsea.jlibrary.photo.gallery;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
@@ -8,7 +7,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,27 +15,25 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
+import com.ttsea.jlibrary.common.JLog;
+
 import java.lang.ref.WeakReference;
 
- class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
+class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         VersionedGestureDetector.OnGestureListener,
         GestureDetector.OnDoubleTapListener,
         ViewTreeObserver.OnGlobalLayoutListener {
 
-    static final String LOG_TAG = "PhotoViewAttacher";
+    private final String TAG = "Gallery.PhotoViewAttacher";
 
-    // let debug flag be dynamic, but still Proguard can be used to remove from
-    // release builds
-    static final boolean DEBUG = Log.isLoggable(LOG_TAG, Log.DEBUG);
+    private final int EDGE_NONE = -1;
+    private final int EDGE_LEFT = 0;
+    private final int EDGE_RIGHT = 1;
+    private final int EDGE_BOTH = 2;
 
-    static final int EDGE_NONE = -1;
-    static final int EDGE_LEFT = 0;
-    static final int EDGE_RIGHT = 1;
-    static final int EDGE_BOTH = 2;
-
-    public static final float DEFAULT_MAX_SCALE = 3.0f;
-    public static final float DEFAULT_MID_SCALE = 1.75f;
-    public static final float DEFAULT_MIN_SCALE = 1.0f;
+    private final float DEFAULT_MAX_SCALE = 5.0f;
+    private final float DEFAULT_MID_SCALE = 2.5f;
+    private final float DEFAULT_MIN_SCALE = 1.0f;
 
     private float mMinScale = DEFAULT_MIN_SCALE;
     private float mMidScale = DEFAULT_MID_SCALE;
@@ -45,14 +41,11 @@ import java.lang.ref.WeakReference;
 
     private boolean mAllowParentInterceptOnEdge = true;
 
-    private static void checkZoomLevels(float minZoom, float midZoom,
-                                        float maxZoom) {
+    private static void checkZoomLevels(float minZoom, float midZoom, float maxZoom) {
         if (minZoom >= midZoom) {
-            throw new IllegalArgumentException(
-                    "MinZoom should be less than MidZoom");
+            throw new IllegalArgumentException("MinZoom should be less than MidZoom");
         } else if (midZoom >= maxZoom) {
-            throw new IllegalArgumentException(
-                    "MidZoom should be less than MaxZoom");
+            throw new IllegalArgumentException("MidZoom should be less than MaxZoom");
         }
     }
 
@@ -66,15 +59,14 @@ import java.lang.ref.WeakReference;
     /**
      * @return true if the ScaleType is supported.
      */
-    private static boolean isSupportedScaleType(final ScaleType scaleType) {
+    private boolean isSupportedScaleType(ScaleType scaleType) {
         if (null == scaleType) {
             return false;
         }
 
         switch (scaleType) {
             case MATRIX:
-                throw new IllegalArgumentException(scaleType.name()
-                        + " is not supported in PhotoView");
+                return false;
 
             default:
                 return true;
@@ -84,7 +76,7 @@ import java.lang.ref.WeakReference;
     /**
      * Set's the ImageView's ScaleType to Matrix.
      */
-    private static void setImageViewScaleTypeMatrix(ImageView imageView) {
+    private void setImageViewScaleTypeMatrix(ImageView imageView) {
         if (null != imageView) {
             if (imageView instanceof PhotoView) {
                 /**
@@ -98,7 +90,7 @@ import java.lang.ref.WeakReference;
         }
     }
 
-    private WeakReference<ImageView> mImageView;
+    private WeakReference<ImageView> mImageViewRef;
     private ViewTreeObserver mViewTreeObserver;
 
     // Gesture Detectors
@@ -119,14 +111,14 @@ import java.lang.ref.WeakReference;
     private OnLongClickListener mLongClickListener;
 
     private int mIvTop, mIvRight, mIvBottom, mIvLeft;
-    private FlingRunnable mCurrentFlingRunnable;
     private int mScrollEdge = EDGE_BOTH;
+    private FlingRunnable mCurrentFlingRunnable;
 
     private boolean mZoomEnabled;
     private ScaleType mScaleType = ScaleType.FIT_CENTER;
 
     public PhotoViewAttacher(ImageView imageView) {
-        mImageView = new WeakReference<ImageView>(imageView);
+        mImageViewRef = new WeakReference<ImageView>(imageView);
 
         imageView.setOnTouchListener(this);
 
@@ -138,23 +130,20 @@ import java.lang.ref.WeakReference;
 
         if (!imageView.isInEditMode()) {
             // Create Gesture Detectors...
-            mScaleDragDetector = VersionedGestureDetector.newInstance(
-                    imageView.getContext(), this);
+            mScaleDragDetector = VersionedGestureDetector.newInstance(imageView.getContext(), this);
 
             mGestureDetector = new GestureDetector(imageView.getContext(),
                     new GestureDetector.SimpleOnGestureListener() {
-
                         // forward long click listener
                         @Override
                         public void onLongPress(MotionEvent e) {
                             if (null != mLongClickListener) {
-                                mLongClickListener.onLongClick(mImageView.get());
+                                mLongClickListener.onLongClick(mImageViewRef.get());
                             }
                         }
                     });
 
             mGestureDetector.setOnDoubleTapListener(this);
-
             // Finally, update the UI so that we're zoomable
             setZoomable(true);
         }
@@ -165,40 +154,15 @@ import java.lang.ref.WeakReference;
         return mZoomEnabled;
     }
 
-    /**
-     * Clean-up the resources attached to this object. This needs to be called
-     * when the ImageView is no longer used. A good example is from
-     * {@link View#onDetachedFromWindow()} or from
-     * {@link android.app.Activity#onDestroy()}. This is automatically called if
-     * you are using {@link PhotoView}.
-     */
-    @SuppressLint("NewApi")
-    // @SuppressWarnings("deprecation")
-    // public final void cleanup() {
-    // if (null != mImageView) {
-    // mImageView.get().getViewTreeObserver().removeGlobalOnLayoutListener(this);
-    // }
-    // mViewTreeObserver = null;
-    //
-    // // Clear listeners too
-    // mMatrixChangeListener = null;
-    // mPhotoTapListener = null;
-    // mViewTapListener = null;
-    //
-    // // Finally, clear ImageView
-    // mImageView = null;
-    // }
     @SuppressWarnings("deprecation")
     public final void cleanup() {
         if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN) {
-            if (null != mImageView) {
-                mImageView.get().getViewTreeObserver()
-                        .removeOnGlobalLayoutListener(this);
+            if (null != mImageViewRef) {
+                mImageViewRef.get().getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
 
             if (null != mViewTreeObserver && mViewTreeObserver.isAlive()) {
                 mViewTreeObserver.removeOnGlobalLayoutListener(this);
-
                 mViewTreeObserver = null;
 
                 // Clear listeners too
@@ -206,18 +170,16 @@ import java.lang.ref.WeakReference;
                 mPhotoTapListener = null;
                 mViewTapListener = null;
                 // Finally, clear ImageView
-                mImageView = null;
+                mImageViewRef = null;
             }
 
         } else {
-            if (null != mImageView) {
-                mImageView.get().getViewTreeObserver()
-                        .removeGlobalOnLayoutListener(this);
+            if (null != mImageViewRef) {
+                mImageViewRef.get().getViewTreeObserver().removeGlobalOnLayoutListener(this);
             }
 
             if (null != mViewTreeObserver && mViewTreeObserver.isAlive()) {
                 mViewTreeObserver.removeGlobalOnLayoutListener(this);
-
                 mViewTreeObserver = null;
 
                 // Clear listeners too
@@ -225,7 +187,7 @@ import java.lang.ref.WeakReference;
                 mPhotoTapListener = null;
                 mViewTapListener = null;
                 // Finally, clear ImageView
-                mImageView = null;
+                mImageViewRef = null;
             }
         }
     }
@@ -239,15 +201,14 @@ import java.lang.ref.WeakReference;
     public final ImageView getImageView() {
         ImageView imageView = null;
 
-        if (null != mImageView) {
-            imageView = mImageView.get();
+        if (null != mImageViewRef) {
+            imageView = mImageViewRef.get();
         }
 
         // If we don't have an ImageView, call cleanup()
         if (null == imageView) {
             cleanup();
-            throw new IllegalStateException(
-                    "ImageView no longer exists. You should not use this PhotoViewAttacher any more.");
+            throw new IllegalStateException("ImageView no longer exists. You should not use this PhotoViewAttacher any more.");
         }
 
         return imageView;
@@ -278,6 +239,7 @@ import java.lang.ref.WeakReference;
         return mScaleType;
     }
 
+    @Override
     public final boolean onDoubleTap(MotionEvent ev) {
         try {
             float scale = getScale();
@@ -292,21 +254,21 @@ import java.lang.ref.WeakReference;
                 zoomTo(mMinScale, x, y);
             }
         } catch (ArrayIndexOutOfBoundsException e) {
+            JLog.e(TAG, "ArrayIndexOutOfBoundsException e:" + e.toString());
             // Can sometimes happen when getX() and getY() is called
         }
 
         return true;
     }
 
+    @Override
     public final boolean onDoubleTapEvent(MotionEvent e) {
         // Wait for the confirmed onDoubleTap() instead
         return false;
     }
 
     public final void onDrag(float dx, float dy) {
-        if (DEBUG) {
-            Log.d(LOG_TAG, String.format("onDrag: dx: %.2f. dy: %.2f", dx, dy));
-        }
+        JLog.d(TAG, String.format("onDrag: dx: %.2f. dy: %.2f", dx, dy));
 
         ImageView imageView = getImageView();
 
@@ -327,20 +289,16 @@ import java.lang.ref.WeakReference;
                 if (mScrollEdge == EDGE_BOTH
                         || (mScrollEdge == EDGE_LEFT && dx >= 1f)
                         || (mScrollEdge == EDGE_RIGHT && dx <= -1f)) {
-                    imageView.getParent().requestDisallowInterceptTouchEvent(
-                            false);
+                    imageView.getParent().requestDisallowInterceptTouchEvent(false);
                 }
             }
         }
     }
 
     @Override
-    public final void onFling(float startX, float startY, float velocityX,
-                              float velocityY) {
-        if (DEBUG) {
-            Log.d(LOG_TAG, "onFling. sX: " + startX + " sY: " + startY
-                    + " Vx: " + velocityX + " Vy: " + velocityY);
-        }
+    public final void onFling(float startX, float startY, float velocityX, float velocityY) {
+        JLog.d(TAG, "onFling. sX: " + startX + " sY: " + startY
+                + " Vx: " + velocityX + " Vy: " + velocityY);
 
         ImageView imageView = getImageView();
         if (hasDrawable(imageView)) {
@@ -382,12 +340,9 @@ import java.lang.ref.WeakReference;
         }
     }
 
+    @Override
     public final void onScale(float scaleFactor, float focusX, float focusY) {
-        if (DEBUG) {
-            Log.d(LOG_TAG, String.format(
-                    "onScale: scale: %.2f. fX: %.2f. fY: %.2f", scaleFactor,
-                    focusX, focusY));
-        }
+        JLog.d(TAG, String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f", scaleFactor, focusX, focusY));
 
         if (hasDrawable(getImageView())
                 && (getScale() < mMaxScale || scaleFactor < 1f)) {
@@ -408,14 +363,10 @@ import java.lang.ref.WeakReference;
 
                     // Check to see if the user tapped on the photo
                     if (displayRect.contains(x, y)) {
+                        float xResult = (x - displayRect.left) / displayRect.width();
+                        float yResult = (y - displayRect.top) / displayRect.height();
 
-                        float xResult = (x - displayRect.left)
-                                / displayRect.width();
-                        float yResult = (y - displayRect.top)
-                                / displayRect.height();
-
-                        mPhotoTapListener.onPhotoTap(imageView, xResult,
-                                yResult);
+                        mPhotoTapListener.onPhotoTap(imageView, xResult, yResult);
                         return true;
                     }
                 }
@@ -424,7 +375,6 @@ import java.lang.ref.WeakReference;
                 mViewTapListener.onViewTap(imageView, e.getX(), e.getY());
             }
         }
-
         return false;
     }
 
@@ -435,12 +385,9 @@ import java.lang.ref.WeakReference;
         if (mZoomEnabled) {
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    // First, disable the Parent from intercepting the touch
-                    // event
+                    // First, disable the Parent from intercepting the touch event
                     v.getParent().requestDisallowInterceptTouchEvent(true);
-
-                    // If we're flinging, and the user presses down, cancel
-                    // fling
+                    // If we're flinging, and the user presses down, cancel fling
                     cancelFling();
                     break;
 
@@ -521,7 +468,6 @@ import java.lang.ref.WeakReference;
     public final void setScaleType(ScaleType scaleType) {
         if (isSupportedScaleType(scaleType) && scaleType != mScaleType) {
             mScaleType = scaleType;
-
             // Finally update
             update();
         }
@@ -540,7 +486,6 @@ import java.lang.ref.WeakReference;
             if (mZoomEnabled) {
                 // Make sure we using MATRIX Scale Type
                 setImageViewScaleTypeMatrix(imageView);
-
                 // Update the base matrix using the current drawable
                 updateBaseMatrix(imageView.getDrawable());
             } else {
@@ -555,8 +500,7 @@ import java.lang.ref.WeakReference;
         ImageView imageView = getImageView();
 
         if (null != imageView) {
-            imageView.post(new AnimatedZoomRunnable(getScale(), scale, focalX,
-                    focalY));
+            imageView.post(new AnimatedZoomRunnable(getScale(), scale, focalX, focalY));
         }
     }
 
@@ -590,8 +534,7 @@ import java.lang.ref.WeakReference;
          */
         if (null != imageView && !(imageView instanceof PhotoView)) {
             if (imageView.getScaleType() != ScaleType.MATRIX) {
-                throw new IllegalStateException(
-                        "The ImageView's ScaleType has been changed since attaching a PhotoViewAttacher");
+                throw new IllegalStateException("The ImageView's ScaleType has been changed since attaching a PhotoViewAttacher");
             }
         }
     }
@@ -616,15 +559,18 @@ import java.lang.ref.WeakReference;
                 case FIT_START:
                     deltaY = -rect.top;
                     break;
+
                 case FIT_END:
                     deltaY = viewHeight - height - rect.top;
                     break;
+
                 default:
                     deltaY = (viewHeight - height) / 2 - rect.top;
                     break;
             }
         } else if (rect.top > 0) {
             deltaY = -rect.top;
+
         } else if (rect.bottom < viewHeight) {
             deltaY = viewHeight - rect.bottom;
         }
@@ -635,20 +581,25 @@ import java.lang.ref.WeakReference;
                 case FIT_START:
                     deltaX = -rect.left;
                     break;
+
                 case FIT_END:
                     deltaX = viewWidth - width - rect.left;
                     break;
+
                 default:
                     deltaX = (viewWidth - width) / 2 - rect.left;
                     break;
             }
             mScrollEdge = EDGE_BOTH;
+
         } else if (rect.left > 0) {
             mScrollEdge = EDGE_LEFT;
             deltaX = -rect.left;
+
         } else if (rect.right < viewWidth) {
             deltaX = viewWidth - rect.right;
             mScrollEdge = EDGE_RIGHT;
+
         } else {
             mScrollEdge = EDGE_NONE;
         }
@@ -669,8 +620,7 @@ import java.lang.ref.WeakReference;
         if (null != imageView) {
             Drawable d = imageView.getDrawable();
             if (null != d) {
-                mDisplayRect.set(0, 0, d.getIntrinsicWidth(),
-                        d.getIntrinsicHeight());
+                mDisplayRect.set(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
                 matrix.mapRect(mDisplayRect);
                 return mDisplayRect;
             }
@@ -759,8 +709,7 @@ import java.lang.ref.WeakReference;
 
             switch (mScaleType) {
                 case FIT_CENTER:
-                    mBaseMatrix
-                            .setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
+                    mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER);
                     break;
 
                 case FIT_START:
@@ -789,7 +738,7 @@ import java.lang.ref.WeakReference;
      *
      * @author Chris Banes
      */
-    public static interface OnMatrixChangedListener {
+    public interface OnMatrixChangedListener {
         /**
          * Callback for when the Matrix displaying the Drawable has changed.
          * This could be because the View's bounds have changed, or the user has
@@ -806,7 +755,7 @@ import java.lang.ref.WeakReference;
      *
      * @author Chris Banes
      */
-    public static interface OnPhotoTapListener {
+    public interface OnPhotoTapListener {
 
         /**
          * A callback to receive where the user taps on a photo. You will only
@@ -828,7 +777,7 @@ import java.lang.ref.WeakReference;
      *
      * @author Chris Banes
      */
-    public static interface OnViewTapListener {
+    public interface OnViewTapListener {
 
         /**
          * A callback to receive where the user taps on a ImageView. You will
@@ -852,8 +801,8 @@ import java.lang.ref.WeakReference;
         private final float mTargetZoom;
         private final float mDeltaScale;
 
-        public AnimatedZoomRunnable(final float currentZoom,
-                                    final float targetZoom, final float focalX, final float focalY) {
+        public AnimatedZoomRunnable(final float currentZoom, final float targetZoom,
+                                    final float focalX, final float focalY) {
             mTargetZoom = targetZoom;
             mFocalX = focalX;
             mFocalY = focalY;
@@ -869,8 +818,7 @@ import java.lang.ref.WeakReference;
             ImageView imageView = getImageView();
 
             if (null != imageView) {
-                mSuppMatrix.postScale(mDeltaScale, mDeltaScale, mFocalX,
-                        mFocalY);
+                mSuppMatrix.postScale(mDeltaScale, mDeltaScale, mFocalX, mFocalY);
                 checkAndDisplayMatrix();
 
                 final float currentScale = getScale();
@@ -893,7 +841,6 @@ import java.lang.ref.WeakReference;
     }
 
     private class FlingRunnable implements Runnable {
-
         private final ScrollerProxy mScroller;
         private int mCurrentX, mCurrentY;
 
@@ -902,14 +849,11 @@ import java.lang.ref.WeakReference;
         }
 
         public void cancelFling() {
-            if (DEBUG) {
-                Log.d(LOG_TAG, "Cancel Fling");
-            }
+            JLog.d(TAG, "Cancel Fling");
             mScroller.forceFinished(true);
         }
 
-        public void fling(int viewWidth, int viewHeight, int velocityX,
-                          int velocityY) {
+        public void fling(int viewWidth, int viewHeight, int velocityX, int velocityY) {
             final RectF rect = getDisplayRect();
             if (null == rect) {
                 return;
@@ -936,15 +880,12 @@ import java.lang.ref.WeakReference;
             mCurrentX = startX;
             mCurrentY = startY;
 
-            if (DEBUG) {
-                Log.d(LOG_TAG, "fling. StartX:" + startX + " StartY:" + startY
-                        + " MaxX:" + maxX + " MaxY:" + maxY);
-            }
+            JLog.d(TAG, "fling. StartX:" + startX + " StartY:" + startY
+                    + " MaxX:" + maxX + " MaxY:" + maxY);
 
             // If we actually can move, fling the scroller
             if (startX != maxX || startY != maxY) {
-                mScroller.fling(startX, startY, velocityX, velocityY, minX,
-                        maxX, minY, maxY, 0, 0);
+                mScroller.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY, 0, 0);
             }
         }
 
@@ -956,11 +897,8 @@ import java.lang.ref.WeakReference;
                 final int newX = mScroller.getCurrX();
                 final int newY = mScroller.getCurrY();
 
-                if (DEBUG) {
-                    Log.d(LOG_TAG, "fling run(). CurrentX:" + mCurrentX
-                            + " CurrentY:" + mCurrentY + " NewX:" + newX
-                            + " NewY:" + newY);
-                }
+                JLog.d(TAG, "fling run(). CurrentX:" + mCurrentX + " CurrentY:" + mCurrentY
+                        + " NewX:" + newX + " NewY:" + newY);
 
                 mSuppMatrix.postTranslate(mCurrentX - newX, mCurrentY - newY);
                 setImageViewMatrix(getDisplayMatrix());

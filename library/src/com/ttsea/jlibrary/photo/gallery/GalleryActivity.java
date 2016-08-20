@@ -8,17 +8,23 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.Layout;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.ViewParent;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.common.ImageLoader;
+import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.photo.select.ImageItem;
 import com.ttsea.jlibrary.utils.BitmapUtils;
 
@@ -31,7 +37,7 @@ import java.util.List;
  * 可以传入的参数有：<br/>
  * selected_list: 被选择了的照片列表<br/>
  * selected_position: 从哪个位置开始查看，从0开始，不能小于0，默认为0<br/>
- * <p>
+ * <p/>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2015.09.10 <br/>
  * <b>author:</b> Jason <br/>
@@ -116,23 +122,70 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
         refreshPhotoViews();
     }
 
+    private void setLoadingViewVisibility(View childView, int visibility) {
+        View parent;
+        ViewParent viewParent = childView.getParent();
+        if (viewParent == null) {
+            return;
+        }
+        if (viewParent instanceof FrameLayout) {
+            parent = (FrameLayout) viewParent;
+        } else {
+            parent = childView.getRootView();
+        }
+
+        View v = parent.findViewById(R.id.pbProgress);
+        if (v != null) {
+            v.setVisibility(visibility);
+        }
+    }
+
     private void refreshPhotoViews() {
+        LayoutInflater inflater = LayoutInflater.from(mActivity);
         if (photoViews == null) {
             photoViews = new ArrayList<View>();
         }
         photoViews.clear();
-        for (int i = 0; i < selectedList.size(); i++) {
-            ImageItem item = selectedList.get(i);
-            PhotoView imgView = new PhotoView(this);
-            imgView.setBackgroundColor(0xff000000);
-            if (item.isNetWorkImage()) {
-                ImageLoader.getInstance().displayImage(mActivity, item.getPath(), imgView);
-            } else {
-                new LoadBitmapTask(imgView).execute(selectedList.get(i).getPath());
+
+        ImageLoader.ImageLoadingListener listener = new ImageLoader.ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String s, View view) {
+                setLoadingViewVisibility(view, View.VISIBLE);
             }
-            imgView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+
+            @Override
+            public void onLoadingFailed(String s, View view, String failReason) {
+                setLoadingViewVisibility(view, View.GONE);
+            }
+
+            @Override
+            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+                setLoadingViewVisibility(view, View.GONE);
+            }
+
+            @Override
+            public void onLoadingCancelled(String s, View view) {
+                setLoadingViewVisibility(view, View.GONE);
+            }
+        };
+
+
+        for (int i = 0; i < selectedList.size(); i++) {
+            View itemView = inflater.inflate(R.layout.photo_gallery_item, null);
+
+            PhotoView pvImage = (PhotoView) itemView.findViewById(R.id.pvImage);
+            pvImage.setBackgroundColor(0xff000000);
+
+            ImageItem item = selectedList.get(i);
+
+            if (item.isNetWorkImage()) {
+                ImageLoader.getInstance().displayImageForGallery(mActivity, item.getPath(), pvImage, listener);
+            } else {
+                ImageLoader.getInstance().displayImageForGallery(mActivity, "file://" + item.getPath(), pvImage, listener);
+            }
+            itemView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
                     LayoutParams.MATCH_PARENT));
-            photoViews.add(imgView);
+            photoViews.add(itemView);
         }
     }
 
@@ -225,47 +278,28 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
             return listViews.size();
         }
 
-        public void destroyItem(View arg0, int arg1, Object arg2) {
-            // ((ViewPagerFixed) arg0)
-            // .removeView(listViews.get(arg1 % getCount()));
-        }
+        public void destroyItem(View container, int position, Object object) {
+            JLog.d(TAG, "destroyItem, position:" + (position % getCount()));
 
-        public Object instantiateItem(View arg0, int arg1) {
             try {
-                ((ViewPagerFixed) arg0).addView(
-                        listViews.get(arg1 % getCount()), 0);
-
+                ((ViewPagerFixed) container).removeView(listViews.get(position % getCount()));
             } catch (Exception e) {
+                JLog.e(TAG, "Exception e:" + e.toString());
             }
-            return listViews.get(arg1 % getCount());
         }
 
-        public boolean isViewFromObject(View arg0, Object arg1) {
-            return arg0 == arg1;
-        }
-    }
-
-    private class LoadBitmapTask extends AsyncTask<String, Void, Bitmap> {
-        private ImageView iv;
-
-        public LoadBitmapTask(ImageView iv) {
-            this.iv = iv;
+        public Object instantiateItem(ViewGroup container, int position) {
+            try {
+                container.addView(listViews.get(position % getCount()), 0);
+            } catch (Exception e) {
+                JLog.e(TAG, "Exception e:" + e.toString());
+            }
+            JLog.d(TAG, "instantiateItem, position:" + (position % getCount()));
+            return listViews.get(position % getCount());
         }
 
-        @Override
-        protected void onPreExecute() {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.color.gray);
-            iv.setImageBitmap(bitmap);
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            return BitmapUtils.revisionImageSize(params[0]);
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            iv.setImageBitmap(result);
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
         }
     }
 }

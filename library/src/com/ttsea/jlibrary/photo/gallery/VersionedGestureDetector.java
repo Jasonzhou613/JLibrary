@@ -42,8 +42,7 @@ abstract class VersionedGestureDetector {
     private final String TAG = "Gallery.VersionedGestureDetector";
     protected OnGestureListener mListener;
 
-    public static VersionedGestureDetector newInstance(Context context,
-                                                       OnGestureListener listener) {
+    public static VersionedGestureDetector newInstance(Context context, OnGestureListener listener) {
         final int sdkVersion = Build.VERSION.SDK_INT;
         VersionedGestureDetector detector = null;
 
@@ -78,16 +77,14 @@ abstract class VersionedGestureDetector {
         float mLastTouchY;
         final float mTouchSlop;
         final float mMinimumVelocity;
+        private VelocityTracker mVelocityTracker;
+        private boolean mIsDragging;
 
         public CupcakeDetector(Context context) {
-            final ViewConfiguration configuration = ViewConfiguration
-                    .get(context);
+            final ViewConfiguration configuration = ViewConfiguration.get(context);
             mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
             mTouchSlop = configuration.getScaledTouchSlop();
         }
-
-        private VelocityTracker mVelocityTracker;
-        private boolean mIsDragging;
 
         float getActiveX(MotionEvent ev) {
             return ev.getX();
@@ -117,7 +114,8 @@ abstract class VersionedGestureDetector {
                 case MotionEvent.ACTION_MOVE: {
                     final float x = getActiveX(ev);
                     final float y = getActiveY(ev);
-                    final float dx = x - mLastTouchX, dy = y - mLastTouchY;
+                    final float dx = x - mLastTouchX;
+                    final float dy = y - mLastTouchY;
 
                     if (!mIsDragging) {
                         // Use Pythagoras to see if drag length is larger than touch slop
@@ -162,8 +160,7 @@ abstract class VersionedGestureDetector {
                             // If the velocity is greater than minVelocity, call
                             // listener
                             if (Math.max(Math.abs(vX), Math.abs(vY)) >= mMinimumVelocity) {
-                                mListener.onFling(mLastTouchX, mLastTouchY, -vX,
-                                        -vY);
+                                mListener.onFling(mLastTouchX, mLastTouchY, -vX, -vY);
                             }
                         }
                     }
@@ -183,7 +180,7 @@ abstract class VersionedGestureDetector {
 
     @TargetApi(5)
     private static class EclairDetector extends CupcakeDetector {
-        private static final int INVALID_POINTER_ID = -1;
+        private final int INVALID_POINTER_ID = -1;
         private int mActivePointerId = INVALID_POINTER_ID;
         private int mActivePointerIndex = 0;
 
@@ -216,10 +213,12 @@ abstract class VersionedGestureDetector {
                 case MotionEvent.ACTION_DOWN:
                     mActivePointerId = ev.getPointerId(0);
                     break;
+
                 case MotionEvent.ACTION_CANCEL:
                 case MotionEvent.ACTION_UP:
                     mActivePointerId = INVALID_POINTER_ID;
                     break;
+
                 case MotionEvent.ACTION_POINTER_UP:
                     final int pointerIndex = (ev.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
                     final int pointerId = ev.getPointerId(pointerIndex);
@@ -234,26 +233,21 @@ abstract class VersionedGestureDetector {
                     break;
             }
 
-            mActivePointerIndex = ev
-                    .findPointerIndex(mActivePointerId != INVALID_POINTER_ID ? mActivePointerId
-                            : 0);
+            mActivePointerIndex = ev.findPointerIndex(mActivePointerId != INVALID_POINTER_ID ? mActivePointerId : 0);
             return super.onTouchEvent(ev);
         }
     }
 
     @TargetApi(8)
     private static class FroyoDetector extends EclairDetector {
-
         private final ScaleGestureDetector mDetector;
 
-        // Needs to be an inner class so that we don't hit
-        // VerifyError's on API 4.
+        // Needs to be an inner class so that we don't hit  VerifyError's on API 4.
         private final OnScaleGestureListener mScaleListener = new OnScaleGestureListener() {
 
             @Override
             public boolean onScale(ScaleGestureDetector detector) {
-                mListener.onScale(detector.getScaleFactor(),
-                        detector.getFocusX(), detector.getFocusY());
+                mListener.onScale(detector.getScaleFactor(), detector.getFocusX(), detector.getFocusY());
                 return true;
             }
 
@@ -281,8 +275,8 @@ abstract class VersionedGestureDetector {
         @Override
         public boolean onTouchEvent(MotionEvent ev) {
             mDetector.onTouchEvent(ev);
+
             return super.onTouchEvent(ev);
         }
-
     }
 }

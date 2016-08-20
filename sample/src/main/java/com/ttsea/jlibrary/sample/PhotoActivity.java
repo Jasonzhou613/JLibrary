@@ -43,6 +43,16 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
     private TextView tvImagePath;
     private List<ImageItem> selectedList;
 
+    private final String[] testImages = new String[]{
+            "http://hws002.b0.upaiyun.com/team/2162187/20160820/859a27c6a61224fdbc140bf7b6f99f4d",
+            "http://hws002.b0.upaiyun.com/team/2162187/20160820/68ec5ce7a7694413e367cb2b22bbea49__",
+            "http://hws002.b0.upaiyun.com/team/2162187/20160820/8c748752d963790074bfae4302d0a84f",
+            "http://hws002.b0.upaiyun.com/team/2162187/20160820/7f39e67fb78adcbaad955b4466f74fe5",
+            "http://hws002.b0.upaiyun.com/team/2162187/20160820/8715b4585a1c5f7000b40fe0cbc243df",
+            "http://hws002.b0.upaiyun.com/team/2162187/20160820/677ef48b95d71957495a745bc6e64263",
+            "http://hws002.b0.upaiyun.com/team/2162187/20160820/fc90c4c9bb54dae3d63642cf20cbbc12"
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +106,12 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 break;
 
             case R.id.ivImage:
+                selectedList.clear();
+                for (int i = 0; i < testImages.length; i++) {
+                    ImageItem item = new ImageItem(testImages[i]);
+                    selectedList.add(item);
+                }
+
                 browseImages(selectedList);
                 break;
 
