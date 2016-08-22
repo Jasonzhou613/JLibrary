@@ -183,8 +183,8 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
             } else {
                 ImageLoader.getInstance().displayImageForGallery(mActivity, "file://" + item.getPath(), pvImage, listener);
             }
-            itemView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-                    LayoutParams.MATCH_PARENT));
+            itemView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
             photoViews.add(itemView);
         }
     }

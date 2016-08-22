@@ -13,8 +13,7 @@
         android:layout_below="@+id/llyTitleBar"
         android:layout_centerHorizontal="true"
         android:background="@color/photo_black"
-        android:unselectedAlpha="1">
-    </com.ttsea.jlibrary.photo.gallery.ViewPagerFixed>
+        android:unselectedAlpha="1"/>
 
     <RelativeLayout
         android:id="@+id/llyBottomView"

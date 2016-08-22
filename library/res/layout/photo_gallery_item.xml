@@ -11,9 +11,7 @@
 
     <ProgressBar
         android:id="@+id/pbProgress"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/Photo.Gallery.Progress.Style"
         android:layout_gravity="center"/>
 
 </FrameLayout>
