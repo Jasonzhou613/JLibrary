@@ -200,20 +200,20 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
     }
 
     private void onDeleteBtnClicked() {
+        int removePosition = currentPosition;
         selectedList.remove(currentPosition);
-        refreshPhotoViews();
-        if (currentPosition >= selectedList.size()) {
-            currentPosition = selectedList.size() - 1;
+        photoViews.remove(currentPosition);
+
+        if (currentPosition >= photoViews.size() && photoViews.size() != 0) {
+            currentPosition = photoViews.size() - 1;
         } else if (currentPosition != 0) {
             currentPosition--;
         }
-        if (selectedList.size() == 0) {
+        JLog.d(TAG, "removed position:" + removePosition + ", currentPosition:" + currentPosition);
+        adapter.notifyDataSetChanged();
+
+        if (photoViews.size() == 0) {
             onOkBtnClicked();
-        } else {
-            // adapter.notifyDataSetChanged();
-            adapter = new MyPageAdapter(photoViews);
-            viwePager.setAdapter(adapter);
-            viwePager.setCurrentItem(currentPosition, true);
         }
         refreshTvIndex();
     }
@@ -243,8 +243,7 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
         if (id == R.id.btnLeft || id == R.id.btnRight) {
             onOkBtnClicked();
         } else if (id == R.id.btnDelete) {
-            toastMessage("移除图片");
-            //onDeleteBtnClicked();
+            onDeleteBtnClicked();
         } else if (id == R.id.btnSavePic) {
             toastMessage("下载图片");
         }

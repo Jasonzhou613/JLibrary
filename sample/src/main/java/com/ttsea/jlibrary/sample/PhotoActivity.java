@@ -27,7 +27,7 @@ import java.util.List;
 
 /**
  * //To do <br/>
- * <p>
+ * <p/>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/7/12 15:40 <br/>
  * <b>author:</b> Jason <br/>
@@ -42,6 +42,9 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
     private ImageView ivImage;
     private TextView tvImagePath;
     private List<ImageItem> selectedList;
+
+    private final int REQUEST_CODE_SELECT_PIC = 100;
+    private final int REQUEST_CODE_BROWSE_PIC = 101;
 
     private final String[] testImages = new String[]{
             "http://hws002.b0.upaiyun.com/team/2162187/20160820/859a27c6a61224fdbc140bf7b6f99f4d",
@@ -78,11 +81,15 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 
     private void onSelectImageBack(List<ImageItem> list) {
         if (list == null) {
+            ImageLoader.getInstance().displayImage(mActivity, null, ivImage);
+            tvImagePath.setText("");
             toastMessage("选择图片出错");
             return;
         }
         JLog.d(TAG, "list size:" + list.size());
         if (list.size() < 1) {
+            ImageLoader.getInstance().displayImage(mActivity, null, ivImage);
+            tvImagePath.setText("");
             toastMessage("未选择图片");
             return;
         }
@@ -106,12 +113,11 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 break;
 
             case R.id.ivImage:
-                selectedList.clear();
-                for (int i = 0; i < testImages.length; i++) {
-                    ImageItem item = new ImageItem(testImages[i]);
-                    selectedList.add(item);
-                }
-
+//                selectedList.clear();
+//                for (int i = 0; i < testImages.length; i++) {
+//                    ImageItem item = new ImageItem(testImages[i]);
+//                    selectedList.add(item);
+//                }
                 browseImages(selectedList);
                 break;
 
@@ -132,7 +138,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         bundle.putBoolean(GalleryConstants.KEY_CAN_SAVE, false);
         bundle.putBoolean(GalleryConstants.KEY_CAN_DEL, true);
         intent.putExtras(bundle);
-        startActivityForResult(intent, 101);
+        startActivityForResult(intent, REQUEST_CODE_BROWSE_PIC);
     }
 
     private void selectPhoto() {
@@ -141,7 +147,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 .setMaxSize(19)//多选时，最多可选数量，默认为：9
                 .setShowCamera(true)//是否显示拍照项，认为：true
                 //请求code，用于onActivityResult接收，默认为：ImageSelector.TAKE_PHOTO_BY_GALLERY
-                .setRequestCode(100)
+                .setRequestCode(REQUEST_CODE_SELECT_PIC)
                 .setPathList(selectedList)
 
                 .setCrop(true)//设置是否需要剪切,默认为：false，单选时生效
@@ -168,7 +174,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 100) {//选择图片回来
+        if (requestCode == REQUEST_CODE_SELECT_PIC) {//选择图片回来
             if (resultCode == Activity.RESULT_CANCELED) {
                 toastMessage("你取消了选择图片");
             } else if (resultCode == Activity.RESULT_OK) {
@@ -179,15 +185,20 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 
                 List<ImageItem> list = (List<ImageItem>) data.getExtras()
                         .getSerializable(ImageSelector.KEY_SELECTED_LIST);
-                ;
                 if (list != null) {
                     selectedList.clear();
                     selectedList.addAll(list);
                 }
                 onSelectImageBack(selectedList);
             }
-        } else if (requestCode == 101 && data != null) {
-
+        } else if (requestCode == REQUEST_CODE_BROWSE_PIC && data != null) {
+            List<ImageItem> list = (List<ImageItem>) data.getExtras()
+                    .getSerializable(GalleryConstants.KEY_SELECTED_LIST);
+            if (list != null) {
+                selectedList.clear();
+                selectedList.addAll(list);
+            }
+            onSelectImageBack(selectedList);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
