@@ -65,7 +65,11 @@ public class JImageLoader {
                     @Override
                     public void onLoadingFailed(String s, View view, FailReason failReason) {
                         if (listener != null) {
-                            listener.onLoadingFailed(s, view, failReason.getCause().getMessage());
+                            String msg = "";
+                            if (failReason != null && failReason.getCause() != null) {
+                                msg = failReason.getCause().getMessage();
+                            }
+                            listener.onLoadingFailed(s, view, msg);
                         }
                     }
 

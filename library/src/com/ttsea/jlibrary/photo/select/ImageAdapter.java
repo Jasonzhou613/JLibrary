@@ -12,7 +12,6 @@ import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.common.JImageLoader;
 import com.ttsea.jlibrary.interfaces.OnItemViewClickListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 class ImageAdapter extends BaseAdapter {
@@ -21,7 +20,6 @@ class ImageAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater mInflater;
     private List<ImageItem> imageList;
-    private List<ImageItem> selectedList;
 
     private final int TYPE_CAMERA = 0;
     private final int TYPE_NORMAL = 1;
@@ -42,19 +40,10 @@ class ImageAdapter extends BaseAdapter {
     private void init() {
         mInflater = LayoutInflater.from(context);
         mItemLayoutParams = new GridView.LayoutParams(GridView.LayoutParams.MATCH_PARENT, GridView.LayoutParams.MATCH_PARENT);
-        selectedList = new ArrayList<ImageItem>();
     }
 
     public void setOnItemViewClickListener(OnItemViewClickListener l) {
         this.onItemViewClickListener = l;
-    }
-
-    public void setDefaultSelected(List<ImageItem> resultList) {
-        selectedList.clear();
-        if (resultList != null) {
-            selectedList.addAll(resultList);
-        }
-        notifyDataSetChanged();
     }
 
     public void setItemSize(int columnWidth) {
@@ -100,20 +89,18 @@ class ImageAdapter extends BaseAdapter {
 
         } else if (type == TYPE_NORMAL) {
             ViewHolder holder;
-            if (convertView == null) {
+            if (convertView == null || convertView.getTag() == null || (!(convertView.getTag() instanceof ViewHolder))) {
                 convertView = mInflater.inflate(R.layout.imageselector_item_image, parent, false);
                 holder = new ViewHolder(convertView);
             } else {
                 holder = (ViewHolder) convertView.getTag();
-                if (holder == null) {
-                    convertView = mInflater.inflate(R.layout.imageselector_item_image, parent, false);
-                    holder = new ViewHolder(convertView);
-                }
             }
+
+            ImageItem item = getItem(position);
 
             if (showSelectIndicator) {
                 holder.ivCheck.setVisibility(View.VISIBLE);
-                if (selectedList.contains(getItem(position))) {
+                if (item != null && item.isSelected()) {
                     holder.ivCheck.setImageResource(R.drawable.imageselector_select_checked);
                     holder.photoMask.setVisibility(View.VISIBLE);
                 } else {
@@ -126,8 +113,8 @@ class ImageAdapter extends BaseAdapter {
 
             setOnClickListener(holder.ivCheck, position);
 
-            if (mItemSize > 0) {
-                JImageLoader.getInstance().displayImage(context, "file://" + getItem(position).getPath(), holder.ivImage);
+            if (mItemSize > 0 && item != null) {
+                JImageLoader.getInstance().displayImage(context, "file://" + item.getPath(), holder.ivImage);
             }
         }
 
@@ -176,15 +163,6 @@ class ImageAdapter extends BaseAdapter {
 
     public boolean isShowCamera() {
         return showCamera;
-    }
-
-    public void selectOrRemoveImage(ImageItem image) {
-        if (selectedList.contains(image)) {
-            selectedList.remove(image);
-        } else {
-            selectedList.add(image);
-        }
-        notifyDataSetChanged();
     }
 
     private static class ViewHolder {

@@ -25,6 +25,7 @@ import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.base.BaseFragmentActivity;
 import com.ttsea.jlibrary.common.JImageLoader;
 import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.common.JToast;
 import com.ttsea.jlibrary.photo.crop.CropConstants;
 import com.ttsea.jlibrary.photo.gallery.GalleryConstants;
 import com.ttsea.jlibrary.photo.gallery.PhotoView;
@@ -45,7 +46,6 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
     private Button btnLeft;
     private Button btnRight;
 
-    private View llyBottomView;
     private View llyCheck;
     private ImageView ivCheck;
 
@@ -76,14 +76,12 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
         btnLeft = (Button) findViewById(R.id.btnLeft);
         btnRight = (Button) findViewById(R.id.btnRight);
 
-        llyBottomView = findViewById(R.id.llyBottomView);
         llyCheck = findViewById(R.id.llyCheck);
         ivCheck = (ImageView) findViewById(R.id.ivCheck);
         viwePager = (ViewPagerFixed) findViewById(R.id.viwePager);
 
         llyTitleBar.setBackgroundColor(getColorById(R.color.photo_title_bar_bg));
-        llyBottomView.setBackgroundColor(getColorById(R.color.translucentE0));
-
+        btnRight.setBackgroundResource(R.drawable.photo_select_ok_btn_selector);
         btnLeft.setOnClickListener(this);
         btnRight.setOnClickListener(this);
         llyCheck.setOnClickListener(this);
@@ -104,6 +102,19 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
         viwePager.setAdapter(adapter);
         viwePager.setPageMargin(10);
         viwePager.setCurrentItem(currentPosition);
+
+        ViewGroup.LayoutParams params = btnRight.getLayoutParams();
+        int marginLR = DisplayUtils.dip2px(mActivity, 8);
+        int marginTB = (marginLR * 2) / 3;
+        if (params != null) {
+            params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            if (params instanceof RelativeLayout.LayoutParams) {
+                ((RelativeLayout.LayoutParams) params).setMargins(0, 0, marginLR, 0);
+            }
+            btnRight.setLayoutParams(params);
+            btnRight.setPadding(marginLR, marginTB, marginLR, marginTB);
+        }
 
         refreshTvIndex();
     }
@@ -126,31 +137,26 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
-    private void onOkBtnClicked() {
+    private void onOkBtnClicked(int resultCode) {
+        //去除未选择的
+        int position = 0;
+        while (position < selectedList.size()) {
+            ImageItem item = selectedList.get(position);
+            if (!item.isSelected()) {
+                selectedList.remove(item);
+                position = 0;
+                continue;
+            }
+            position++;
+        }
+
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(GalleryConstants.KEY_SELECTED_LIST, (Serializable) selectedList);
+        bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) selectedList);
         intent.putExtras(bundle);
-        setResult(Activity.RESULT_OK, intent);
+        setResult(resultCode, intent);
 
         finish();
-    }
-
-    private void onDeleteBtnClicked() {
-        selectedList.remove(currentPosition);
-
-        if (currentPosition >= selectedList.size() && selectedList.size() != 0) {
-            currentPosition = selectedList.size() - 1;
-        } else if (currentPosition != 0) {
-            currentPosition--;
-        }
-        JLog.d(TAG, "removed currentPosition:" + currentPosition);
-        adapter.notifyDataSetChanged();
-        refreshTvIndex();
-
-        if (selectedList.size() == 0) {
-            onOkBtnClicked();
-        }
     }
 
     public void refreshTvIndex() {
@@ -167,6 +173,36 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
                 ivCheck.setImageResource(R.drawable.imageselector_select_uncheck);
             }
         }
+
+        int selectCount = getSelectCount();
+        String txt = (getStringById(R.string.finish)) + "(" + selectCount + "/" + maxSize + ")";
+        btnRight.setEnabled(true);
+
+        if (selectCount < 1) {
+            txt = (getStringById(R.string.finish));
+            btnRight.setEnabled(false);
+        }
+        btnRight.setText(txt);
+    }
+
+    private int getSelectCount() {
+        int count = 0;
+        for (int i = 0; i < selectedList.size(); i++) {
+            if (selectedList.get(i).isSelected()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private void selectOrUnselectImage(int position) {
+        ImageItem item = selectedList.get(position);
+        if (getSelectCount() >= maxSize && !item.isSelected()) {
+            JToast.makeTextCenter(mActivity, getStringById(R.string.image_msg_amount_limit));
+            return;
+        }
+        item.setSelected(!item.isSelected());
+        refreshTvIndex();
     }
 
     private void displayImage(ImageItem item, ImageView imageView) {
@@ -205,7 +241,7 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            onOkBtnClicked();
+            onOkBtnClicked(Activity.RESULT_CANCELED);
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -215,11 +251,11 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.btnLeft || id == R.id.btnRight) {
-            onOkBtnClicked();
-        } else if (id == R.id.btnDelete) {
-            onDeleteBtnClicked();
-        } else if (id == R.id.btnSavePic) {
-            toastMessage("下载图片");
+            onOkBtnClicked(Activity.RESULT_CANCELED);
+        } else if (id == R.id.btnLeft || id == R.id.btnRight) {
+            onOkBtnClicked(Activity.RESULT_OK);
+        } else if (id == R.id.llyCheck) {
+            selectOrUnselectImage(currentPosition);
         }
     }
 

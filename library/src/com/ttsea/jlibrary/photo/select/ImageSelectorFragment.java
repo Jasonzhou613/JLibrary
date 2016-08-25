@@ -282,9 +282,9 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
                                 imageAdapter.notifyDataSetChanged();
                                 btnCategory.setText(folder.getName());
                                 // 设定默认选择
-                                if (selectedList != null && selectedList.size() > 0) {
-                                    imageAdapter.setDefaultSelected(selectedList);
-                                }
+//                                if (selectedList != null && selectedList.size() > 0) {
+//                                    imageAdapter.setDefaultSelected(selectedList);
+//                                }
                             }
                             imageAdapter.setShowCamera(false);
                         }
@@ -321,6 +321,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
         if (imageConfig.isMutiSelect()) {
             if (selectedList.contains(image)) {
                 selectedList.remove(image);
+                image.setSelected(false);
                 if (onImageSelectListener != null) {
                     onImageSelectListener.onImageUnselected(image);
                 }
@@ -329,14 +330,15 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
                     JToast.makeTextCenter(mActivity, getStringById(R.string.image_msg_amount_limit));
                     return;
                 }
-
                 selectedList.add(image);
+                image.setSelected(true);
                 if (onImageSelectListener != null) {
                     onImageSelectListener.onImageSelected(image);
                 }
             }
-            imageAdapter.selectOrRemoveImage(image);
+            imageAdapter.notifyDataSetChanged();
         } else {
+            image.setSelected(true);
             if (onImageSelectListener != null) {
                 onImageSelectListener.onSingleImageSelected(image);
             }
@@ -345,10 +347,12 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
     }
 
     /** 进行预览 */
-    private void previewList(List<ImageItem> list) {
+    private void previewList(List<ImageItem> list, int position) {
         Intent intent = new Intent(mActivity, ImagePreviewActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) list);
+        bundle.putInt(ImageSelector.KEY_SELECTED_POSITION, position);
+        bundle.putInt(ImageSelector.KEY_MAX_SIZE, imageConfig.getMaxSize());
         intent.putExtras(bundle);
         startActivityForResult(intent, REQUEST_CODE_PREVIEW);
     }
@@ -408,10 +412,11 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
                 }
                 showCameraAction();
             } else {
-                previewList(imageList);
+                position--;
+                previewList(imageList, position);
             }
         } else {
-            previewList(imageList);
+            previewList(imageList, position);
         }
     }
 
@@ -427,7 +432,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
         if (v.getId() == R.id.btnCategory) {//点击所有图片，弹出相册选择pop
             showFolderPopupWindow();
         } else if (v.getId() == R.id.tvPreview) {//预览
-            previewList(selectedList);
+            previewList(selectedList, 0);
         }
     }
 
@@ -446,7 +451,12 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
             return;
         }
 
-        if (requestCode == REQUEST_CODE_PREVIEW) {// 预览照片回来
+        if (requestCode == REQUEST_CODE_PREVIEW && data!=null) {// 预览照片回来
+            Bundle bundle = data.getExtras();
+            if (bundle!=null && bundle.getSerializable(ImageSelector.KEY_SELECTED_LIST)!=null){
+
+            }
+
             if (resultCode == Activity.RESULT_OK) {
 
             } else {
@@ -527,9 +537,9 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
                     imageList.addAll(tempImageList);
                     imageAdapter.notifyDataSetChanged();
 
-                    if (selectedList != null && selectedList.size() > 0) {
-                        imageAdapter.setDefaultSelected(selectedList);
-                    }
+//                    if (selectedList != null && selectedList.size() > 0) {
+//                        imageAdapter.setDefaultSelected(selectedList);
+//                    }
 
                     if ((folderList == null || folderList.size() < 1)
                             && !imageConfig.isShowCamera()) {
