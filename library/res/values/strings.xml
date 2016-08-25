@@ -53,6 +53,7 @@
     <string name="image_folder_name">文件名</string>
     <string name="image_image_num">图片数量</string>
     <string name="image_all_folder">所有图片</string>
+    <string name="image_preview">预览</string>
     <string name="image_sheet">张</string>
     <string name="image_shoot">拍摄照片</string>
     <string name="image_picture">图片</string>

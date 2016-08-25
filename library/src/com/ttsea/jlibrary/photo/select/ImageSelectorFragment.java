@@ -33,12 +33,14 @@ import android.widget.Toast;
 import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.common.JToast;
+import com.ttsea.jlibrary.interfaces.OnItemViewClickListener;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageSelectorFragment extends Fragment {
+public class ImageSelectorFragment extends Fragment implements View.OnClickListener,
+        OnItemViewClickListener, AdapterView.OnItemClickListener {
     private final String TAG = "Select.ImageSelectorFragment";
 
     private final int LOADER_TYPE_ALL = 0;
@@ -53,8 +55,10 @@ public class ImageSelectorFragment extends Fragment {
     private GridView gvImages;
     private TextView tvNoPicture;
     private View popupAnchorView;
+    private TextView tvPreview;
+    private View llyPreview;
 
-    private List<ImageItem> resultList;
+    private List<ImageItem> selectedList;
     private List<ImageItem> imageList;
     private List<Folder> folderList;
 
@@ -98,14 +102,19 @@ public class ImageSelectorFragment extends Fragment {
         gvImages = (GridView) view.findViewById(R.id.gvImages);
         tvNoPicture = (TextView) view.findViewById(R.id.tvNoPicture);
         popupAnchorView = view.findViewById(R.id.rlyBottomView);
+        tvPreview = (TextView) view.findViewById(R.id.tvPreview);
+        llyPreview = view.findViewById(R.id.llyPreview);
 
         tvDate.setVisibility(View.GONE);
+        btnCategory.setText(R.string.image_all_folder);
+        btnCategory.setOnClickListener(this);
+        tvPreview.setOnClickListener(this);
 
         init();
     }
 
     private void init() {
-        resultList = new ArrayList<>();
+        selectedList = new ArrayList<>();
         folderList = new ArrayList<>();
         imageList = new ArrayList<>();
 
@@ -114,31 +123,16 @@ public class ImageSelectorFragment extends Fragment {
         imageAdapter = new ImageAdapter(mActivity, imageList);
         imageAdapter.setShowCamera(imageConfig.isShowCamera());
         imageAdapter.setShowSelectIndicator(imageConfig.isMutiSelect());
+        imageAdapter.setOnItemViewClickListener(this);
 
         gvImages.setAdapter(imageAdapter);
-        resultList = imageConfig.getPathList();
+        gvImages.setOnItemClickListener(this);
 
-        btnCategory.setText(R.string.image_all_folder);
-        btnCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (folderPopupWindow == null) {
-                    createPopupFolderList(gridWidth, gridHeight);
-                }
-
-                if (folderPopupWindow.isShowing()) {
-                    folderPopupWindow.dismiss();
-                } else {
-                    folderPopupWindow.showAsDropDown(popupAnchorView, 0, 0);
-                    int index = folderAdapter.getSelectIndex();
-                    index = index == 0 ? index : index - 1;
-                    ListView lvFolder = (ListView) folderPopupWindow.getContentView().findViewById(R.id.lvFolder);
-                    if (lvFolder != null) {
-                        lvFolder.setSelection(index);
-                    }
-                }
-            }
-        });
+        selectedList = imageConfig.getPathList();
+        if (selectedList == null) {
+            selectedList = new ArrayList<ImageItem>();
+        }
+        refreshPreviewTVStatus();
 
         gvImages.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -189,28 +183,41 @@ public class ImageSelectorFragment extends Fragment {
                 }
             }
         });
+    }
 
-        gvImages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (imageAdapter.isShowCamera()) {
-                    if (i == 0) {
-                        if (resultList.size() >= imageConfig.getMaxSize()) {
-                            JToast.makeTextCenter(mActivity, getStringById(R.string.image_msg_amount_limit));
-                            return;
-                        }
-                        showCameraAction();
-                    } else {
-                        ImageItem image = (ImageItem) adapterView.getAdapter().getItem(i);
-                        selectImageFromGrid(image, imageConfig.isMutiSelect());
-                    }
-                } else {
-                    // 正常操作
-                    ImageItem image = (ImageItem) adapterView.getAdapter().getItem(i);
-                    selectImageFromGrid(image, imageConfig.isMutiSelect());
-                }
+    private void refreshPreviewTVStatus() {
+        String txt = (getStringById(R.string.image_preview)) + "(" + selectedList.size() + ")";
+        tvPreview.setEnabled(true);
+
+        if (selectedList.size() == 0) {
+            txt = getStringById(R.string.image_preview);
+            tvPreview.setEnabled(false);
+        }
+        tvPreview.setText(txt);
+
+        if (imageConfig.isMutiSelect()) {
+            llyPreview.setVisibility(View.VISIBLE);
+        } else {
+            llyPreview.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void showFolderPopupWindow() {
+        if (folderPopupWindow == null) {
+            createPopupFolderList(gridWidth, gridHeight);
+        }
+
+        if (folderPopupWindow.isShowing()) {
+            folderPopupWindow.dismiss();
+        } else {
+            folderPopupWindow.showAsDropDown(popupAnchorView, 0, 0);
+            int index = folderAdapter.getSelectIndex();
+            index = index == 0 ? index : index - 1;
+            ListView lvFolder = (ListView) folderPopupWindow.getContentView().findViewById(R.id.lvFolder);
+            if (lvFolder != null) {
+                lvFolder.setSelection(index);
             }
-        });
+        }
     }
 
     /*** 创建弹出的ListView */
@@ -275,8 +282,8 @@ public class ImageSelectorFragment extends Fragment {
                                 imageAdapter.notifyDataSetChanged();
                                 btnCategory.setText(folder.getName());
                                 // 设定默认选择
-                                if (resultList != null && resultList.size() > 0) {
-                                    imageAdapter.setDefaultSelected(resultList);
+                                if (selectedList != null && selectedList.size() > 0) {
+                                    imageAdapter.setDefaultSelected(selectedList);
                                 }
                             }
                             imageAdapter.setShowCamera(false);
@@ -287,6 +294,66 @@ public class ImageSelectorFragment extends Fragment {
                 }, 100);
             }
         });
+    }
+
+    /** 选择相机 */
+    private void showCameraAction() {
+        // 跳转到系统照相机
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            // 设置系统相机拍照后的输出路径
+            // 创建临时文件
+            tempFile = ImageUtils.createTmpFile(imageConfig.getOutPutPath(), imageConfig.getImageSuffix());
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempFile));
+            startActivityForResult(cameraIntent, REQUEST_CODE_TAKE_CAMERA);
+        } else {
+            JToast.makeTextCenter(mActivity, getStringById(R.string.image_msg_no_camera));
+        }
+    }
+
+    private void selectImageFromGrid(int position) {
+        ImageItem image = imageAdapter.getItem(position);
+        if (image == null) {
+            JLog.d(TAG, "image is null, return");
+            return;
+        }
+        if (imageConfig.isMutiSelect()) {
+            if (selectedList.contains(image)) {
+                selectedList.remove(image);
+                if (onImageSelectListener != null) {
+                    onImageSelectListener.onImageUnselected(image);
+                }
+            } else {
+                if (selectedList.size() >= imageConfig.getMaxSize()) {
+                    JToast.makeTextCenter(mActivity, getStringById(R.string.image_msg_amount_limit));
+                    return;
+                }
+
+                selectedList.add(image);
+                if (onImageSelectListener != null) {
+                    onImageSelectListener.onImageSelected(image);
+                }
+            }
+            imageAdapter.selectOrRemoveImage(image);
+        } else {
+            if (onImageSelectListener != null) {
+                onImageSelectListener.onSingleImageSelected(image);
+            }
+        }
+        refreshPreviewTVStatus();
+    }
+
+    private void previewList() {
+        JToast.makeText(mActivity, "preview");
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && folderPopupWindow != null
+                && folderPopupWindow.isShowing()) {
+            folderPopupWindow.dismiss();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -325,57 +392,38 @@ public class ImageSelectorFragment extends Fragment {
         super.onConfigurationChanged(newConfig);
     }
 
-    /** 选择相机 */
-    private void showCameraAction() {
-        // 跳转到系统照相机
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            // 设置系统相机拍照后的输出路径
-            // 创建临时文件
-            tempFile = ImageUtils.createTmpFile(imageConfig.getOutPutPath(), imageConfig.getImageSuffix());
-            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempFile));
-            startActivityForResult(cameraIntent, REQUEST_CODE_TAKE_CAMERA);
-        } else {
-            JToast.makeTextCenter(mActivity, getStringById(R.string.image_msg_no_camera));
-        }
-    }
-
-    private void selectImageFromGrid(ImageItem image, boolean isMulti) {
-        if (image != null) {
-            if (isMulti) {
-                if (resultList.contains(image)) {
-                    resultList.remove(image);
-                    if (onImageSelectListener != null) {
-                        onImageSelectListener.onImageUnselected(image);
-                    }
-                } else {
-                    if (resultList.size() >= imageConfig.getMaxSize()) {
-                        JToast.makeTextCenter(mActivity, getStringById(R.string.image_msg_amount_limit));
-                        return;
-                    }
-
-                    resultList.add(image);
-                    if (onImageSelectListener != null) {
-                        onImageSelectListener.onImageSelected(image);
-                    }
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (imageAdapter.isShowCamera()) {
+            if (position == 0) {
+                if (selectedList.size() >= imageConfig.getMaxSize()) {
+                    JToast.makeTextCenter(mActivity, getStringById(R.string.image_msg_amount_limit));
+                    return;
                 }
-                imageAdapter.selectOrRemoveImage(image);
+                showCameraAction();
             } else {
-                if (onImageSelectListener != null) {
-                    onImageSelectListener.onSingleImageSelected(image);
-                }
+                previewList();
             }
+        } else {
+            previewList();
         }
     }
 
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK
-                && folderPopupWindow != null
-                && folderPopupWindow.isShowing()) {
-            folderPopupWindow.dismiss();
-            return true;
+
+    @Override
+    public void onItemViewClick(View v, int position) {
+        if (v.getId() == R.id.ivCheck) {//选择和取消选择图片
+            selectImageFromGrid(position);
         }
-        return false;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.btnCategory) {//点击所有图片，弹出相册选择pop
+            showFolderPopupWindow();
+        } else if (v.getId() == R.id.tvPreview) {//预览
+            previewList();
+        }
     }
 
     @Override
@@ -465,8 +513,8 @@ public class ImageSelectorFragment extends Fragment {
                     imageList.addAll(tempImageList);
                     imageAdapter.notifyDataSetChanged();
 
-                    if (resultList != null && resultList.size() > 0) {
-                        imageAdapter.setDefaultSelected(resultList);
+                    if (selectedList != null && selectedList.size() > 0) {
+                        imageAdapter.setDefaultSelected(selectedList);
                     }
 
                     if ((folderList == null || folderList.size() < 1)

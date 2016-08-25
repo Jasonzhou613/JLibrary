@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.base.BaseActivity;
-import com.ttsea.jlibrary.common.ImageLoader;
+import com.ttsea.jlibrary.common.JImageLoader;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.photo.select.ImageItem;
 
@@ -166,7 +166,7 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
     }
 
     private void displayImage(ImageItem item, ImageView imageView) {
-        ImageLoader.ImageLoadingListener listener = new ImageLoader.ImageLoadingListener() {
+        JImageLoader.ImageLoadingListener listener = new JImageLoader.ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
                 setLoadingViewVisibility(view, View.VISIBLE);
@@ -191,9 +191,9 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
         JLog.d(TAG, "childrenCount:" + viwePager.getChildCount());
 
         if (item.isNetWorkImage()) {
-            ImageLoader.getInstance().displayImageForGallery(mActivity, item.getPath(), imageView, listener);
+            JImageLoader.getInstance().displayImageForGallery(mActivity, item.getPath(), imageView, listener);
         } else {
-            ImageLoader.getInstance().displayImageForGallery(mActivity, "file://" + item.getPath(), imageView, listener);
+            JImageLoader.getInstance().displayImageForGallery(mActivity, "file://" + item.getPath(), imageView, listener);
         }
     }
 

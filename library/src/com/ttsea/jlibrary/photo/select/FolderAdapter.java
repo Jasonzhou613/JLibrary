@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ttsea.jlibrary.R;
-import com.ttsea.jlibrary.common.ImageLoader;
+import com.ttsea.jlibrary.common.JImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +82,7 @@ class FolderAdapter extends BaseAdapter {
 
             if (folderList.size() > 0) {
                 Folder folder = folderList.get(0);
-                ImageLoader.getInstance().displayImage(mContext, "file://" + folder.getCover().getPath(), holder.ivCover);
+                JImageLoader.getInstance().displayImage(mContext, "file://" + folder.getCover().getPath(), holder.ivCover);
             }
         } else {
 
@@ -90,7 +90,7 @@ class FolderAdapter extends BaseAdapter {
             holder.tvFolderName.setText(folder.getName());
             holder.tvCount.setText("" + folder.getImages().size() + (mContext.getResources().getText(R.string.image_sheet)));
 
-            ImageLoader.getInstance().displayImage(mContext, "file://" + folder.getCover().getPath(), holder.ivCover);
+            JImageLoader.getInstance().displayImage(mContext, "file://" + folder.getCover().getPath(), holder.ivCover);
         }
 
         if (lastSelected == position) {

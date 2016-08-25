@@ -9,7 +9,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.ttsea.jlibrary.R;
-import com.ttsea.jlibrary.common.ImageLoader;
+import com.ttsea.jlibrary.common.JImageLoader;
+import com.ttsea.jlibrary.interfaces.OnItemViewClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ class ImageAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater mInflater;
     private List<ImageItem> imageList;
-    private List<ImageItem> selectedImageList;
+    private List<ImageItem> selectedList;
 
     private final int TYPE_CAMERA = 0;
     private final int TYPE_NORMAL = 1;
@@ -29,6 +30,7 @@ class ImageAdapter extends BaseAdapter {
     private boolean showSelectIndicator = true;
     private int mItemSize;
     private GridView.LayoutParams mItemLayoutParams;
+    private OnItemViewClickListener onItemViewClickListener;
 
     public ImageAdapter(Context context, List<ImageItem> imageList) {
         this.context = context;
@@ -40,13 +42,17 @@ class ImageAdapter extends BaseAdapter {
     private void init() {
         mInflater = LayoutInflater.from(context);
         mItemLayoutParams = new GridView.LayoutParams(GridView.LayoutParams.MATCH_PARENT, GridView.LayoutParams.MATCH_PARENT);
-        selectedImageList = new ArrayList<ImageItem>();
+        selectedList = new ArrayList<ImageItem>();
+    }
+
+    public void setOnItemViewClickListener(OnItemViewClickListener l) {
+        this.onItemViewClickListener = l;
     }
 
     public void setDefaultSelected(List<ImageItem> resultList) {
-        selectedImageList.clear();
+        selectedList.clear();
         if (resultList != null) {
-            selectedImageList.addAll(resultList);
+            selectedList.addAll(resultList);
         }
         notifyDataSetChanged();
     }
@@ -107,7 +113,7 @@ class ImageAdapter extends BaseAdapter {
 
             if (showSelectIndicator) {
                 holder.ivCheck.setVisibility(View.VISIBLE);
-                if (selectedImageList.contains(getItem(position))) {
+                if (selectedList.contains(getItem(position))) {
                     holder.ivCheck.setImageResource(R.drawable.imageselector_select_checked);
                     holder.photoMask.setVisibility(View.VISIBLE);
                 } else {
@@ -116,11 +122,12 @@ class ImageAdapter extends BaseAdapter {
                 }
             } else {
                 holder.ivCheck.setVisibility(View.GONE);
-                holder.ivCheck.setVisibility(View.GONE);
             }
 
+            setOnClickListener(holder.ivCheck, position);
+
             if (mItemSize > 0) {
-                ImageLoader.getInstance().displayImage(context, "file://" + getItem(position).getPath(), holder.ivImage);
+                JImageLoader.getInstance().displayImage(context, "file://" + getItem(position).getPath(), holder.ivImage);
             }
         }
 
@@ -140,7 +147,21 @@ class ImageAdapter extends BaseAdapter {
         return TYPE_NORMAL;
     }
 
+    private void setOnClickListener(View v, final int position) {
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onItemViewClickListener != null) {
+                    onItemViewClickListener.onItemViewClick(v, position);
+                }
+            }
+        });
+    }
+
     public void setShowSelectIndicator(boolean showSelectIndicator) {
+        if (this.showSelectIndicator == showSelectIndicator) {
+            return;
+        }
         this.showSelectIndicator = showSelectIndicator;
         notifyDataSetChanged();
     }
@@ -149,7 +170,6 @@ class ImageAdapter extends BaseAdapter {
         if (this.showCamera == showCamera) {
             return;
         }
-
         this.showCamera = showCamera;
         notifyDataSetChanged();
     }
@@ -159,10 +179,10 @@ class ImageAdapter extends BaseAdapter {
     }
 
     public void selectOrRemoveImage(ImageItem image) {
-        if (selectedImageList.contains(image)) {
-            selectedImageList.remove(image);
+        if (selectedList.contains(image)) {
+            selectedList.remove(image);
         } else {
-            selectedImageList.add(image);
+            selectedList.add(image);
         }
         notifyDataSetChanged();
     }

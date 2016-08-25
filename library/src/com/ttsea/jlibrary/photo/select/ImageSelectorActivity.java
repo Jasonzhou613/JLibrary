@@ -108,15 +108,13 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
     private void refreshBtnRightStatus() {
         String txt = (getStringById(R.string.finish)) +
                 "(" + selectedList.size() + "/" + imageConfig.getMaxSize() + ")";
+        btnRight.setEnabled(true);
+
         if (selectedList.size() == 0) {
             txt = getStringById(R.string.finish);
+            btnRight.setEnabled(false);
         }
         btnRight.setText(txt);
-        if (selectedList.size() == 0) {
-            btnRight.setEnabled(false);
-        } else {
-            btnRight.setEnabled(true);
-        }
 
         if (imageConfig.isMutiSelect()) {
             btnRight.setVisibility(View.VISIBLE);

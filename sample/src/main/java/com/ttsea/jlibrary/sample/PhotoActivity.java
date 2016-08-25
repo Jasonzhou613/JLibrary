@@ -3,14 +3,13 @@ package com.ttsea.jlibrary.sample;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ttsea.jlibrary.base.BaseActivity;
-import com.ttsea.jlibrary.common.ImageLoader;
+import com.ttsea.jlibrary.common.JImageLoader;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.photo.crop.CropView;
 import com.ttsea.jlibrary.photo.gallery.GalleryActivity;
@@ -81,20 +80,20 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 
     private void onSelectImageBack(List<ImageItem> list) {
         if (list == null) {
-            ImageLoader.getInstance().displayImage(mActivity, null, ivImage);
+            JImageLoader.getInstance().displayImage(mActivity, null, ivImage);
             tvImagePath.setText("");
             toastMessage("选择图片出错");
             return;
         }
         JLog.d(TAG, "list size:" + list.size());
         if (list.size() < 1) {
-            ImageLoader.getInstance().displayImage(mActivity, null, ivImage);
+            JImageLoader.getInstance().displayImage(mActivity, null, ivImage);
             tvImagePath.setText("");
             toastMessage("未选择图片");
             return;
         }
 
-        ImageLoader.getInstance().displayImage(mActivity, "file://" + list.get(0).getPath(), ivImage);
+        JImageLoader.getInstance().displayImage(mActivity, "file://" + list.get(0).getPath(), ivImage);
         String paths = "";
         for (int i = 0; i < list.size(); i++) {
             paths = paths + "\n" + list.get(i).getPath();
@@ -144,11 +143,11 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
     private void selectPhoto() {
         ImageConfig config = new ImageConfig.Builder(this)
                 .setMutiSelect(true)//设置是否是多选，默认为：true
-                .setMaxSize(19)//多选时，最多可选数量，默认为：9
+                .setMaxSize(9)//多选时，最多可选数量，默认为：9
                 .setShowCamera(true)//是否显示拍照项，认为：true
                 //请求code，用于onActivityResult接收，默认为：ImageSelector.TAKE_PHOTO_BY_GALLERY
                 .setRequestCode(REQUEST_CODE_SELECT_PIC)
-                .setPathList(selectedList)
+                //.setPathList(selectedList)
 
                 .setCrop(true)//设置是否需要剪切,默认为：false，单选时生效
                 //设置剪切图片的输出路径

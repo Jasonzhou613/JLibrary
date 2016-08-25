@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.ttsea.jlibrary.R;
 
 /**
@@ -20,17 +19,17 @@ import com.ttsea.jlibrary.R;
  * <b>version:</b> 1.0 <br/>
  * <b>last modified date:</b> 2016/7/19 10:27
  */
-public class ImageLoader {
-    private final String TAG = "Common.ImageLoader";
+public class JImageLoader {
+    private final String TAG = "Common.JImageLoader";
 
-    private static ImageLoader loader;
+    private static JImageLoader loader;
 
-    private ImageLoader() {
+    private JImageLoader() {
     }
 
-    public static ImageLoader getInstance() {
+    public static JImageLoader getInstance() {
         if (loader == null) {
-            loader = new ImageLoader();
+            loader = new JImageLoader();
         }
         return loader;
     }
