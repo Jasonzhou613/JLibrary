@@ -4,12 +4,23 @@
                 android:layout_height="match_parent"
                 android:background="@android:color/black">
 
+    <GridView
+        android:id="@+id/gvImages"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:clipToPadding="false"
+        android:horizontalSpacing="2dp"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="3"
+        android:verticalSpacing="2dp"/>
+
     <RelativeLayout
         android:id="@+id/rlyBottomView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="46dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/translucentCD"
+        android:background="#DD373C3D"
         android:clickable="true">
 
         <Button
@@ -22,24 +33,14 @@
             android:drawableRight="@drawable/imageselector_select_album"
             android:ellipsize="end"
             android:gravity="center_vertical"
-            android:padding="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:singleLine="true"
             android:text="@string/image_all_folder"
             android:textColor="@color/white"
             android:textSize="14sp"/>
 
     </RelativeLayout>
-
-    <GridView
-        android:id="@+id/gvImages"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/rlyBottomView"
-        android:clipToPadding="false"
-        android:horizontalSpacing="2dp"
-        android:listSelector="@android:color/transparent"
-        android:numColumns="3"
-        android:verticalSpacing="2dp"/>
 
     <TextView
         android:id="@+id/tvNoPicture"

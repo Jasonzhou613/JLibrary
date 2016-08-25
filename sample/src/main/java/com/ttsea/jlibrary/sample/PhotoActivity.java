@@ -113,11 +113,11 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 break;
 
             case R.id.ivImage:
-//                selectedList.clear();
-//                for (int i = 0; i < testImages.length; i++) {
-//                    ImageItem item = new ImageItem(testImages[i]);
-//                    selectedList.add(item);
-//                }
+                selectedList.clear();
+                for (int i = 0; i < testImages.length; i++) {
+                    ImageItem item = new ImageItem(testImages[i]);
+                    selectedList.add(item);
+                }
                 browseImages(selectedList);
                 break;
 

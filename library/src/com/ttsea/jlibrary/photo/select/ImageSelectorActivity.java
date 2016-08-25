@@ -2,18 +2,22 @@ package com.ttsea.jlibrary.photo.select;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.base.BaseFragmentActivity;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.photo.crop.CropConstants;
+import com.ttsea.jlibrary.utils.DisplayUtils;
 
 import java.io.File;
 import java.io.Serializable;
@@ -55,13 +59,27 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
         btnLeft.setOnClickListener(this);
         btnRight.setOnClickListener(this);
 
-        btnRight.setTextColor(imageConfig.getTitleSubmitTextColor());
-        tvTitleBarName.setTextColor(imageConfig.getTitleTextColor());
-        llyTitleBar.setBackgroundColor(imageConfig.getTitleBgColor());
+        btnRight.setBackgroundResource(R.drawable.photo_select_ok_btn_selector);
+        btnRight.setTextColor(getColorById(imageConfig.getTitleSubmitTextColorRes()));
+        tvTitleBarName.setTextColor(getColorById(imageConfig.getTitleTextColorRes()));
+        llyTitleBar.setBackgroundColor(getColorById(imageConfig.getTitleBgColorRes()));
 
         selectedList = imageConfig.getPathList();
         if (selectedList == null) {
             selectedList = new ArrayList<ImageItem>();
+        }
+
+        ViewGroup.LayoutParams params = btnRight.getLayoutParams();
+        int marginLR = DisplayUtils.dip2px(mActivity, 8);
+        int marginTB = (marginLR * 2) / 3;
+        if (params != null) {
+            params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            if (params instanceof RelativeLayout.LayoutParams) {
+                ((RelativeLayout.LayoutParams) params).setMargins(0, 0, marginLR, 0);
+            }
+            btnRight.setLayoutParams(params);
+            btnRight.setPadding(marginLR, marginTB, marginLR, marginTB);
         }
 
         refreshBtnRightStatus();
@@ -88,8 +106,12 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
     }
 
     private void refreshBtnRightStatus() {
-        btnRight.setText((getResources().getText(R.string.finish)) +
-                "(" + selectedList.size() + "/" + imageConfig.getMaxSize() + ")");
+        String txt = (getStringById(R.string.finish)) +
+                "(" + selectedList.size() + "/" + imageConfig.getMaxSize() + ")";
+        if (selectedList.size() == 0) {
+            txt = getStringById(R.string.finish);
+        }
+        btnRight.setText(txt);
         if (selectedList.size() == 0) {
             btnRight.setEnabled(false);
         } else {

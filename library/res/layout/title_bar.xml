@@ -11,7 +11,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black"
+        android:background="@color/transparent"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -44,6 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:background="@color/transparent"
             android:minWidth="48dp"
             android:text="@string/finish"
@@ -54,6 +55,7 @@
             android:id="@+id/btnRight2"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/btnRight"
             android:background="@color/transparent"
             android:minWidth="48dp"

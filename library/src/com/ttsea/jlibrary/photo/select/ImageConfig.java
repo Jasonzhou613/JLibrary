@@ -2,6 +2,7 @@ package com.ttsea.jlibrary.photo.select;
 
 import android.content.Context;
 
+import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.photo.crop.CropView;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
 
@@ -32,20 +33,16 @@ public class ImageConfig implements Serializable {
         return builder.maxSize;
     }
 
-    public int getTitleBgColor() {
-        return builder.titleBgColor;
+    public int getTitleBgColorRes() {
+        return builder.titleBgColorRes;
     }
 
-    public int getTitleTextColor() {
-        return builder.titleNameTextColor;
+    public int getTitleTextColorRes() {
+        return builder.titleNameTextColorRes;
     }
 
-    public int getTitleSubmitTextColor() {
-        return builder.titleOKTextColor;
-    }
-
-    public int getSteepToolBarColor() {
-        return builder.steepToolBarColor;
+    public int getTitleSubmitTextColorRes() {
+        return builder.titleOKTextColorRes;
     }
 
     public int getRequestCode() {
@@ -118,10 +115,9 @@ public class ImageConfig implements Serializable {
         private boolean showCamera = true;
         private int maxSize = 9;
 
-        private int titleBgColor = 0xFF000000;
-        private int titleNameTextColor = 0xFFFFFFFF;
-        private int titleOKTextColor = 0xFFFFFFFF;
-        private int steepToolBarColor = 0xFF000000;
+        private int titleBgColorRes = -1;
+        private int titleNameTextColorRes = -1;
+        private int titleOKTextColorRes = -1;
 
         private int requestCode = ImageSelector.TAKE_PHOTO_BY_GALLERY;
 
@@ -163,23 +159,18 @@ public class ImageConfig implements Serializable {
             return this;
         }
 
-        public Builder setTitleBgColor(int titleBgColor) {
-            this.titleBgColor = titleBgColor;
+        public Builder setTitleBgColorRes(int titleBgColorRes) {
+            this.titleBgColorRes = titleBgColorRes;
             return this;
         }
 
-        public Builder setTitleNameTextColor(int titleNameTextColor) {
-            this.titleNameTextColor = titleNameTextColor;
+        public Builder setTitleNameTextColorRes(int titleNameTextColorRes) {
+            this.titleNameTextColorRes = titleNameTextColorRes;
             return this;
         }
 
-        public Builder setTitleOKTextColor(int titleOKTextColor) {
-            this.titleOKTextColor = titleOKTextColor;
-            return this;
-        }
-
-        public Builder setSteepToolBarColor(int steepToolBarColor) {
-            this.steepToolBarColor = steepToolBarColor;
+        public Builder setTitleOKTextColorRes(int titleOKTextColorRes) {
+            this.titleOKTextColorRes = titleOKTextColorRes;
             return this;
         }
 
@@ -275,6 +266,16 @@ public class ImageConfig implements Serializable {
             if (outPutPath == null) {
                 outPutPath = CacheDirUtils.getTempDir(mContext);
             }
+            if (titleBgColorRes == -1) {
+                titleBgColorRes = R.color.photo_title_bar_bg;
+            }
+            if (titleNameTextColorRes == -1) {
+                titleNameTextColorRes = R.color.white;
+            }
+            if (titleOKTextColorRes == -1) {
+                titleOKTextColorRes = R.color.white;
+            }
+
             return new ImageConfig(this);
         }
 
@@ -285,10 +286,9 @@ public class ImageConfig implements Serializable {
                     ", mutiSelect=" + mutiSelect +
                     ", showCamera=" + showCamera +
                     ", maxSize=" + maxSize +
-                    ", titleBgColor=" + titleBgColor +
-                    ", titleNameTextColor=" + titleNameTextColor +
-                    ", titleOKTextColor=" + titleOKTextColor +
-                    ", steepToolBarColor=" + steepToolBarColor +
+                    ", titleBgColorRes=" + titleBgColorRes +
+                    ", titleNameTextColorRes=" + titleNameTextColorRes +
+                    ", titleOKTextColorRes=" + titleOKTextColorRes +
                     ", requestCode=" + requestCode +
                     ", pathList=" + pathList +
                     ", crop=" + crop +

@@ -16,7 +16,7 @@ import java.util.List;
  * <b>last modified date:</b> 2016/8/6 9:20
  */
 public abstract class JBaseAdapter<E> extends BaseAdapter {
-    public final String TAG = JBaseAdapter.class.getSimpleName();
+    public String TAG = JBaseAdapter.class.getSimpleName();
 
     public Context mContext;
     public List<E> mList;
