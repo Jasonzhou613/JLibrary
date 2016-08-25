@@ -148,7 +148,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 .setShowCamera(true)//是否显示拍照项，认为：true
                 //请求code，用于onActivityResult接收，默认为：ImageSelector.TAKE_PHOTO_BY_GALLERY
                 .setRequestCode(REQUEST_CODE_SELECT_PIC)
-                //.setPathList(selectedList)
+                .setPathList(selectedList)
 
                 .setCrop(true)//设置是否需要剪切,默认为：false，单选时生效
                 //设置剪切图片的输出路径

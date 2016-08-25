@@ -2,7 +2,6 @@ package com.ttsea.jlibrary.photo.select;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -106,13 +105,14 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
     }
 
     private void refreshBtnRightStatus() {
-        String txt = (getStringById(R.string.finish)) +
-                "(" + selectedList.size() + "/" + imageConfig.getMaxSize() + ")";
-        btnRight.setEnabled(true);
-
-        if (selectedList.size() == 0) {
+        String txt;
+        if (selectedList == null || selectedList.size() == 0) {
             txt = getStringById(R.string.finish);
             btnRight.setEnabled(false);
+        } else {
+            txt = (getStringById(R.string.finish)) +
+                    "(" + selectedList.size() + "/" + imageConfig.getMaxSize() + ")";
+            btnRight.setEnabled(true);
         }
         btnRight.setText(txt);
 
@@ -146,18 +146,23 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
     }
 
     @Override
-    public void onImageSelected(ImageItem image) {
-        JLog.d(TAG, "onImageSelected, add image:" + image.toString());
-        if (!selectedList.contains(image)) {
-            selectedList.add(image);
-        }
+    public void onRefreshSelectedList(List<ImageItem> selectedList) {
+        JLog.d(TAG, "onRefreshSelectedList, selectedList.size:" + selectedList.size());
+        this.selectedList = selectedList;
         refreshBtnRightStatus();
     }
 
     @Override
-    public void onImageUnselected(ImageItem image) {
+    public void onImageSelected(List<ImageItem> list, ImageItem image) {
+        JLog.d(TAG, "onImageSelected, add image:" + image.toString());
+        selectedList = list;
+        refreshBtnRightStatus();
+    }
+
+    @Override
+    public void onImageUnselected(List<ImageItem> list, ImageItem image) {
         JLog.d(TAG, "onImageSelected, remove image:" + image.toString());
-        selectedList.remove(image);
+        selectedList = list;
         refreshBtnRightStatus();
     }
 
@@ -168,12 +173,11 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
             if (imageConfig.isCrop() && !imageConfig.isMutiSelect()) {
                 crop(imageFile);
             } else {
-                if (!imageConfig.isMutiSelect()) {
-                    selectedList.clear();
-                }
                 ImageItem item = new ImageItem(imageFile.getAbsolutePath());
                 item.setSelected(true);
+                selectedList.clear();
                 selectedList.add(item);
+
                 Intent data = new Intent();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) selectedList);

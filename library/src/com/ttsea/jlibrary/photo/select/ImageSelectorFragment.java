@@ -132,6 +132,9 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
         if (selectedList == null) {
             selectedList = new ArrayList<ImageItem>();
         }
+        if (onImageSelectListener != null) {
+            onImageSelectListener.onRefreshSelectedList(selectedList);
+        }
         refreshPreviewTVStatus();
 
         gvImages.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -281,10 +284,8 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
                                 imageList.addAll(folder.getImages());
                                 imageAdapter.notifyDataSetChanged();
                                 btnCategory.setText(folder.getName());
-                                // 设定默认选择
-//                                if (selectedList != null && selectedList.size() > 0) {
-//                                    imageAdapter.setDefaultSelected(selectedList);
-//                                }
+                                //设置默认选择项
+                                imageAdapter.setDefaultSelected(selectedList);
                             }
                             imageAdapter.setShowCamera(false);
                         }
@@ -323,7 +324,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
                 selectedList.remove(image);
                 image.setSelected(false);
                 if (onImageSelectListener != null) {
-                    onImageSelectListener.onImageUnselected(image);
+                    onImageSelectListener.onImageUnselected(selectedList, image);
                 }
             } else {
                 if (selectedList.size() >= imageConfig.getMaxSize()) {
@@ -333,7 +334,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
                 selectedList.add(image);
                 image.setSelected(true);
                 if (onImageSelectListener != null) {
-                    onImageSelectListener.onImageSelected(image);
+                    onImageSelectListener.onImageSelected(selectedList, image);
                 }
             }
             imageAdapter.notifyDataSetChanged();
@@ -451,17 +452,27 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
             return;
         }
 
-        if (requestCode == REQUEST_CODE_PREVIEW && data!=null) {// 预览照片回来
+        // 预览照片回来
+        if (requestCode == REQUEST_CODE_PREVIEW && data != null) {
             Bundle bundle = data.getExtras();
-            if (bundle!=null && bundle.getSerializable(ImageSelector.KEY_SELECTED_LIST)!=null){
-
+            if (bundle != null) {
+                List<ImageItem> list = (List<ImageItem>) bundle.getSerializable(ImageSelector.KEY_SELECTED_LIST);
+                selectedList.clear();
+                if (list != null) {
+                    selectedList.addAll(list);
+                }
             }
 
             if (resultCode == Activity.RESULT_OK) {
-
+                mActivity.setResult(Activity.RESULT_OK, data);
+                mActivity.finish();
             } else {
-                imageAdapter.notifyDataSetChanged();
+                imageAdapter.setDefaultSelected(selectedList);
             }
+            if (onImageSelectListener != null) {
+                onImageSelectListener.onRefreshSelectedList(selectedList);
+            }
+            refreshPreviewTVStatus();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -536,10 +547,8 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
 
                     imageList.addAll(tempImageList);
                     imageAdapter.notifyDataSetChanged();
-
-//                    if (selectedList != null && selectedList.size() > 0) {
-//                        imageAdapter.setDefaultSelected(selectedList);
-//                    }
+                    //设置默认选择项
+                    imageAdapter.setDefaultSelected(selectedList);
 
                     if ((folderList == null || folderList.size() < 1)
                             && !imageConfig.isShowCamera()) {
@@ -567,16 +576,41 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
 
     public interface OnImageSelectListener {
 
-        /** 单选时，选择图片后触发 */
+        /**
+         * 单选时，选择图片后触发
+         *
+         * @param image 被选择的图片
+         */
         void onSingleImageSelected(ImageItem image);
 
-        /** 多选时，选择图片后触发 */
-        void onImageSelected(ImageItem image);
+        /**
+         * 多选时，选择图片后触发
+         *
+         * @param selectedList 选择图片后的image list
+         * @param image        被选择的图片
+         */
+        void onImageSelected(List<ImageItem> selectedList, ImageItem image);
 
-        /** 取消选择图片后触发 */
-        void onImageUnselected(ImageItem image);
+        /**
+         * 取消选择图片后触发
+         *
+         * @param selectedList 取消选择图片后的image list
+         * @param image        被取消选择的图片
+         */
+        void onImageUnselected(List<ImageItem> selectedList, ImageItem image);
 
-        /** 拍照后触发 */
+        /**
+         * 由于一些原因需要刷新被选择的图片列表
+         *
+         * @param selectedList 被选择的图片列表
+         */
+        void onRefreshSelectedList(List<ImageItem> selectedList);
+
+        /**
+         * 拍照后触发
+         *
+         * @param imageFile 拍照生成的图片文件
+         */
         void onCameraShot(File imageFile);
     }
 }

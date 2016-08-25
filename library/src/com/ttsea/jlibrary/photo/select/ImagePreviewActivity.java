@@ -39,7 +39,7 @@ import java.util.List;
 
 public class ImagePreviewActivity extends BaseActivity implements View.OnClickListener,
         ViewPager.OnPageChangeListener {
-    private final String TAG = "Gallery.ImagePreviewActivity";
+    private final String TAG = "Select.ImagePreviewActivity";
 
     private View llyTitleBar;
     private TextView tvTitleBarName;
@@ -250,9 +250,9 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.btnLeft || id == R.id.btnRight) {
+        if (id == R.id.btnLeft) {
             onOkBtnClicked(Activity.RESULT_CANCELED);
-        } else if (id == R.id.btnLeft || id == R.id.btnRight) {
+        } else if (id == R.id.btnRight) {
             onOkBtnClicked(Activity.RESULT_OK);
         } else if (id == R.id.llyCheck) {
             selectOrUnselectImage(currentPosition);
