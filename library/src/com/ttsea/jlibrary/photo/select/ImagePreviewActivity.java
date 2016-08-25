@@ -3,10 +3,7 @@ package com.ttsea.jlibrary.photo.select;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
@@ -22,19 +19,14 @@ import android.widget.TextView;
 
 import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.base.BaseActivity;
-import com.ttsea.jlibrary.base.BaseFragmentActivity;
 import com.ttsea.jlibrary.common.JImageLoader;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.common.JToast;
-import com.ttsea.jlibrary.photo.crop.CropConstants;
-import com.ttsea.jlibrary.photo.gallery.GalleryConstants;
 import com.ttsea.jlibrary.photo.gallery.PhotoView;
 import com.ttsea.jlibrary.photo.gallery.ViewPagerFixed;
 import com.ttsea.jlibrary.utils.DisplayUtils;
 
-import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ImagePreviewActivity extends BaseActivity implements View.OnClickListener,

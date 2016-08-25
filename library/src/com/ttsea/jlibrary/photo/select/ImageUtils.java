@@ -1,18 +1,11 @@
 package com.ttsea.jlibrary.photo.select;
 
-import android.content.Context;
-import android.os.Environment;
-
 import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.utils.CacheDirUtils;
 import com.ttsea.jlibrary.utils.DateUtils;
 import com.ttsea.jlibrary.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * //To do <br/>
