@@ -169,10 +169,8 @@ public class MyAlertDialog extends Dialog {
             }
 
             if (Utils.isEmpty(message)) {
-                llyContentView.setVisibility(View.GONE);
-
+                tvMessage.setText("");
             } else {
-                llyContentView.setVisibility(View.VISIBLE);
                 tvMessage.setText(message);
             }
 

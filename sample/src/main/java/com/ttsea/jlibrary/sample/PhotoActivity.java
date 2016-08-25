@@ -135,7 +135,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         Bundle bundle = new Bundle();
         bundle.putSerializable(GalleryConstants.KEY_SELECTED_LIST, (Serializable) listImage);
         bundle.putInt(GalleryConstants.KEY_SELECTED_POSITION, 0);
-        bundle.putBoolean(GalleryConstants.KEY_CAN_SAVE, false);
+        bundle.putBoolean(GalleryConstants.KEY_CAN_SAVE, true);
         bundle.putBoolean(GalleryConstants.KEY_CAN_DEL, true);
         intent.putExtras(bundle);
         startActivityForResult(intent, REQUEST_CODE_BROWSE_PIC);

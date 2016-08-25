@@ -2,14 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_margin="10dp"
-              android:background="@drawable/my_alert_dialog_bg"
               android:clickable="true"
               android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/my_alert_dialog_bg"
         android:orientation="vertical">
 
         <LinearLayout
@@ -30,16 +31,15 @@
                 android:textSize="14sp"
                 android:visibility="visible"/>
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1.0px"
-                android:background="#ffd0d0d0"/>
+            <include layout="@layout/divider_line_horizontal"/>
+
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/llyContentView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1.0"
             android:orientation="vertical"
             android:visibility="visible">
 
@@ -54,10 +54,7 @@
                 android:textColor="#FF666666"
                 android:textSize="12sp"/>
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1.0px"
-                android:background="#ffd0d0d0"/>
+            <include layout="@layout/divider_line_horizontal"/>
         </LinearLayout>
 
         <LinearLayout
@@ -80,11 +77,9 @@
                 android:textSize="14sp"
                 android:visibility="visible"/>
 
-            <View
+            <include
                 android:id="@+id/divider"
-                android:layout_width="1px"
-                android:layout_height="match_parent"
-                android:background="#ffd0d0d0"/>
+                layout="@layout/divider_line_vertical"/>
 
             <Button
                 android:id="@+id/positiveButton"
