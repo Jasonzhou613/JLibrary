@@ -112,11 +112,6 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 break;
 
             case R.id.ivImage:
-                selectedList.clear();
-                for (int i = 0; i < testImages.length; i++) {
-                    ImageItem item = new ImageItem(testImages[i]);
-                    selectedList.add(item);
-                }
                 browseImages(selectedList);
                 break;
 
@@ -126,6 +121,12 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void browseImages(List<ImageItem> listImage) {
+//        selectedList.clear();
+//        for (int i = 0; i < testImages.length; i++) {
+//            ImageItem item = new ImageItem(testImages[i]);
+//            selectedList.add(item);
+//        }
+
         if (listImage == null || listImage.size() < 1) {
             toastMessage(R.string.image_no_picture);
             return;
@@ -171,6 +172,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         ImageSelector.open(mActivity, config);
     }
 
+    @SuppressWarnings({"unchecked", "deprecation"})
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_SELECT_PIC) {//选择图片回来
@@ -190,7 +192,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 }
                 onSelectImageBack(selectedList);
             }
-        } else if (requestCode == REQUEST_CODE_BROWSE_PIC && data != null) {
+        } else if (requestCode == REQUEST_CODE_BROWSE_PIC && data != null) {//浏览图片回来
             List<ImageItem> list = (List<ImageItem>) data.getExtras()
                     .getSerializable(GalleryConstants.KEY_SELECTED_LIST);
             if (list != null) {

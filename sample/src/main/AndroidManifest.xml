@@ -33,8 +33,14 @@
             android:name="com.ttsea.jlibrary.sample.PhotoActivity"
             android:screenOrientation="portrait"/>
 
+        <!--Photo Activitys start -->
+
         <activity
             android:name="com.ttsea.jlibrary.photo.select.ImageSelectorActivity"
+            android:theme="@android:style/Theme.Light.NoTitleBar"/>
+
+        <activity
+            android:name="com.ttsea.jlibrary.photo.select.ImagePreviewActivity"
             android:theme="@android:style/Theme.Light.NoTitleBar"/>
 
         <activity
@@ -56,6 +62,8 @@
                 <data android:mimeType="image/*"/>
             </intent-filter>
         </activity>
+
+        <!--Photo Activitys end -->
 
     </application>
 

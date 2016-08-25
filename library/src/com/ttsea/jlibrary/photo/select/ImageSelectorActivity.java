@@ -171,7 +171,9 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
                 if (!imageConfig.isMutiSelect()) {
                     selectedList.clear();
                 }
-                selectedList.add(new ImageItem(imageFile.getAbsolutePath()));
+                ImageItem item = new ImageItem(imageFile.getAbsolutePath());
+                item.setSelected(true);
+                selectedList.add(item);
                 Intent data = new Intent();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) selectedList);
@@ -222,8 +224,10 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
                     toastMessage("剪切图片出错");
                     return;
                 }
+                ImageItem item = new ImageItem(data.getData().getPath());
+                item.setSelected(true);
                 selectedList.clear();
-                selectedList.add(new ImageItem(data.getData().getPath()));
+                selectedList.add(item);
                 JLog.d(TAG, "crop image back, imagePath:" + data.getData().getPath());
 
                 Intent intent = new Intent();

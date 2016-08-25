@@ -28,7 +28,6 @@ import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.common.JLog;
@@ -36,6 +35,7 @@ import com.ttsea.jlibrary.common.JToast;
 import com.ttsea.jlibrary.interfaces.OnItemViewClickListener;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +46,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
     private final int LOADER_TYPE_ALL = 0;
     private final int LOADER_TYPE_CATEGORY = 1;
     private final int REQUEST_CODE_TAKE_CAMERA = 0x111;
+    private final int REQUEST_CODE_PREVIEW = 0x112;
 
     private Activity mActivity;
 
@@ -80,7 +81,6 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
             throw new ClassCastException("The Activity must implement ImageSelectorFragment.Callback interface...");
         }
     }
-
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -311,6 +311,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
         }
     }
 
+    /** 勾选或者取消勾选图片 */
     private void selectImageFromGrid(int position) {
         ImageItem image = imageAdapter.getItem(position);
         if (image == null) {
@@ -343,8 +344,13 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
         refreshPreviewTVStatus();
     }
 
-    private void previewList() {
-        JToast.makeText(mActivity, "preview");
+    /** 进行预览 */
+    private void previewList(List<ImageItem> list) {
+        Intent intent = new Intent(mActivity, ImagePreviewActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) list);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, REQUEST_CODE_PREVIEW);
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -402,13 +408,12 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
                 }
                 showCameraAction();
             } else {
-                previewList();
+                previewList(imageList);
             }
         } else {
-            previewList();
+            previewList(imageList);
         }
     }
-
 
     @Override
     public void onItemViewClick(View v, int position) {
@@ -422,7 +427,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
         if (v.getId() == R.id.btnCategory) {//点击所有图片，弹出相册选择pop
             showFolderPopupWindow();
         } else if (v.getId() == R.id.tvPreview) {//预览
-            previewList();
+            previewList(selectedList);
         }
     }
 
@@ -437,6 +442,15 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
                 if (tempFile != null && tempFile.exists()) {
                     tempFile.delete();
                 }
+            }
+            return;
+        }
+
+        if (requestCode == REQUEST_CODE_PREVIEW) {// 预览照片回来
+            if (resultCode == Activity.RESULT_OK) {
+
+            } else {
+                imageAdapter.notifyDataSetChanged();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

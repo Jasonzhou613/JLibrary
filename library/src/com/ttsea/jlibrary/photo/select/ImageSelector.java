@@ -8,6 +8,8 @@ public class ImageSelector {
     public static final int TAKE_PHOTO_BY_GALLERY = 0x110;
 
     public static final String KEY_SELECTED_LIST = "selected_list";
+    public static final String KEY_SELECTED_POSITION = "selected_position";
+    public static final String KEY_MAX_SIZE = "max_size";
 
     private static ImageConfig mImageConfig;
 
