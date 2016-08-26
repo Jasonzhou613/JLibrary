@@ -150,7 +150,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 .setRequestCode(REQUEST_CODE_SELECT_PIC)
                 .setPathList(selectedList)
 
-                .setCrop(true)//设置是否需要剪切,默认为：false，单选时生效
+                .setCrop(false)//设置是否需要剪切,默认为：false，单选时生效
                 //设置剪切图片的输出路径
                 .setOutPutPath(CacheDirUtils.getTempDir(mActivity) + File.separator + "photo")
                 .setAspectX(4)//设置X比例
@@ -160,7 +160,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 //设置剪切模式，默认为(CROP_MODE_RECTANGLE)矩形
                 .setCropModel(CropView.CROP_MODE_RECTANGLE)
                 .setImageSuffix(".nomedia")//设置剪切图片后保存和拍照保存后的后缀名，默认为".jpg"
-                .setReturnData(true)//是否返回数据
+                .setReturnData(false)//是否返回数据
                 .setFixedAspectRatio(true)//设置是否保持剪切比例，默认为true
                 .setCanMoveFrame(false)//按住剪切框中间，是否可以拖动整个剪切框, 默认为false
                 .setCanDragFrameConner(false)//按住剪切框四个角，是否可以拖动剪切框的四个角

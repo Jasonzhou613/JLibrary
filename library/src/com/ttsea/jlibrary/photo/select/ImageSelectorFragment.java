@@ -405,19 +405,35 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (imageAdapter.isShowCamera()) {
-            if (position == 0) {
-                if (selectedList.size() >= imageConfig.getMaxSize()) {
-                    JToast.makeTextCenter(mActivity, getStringById(R.string.image_msg_amount_limit));
+        if (imageConfig.isMutiSelect()) {//多选
+            if (imageAdapter.isShowCamera()) {//如果显示了拍照按钮
+                if (position == 0) {
+                    if (selectedList.size() >= imageConfig.getMaxSize()) {
+                        JToast.makeTextCenter(mActivity, getStringById(R.string.image_msg_amount_limit));
+                        return;
+                    }
+                    showCameraAction();
                     return;
+                } else {
+                    position--;
                 }
-                showCameraAction();
-            } else {
-                position--;
-                previewList(imageList, position);
             }
-        } else {
             previewList(imageList, position);
+
+        } else {//单选
+            if (imageAdapter.isShowCamera()) {//如果显示了拍照按钮
+                if (position == 0) {
+                    showCameraAction();
+                    return;
+                } else {
+                    position--;
+                }
+            }
+            ImageItem item = imageList.get(position);
+            item.setSelected(true);
+            if (onImageSelectListener != null) {
+                onImageSelectListener.onSingleImageSelected(item);
+            }
         }
     }
 

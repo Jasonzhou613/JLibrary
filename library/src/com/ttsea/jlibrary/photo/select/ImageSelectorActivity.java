@@ -125,8 +125,7 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
 
     private void onBackKeyClicked() {
         selectedList.clear();
-        setResult(RESULT_CANCELED);
-        finish();
+        finish(RESULT_CANCELED);
     }
 
     @Override
@@ -141,16 +140,8 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
             Bundle bundle = new Bundle();
             bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) selectedList);
             data.putExtras(bundle);
-            setResult(RESULT_OK, data);
-            finish();
+            finish(RESULT_OK, data);
         }
-    }
-
-    @Override
-    public void onRefreshSelectedList(List<ImageItem> selectedList) {
-        JLog.d(TAG, "onRefreshSelectedList, selectedList.size:" + selectedList.size());
-        this.selectedList = selectedList;
-        refreshBtnRightStatus();
     }
 
     @Override
@@ -164,6 +155,13 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
     public void onImageUnselected(List<ImageItem> list, ImageItem image) {
         JLog.d(TAG, "onImageSelected, remove image:" + image.toString());
         selectedList = list;
+        refreshBtnRightStatus();
+    }
+
+    @Override
+    public void onRefreshSelectedList(List<ImageItem> selectedList) {
+        JLog.d(TAG, "onRefreshSelectedList, selectedList.size:" + selectedList.size());
+        this.selectedList = selectedList;
         refreshBtnRightStatus();
     }
 
@@ -183,8 +181,7 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) selectedList);
                 data.putExtras(bundle);
-                setResult(Activity.RESULT_OK, data);
-                finish();
+                finish(RESULT_OK, data);
             }
         }
     }
@@ -199,8 +196,7 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) selectedList);
                 data.putExtras(bundle);
-                setResult(Activity.RESULT_OK, data);
-                finish();
+                finish(RESULT_OK, data);
             }
         }
     }
@@ -239,8 +235,7 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) selectedList);
                 intent.putExtras(bundle);
-                setResult(Activity.RESULT_OK, data);
-                finish();
+                finish(RESULT_OK, intent);
 
             } else if (resultCode == CropConstants.RESULT_CODE_CROP_CANCLED) {
                 //toastMessage("取消了剪切图片");
