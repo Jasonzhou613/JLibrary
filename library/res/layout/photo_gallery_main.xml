@@ -47,7 +47,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="16dp"
-            android:background="@drawable/photo_btn_delete_selector"/>
+            android:background="@drawable/photo_clockwise_rotation_selector"/>
 
     </RelativeLayout>
 

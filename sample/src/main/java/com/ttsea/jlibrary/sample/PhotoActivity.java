@@ -121,11 +121,11 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void browseImages(List<ImageItem> listImage) {
-//        selectedList.clear();
-//        for (int i = 0; i < testImages.length; i++) {
-//            ImageItem item = new ImageItem(testImages[i]);
-//            selectedList.add(item);
-//        }
+        selectedList.clear();
+        for (int i = 0; i < testImages.length; i++) {
+            ImageItem item = new ImageItem(testImages[i]);
+            selectedList.add(item);
+        }
 
         if (listImage == null || listImage.size() < 1) {
             toastMessage(R.string.image_no_picture);
