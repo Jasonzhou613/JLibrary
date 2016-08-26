@@ -140,7 +140,8 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
             }
         }
 
-        if (list.size() == 0) {
+        //点击的是完成
+        if (list.size() == 0 && resultCode == Activity.RESULT_OK) {
             imageList.get(currentPosition).setSelected(true);
             list.add(imageList.get(currentPosition));
             refreshTvIndex();
