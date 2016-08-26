@@ -27,6 +27,7 @@ import com.ttsea.jlibrary.photo.gallery.ViewPagerFixed;
 import com.ttsea.jlibrary.utils.DisplayUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImagePreviewActivity extends BaseActivity implements View.OnClickListener,
@@ -45,7 +46,7 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
     private MyPageAdapter adapter;
 
     /** 获取前一个activity传过来的图片list */
-    private List<ImageItem> selectedList;
+    private List<ImageItem> imageList;
     /** 获取前一个activity传过来的position */
     private int currentPosition;
     /** 能选择的最大数目 */
@@ -59,7 +60,7 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        selectedList = (List<ImageItem>) bundle.getSerializable(ImageSelector.KEY_SELECTED_LIST);
+        imageList = (List<ImageItem>) bundle.getSerializable(ImageSelector.KEY_SELECTED_LIST);
         currentPosition = bundle.getInt(ImageSelector.KEY_SELECTED_POSITION, 0);
         maxSize = bundle.getInt(ImageSelector.KEY_MAX_SIZE, 0);
 
@@ -79,7 +80,7 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
         llyCheck.setOnClickListener(this);
         viwePager.setOnPageChangeListener(this);
 
-        if (selectedList == null || selectedList.size() == 0) {
+        if (imageList == null || imageList.size() == 0) {
             toastMessage(R.string.image_no_picture);
             this.finish();
             return;
@@ -90,7 +91,7 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
             return;
         }
 
-        adapter = new MyPageAdapter(selectedList);
+        adapter = new MyPageAdapter(imageList);
         viwePager.setAdapter(adapter);
         viwePager.setPageMargin(10);
         viwePager.setCurrentItem(currentPosition);
@@ -130,21 +131,24 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void onOkBtnClicked(int resultCode) {
-        //去除未选择的
-        int position = 0;
-        while (position < selectedList.size()) {
-            ImageItem item = selectedList.get(position);
-            if (!item.isSelected()) {
-                selectedList.remove(item);
-                position = 0;
-                continue;
+        //筛选出被选择的图片
+        List<ImageItem> list = new ArrayList<ImageItem>();
+        for (int i = 0; i < imageList.size(); i++) {
+            ImageItem item = imageList.get(i);
+            if (item.isSelected()) {
+                list.add(item);
             }
-            position++;
+        }
+
+        if (list.size() == 0) {
+            imageList.get(currentPosition).setSelected(true);
+            list.add(imageList.get(currentPosition));
+            refreshTvIndex();
         }
 
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) selectedList);
+        bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) list);
         intent.putExtras(bundle);
         setResult(resultCode, intent);
 
@@ -152,12 +156,12 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
     }
 
     public void refreshTvIndex() {
-        if (selectedList.size() <= 1) {
+        if (imageList.size() <= 1) {
             tvTitleBarName.setText("");
         } else {
-            tvTitleBarName.setText((currentPosition + 1) + "/" + selectedList.size());
+            tvTitleBarName.setText((currentPosition + 1) + "/" + imageList.size());
         }
-        ImageItem item = selectedList.get(currentPosition);
+        ImageItem item = imageList.get(currentPosition);
         if (item != null) {
             if (item.isSelected()) {
                 ivCheck.setImageResource(R.drawable.imageselector_select_checked);
@@ -168,19 +172,17 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
 
         int selectCount = getSelectCount();
         String txt = (getStringById(R.string.finish)) + "(" + selectCount + "/" + maxSize + ")";
-        btnRight.setEnabled(true);
 
         if (selectCount < 1) {
             txt = (getStringById(R.string.finish));
-            btnRight.setEnabled(false);
         }
         btnRight.setText(txt);
     }
 
     private int getSelectCount() {
         int count = 0;
-        for (int i = 0; i < selectedList.size(); i++) {
-            if (selectedList.get(i).isSelected()) {
+        for (int i = 0; i < imageList.size(); i++) {
+            if (imageList.get(i).isSelected()) {
                 count++;
             }
         }
@@ -188,7 +190,7 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void selectOrUnselectImage(int position) {
-        ImageItem item = selectedList.get(position);
+        ImageItem item = imageList.get(position);
         if (getSelectCount() >= maxSize && !item.isSelected()) {
             JToast.makeTextCenter(mActivity, getStringById(R.string.image_msg_amount_limit));
             return;
@@ -294,7 +296,7 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
             PhotoView pvImage = (PhotoView) itemView.findViewById(R.id.pvImage);
             pvImage.setBackgroundColor(0xff000000);
 
-            ImageItem item = selectedList.get(position);
+            ImageItem item = imageList.get(position);
 
             itemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             itemView.setTag(item.getPath());
