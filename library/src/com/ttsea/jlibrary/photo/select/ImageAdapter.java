@@ -184,6 +184,15 @@ class ImageAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void selectOrUnselect(ImageItem image) {
+        if (selectedList.contains(image)) {
+            selectedList.remove(image);
+        } else {
+            selectedList.add(image);
+        }
+        notifyDataSetChanged();
+    }
+
     private static class ViewHolder {
         ImageView ivImage;
         ImageView ivCheck;

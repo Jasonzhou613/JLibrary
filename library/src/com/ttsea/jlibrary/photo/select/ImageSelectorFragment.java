@@ -337,7 +337,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
                     onImageSelectListener.onImageSelected(selectedList, image);
                 }
             }
-            imageAdapter.notifyDataSetChanged();
+            imageAdapter.selectOrUnselect(image);
         } else {
             image.setSelected(true);
             if (onImageSelectListener != null) {

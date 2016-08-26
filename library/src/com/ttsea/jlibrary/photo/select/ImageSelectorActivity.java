@@ -124,6 +124,7 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
     }
 
     private void onBackKeyClicked() {
+        selectedList.clear();
         setResult(RESULT_CANCELED);
         finish();
     }

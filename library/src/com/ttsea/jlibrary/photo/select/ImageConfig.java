@@ -181,7 +181,13 @@ public class ImageConfig implements Serializable {
         }
 
         public Builder setPathList(List<ImageItem> pathList) {
-            this.pathList = pathList;
+            if (this.pathList == null) {
+                this.pathList = new ArrayList<ImageItem>();
+            }
+            this.pathList.clear();
+            if (pathList != null) {
+                this.pathList.addAll(pathList);
+            }
             return this;
         }
 
