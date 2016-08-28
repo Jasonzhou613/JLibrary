@@ -4,7 +4,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/black">
 
-    <include layout="@layout/title_bar_center"/>
+    <include layout="@layout/title_bar_left"/>
 
     <com.ttsea.jlibrary.photo.gallery.ViewPagerFixed
         android:id="@+id/viwePager"
@@ -23,25 +23,16 @@
         android:background="@color/translucent44">
 
         <Button
-            android:id="@+id/btnSavePic"
+            android:id="@+id/btnUnClockwiseRotation"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
-            android:background="@drawable/photo_btn_download_selector"/>
-
-        <TextView
-            android:id="@+id/tvIndex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="0/0"
-            android:textColor="@color/white"
-            android:textSize="12sp"/>
+            android:background="@drawable/photo_unclockwise_rotation_selector"/>
 
         <Button
-            android:id="@+id/btnDelete"
+            android:id="@+id/btnClockwiseRotation"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_alignParentRight="true"

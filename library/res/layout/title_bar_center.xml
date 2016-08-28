@@ -47,7 +47,6 @@
             android:layout_centerVertical="true"
             android:background="@color/transparent"
             android:minWidth="48dp"
-            android:text="@string/finish"
             android:textColor="@color/white"
             android:textSize="14sp"/>
 

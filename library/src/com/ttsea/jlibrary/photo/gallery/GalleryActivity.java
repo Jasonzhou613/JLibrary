@@ -43,12 +43,14 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
         OnPageChangeListener {
     private final String TAG = "Gallery.GalleryActivity";
 
+    private View llyTitleBar;
     private TextView tvTitleBarName;
     private Button btnLeft;
     private Button btnRight;
-    private TextView tvIndex;
-    private Button btnSavePic;
-    private Button btnDelete;
+
+    private View llyBottomView;
+    private Button btnUnClockwiseRotation;
+    private Button btnClockwiseRotation;
 
     private ViewPagerFixed viwePager;
     private MyPageAdapter adapter;
@@ -59,8 +61,8 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
     private int currentPosition;
     /** 是否可保存图片, 默认为false */
     private boolean canSave = false;
-    /** 是否可删除图片, 默认为false */
-    private boolean canDel = false;
+    /** 是否可旋转图片, 默认为true */
+    private boolean canRotate = true;
 
     @SuppressWarnings({"unchecked", "deprecation"})
     @Override
@@ -73,20 +75,23 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
         selectedList = (List<ImageItem>) bundle.getSerializable(GalleryConstants.KEY_SELECTED_LIST);
         currentPosition = bundle.getInt(GalleryConstants.KEY_SELECTED_POSITION, 0);
         canSave = bundle.getBoolean(GalleryConstants.KEY_CAN_SAVE, false);
-        canDel = bundle.getBoolean(GalleryConstants.KEY_CAN_DEL, false);
+        canRotate = bundle.getBoolean(GalleryConstants.KEY_CAN_ROTATE, true);
 
+        llyTitleBar = findViewById(R.id.llyTitleBar);
         tvTitleBarName = (TextView) findViewById(R.id.tvTitleBarName);
         btnLeft = (Button) findViewById(R.id.btnLeft);
         btnRight = (Button) findViewById(R.id.btnRight);
-        viwePager = (ViewPagerFixed) findViewById(R.id.viwePager);
-        tvIndex = (TextView) findViewById(R.id.tvIndex);
-        btnSavePic = (Button) findViewById(R.id.btnSavePic);
-        btnDelete = (Button) findViewById(R.id.btnDelete);
 
+        viwePager = (ViewPagerFixed) findViewById(R.id.viwePager);
+        llyBottomView = findViewById(R.id.llyBottomView);
+        btnUnClockwiseRotation = (Button) findViewById(R.id.btnUnClockwiseRotation);
+        btnClockwiseRotation = (Button) findViewById(R.id.btnClockwiseRotation);
+
+        btnRight.setBackgroundResource(R.drawable.photo_btn_download_selector);
         btnLeft.setOnClickListener(this);
         btnRight.setOnClickListener(this);
-        btnSavePic.setOnClickListener(this);
-        btnDelete.setOnClickListener(this);
+        btnUnClockwiseRotation.setOnClickListener(this);
+        btnClockwiseRotation.setOnClickListener(this);
         viwePager.setOnPageChangeListener(this);
 
         if (selectedList == null || selectedList.size() == 0) {
@@ -100,8 +105,8 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
             return;
         }
 
-        btnSavePic.setVisibility(canSave ? View.VISIBLE : View.INVISIBLE);
-        btnDelete.setVisibility(canDel ? View.VISIBLE : View.INVISIBLE);
+        btnRight.setVisibility(canSave ? View.VISIBLE : View.INVISIBLE);
+        llyBottomView.setVisibility(canRotate ? View.VISIBLE : View.INVISIBLE);
 
         adapter = new MyPageAdapter(selectedList);
         viwePager.setAdapter(adapter);
@@ -158,11 +163,11 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
 
     public void refreshTvIndex() {
         if (selectedList.size() <= 1) {
-            tvIndex.setVisibility(View.INVISIBLE);
+            tvTitleBarName.setVisibility(View.INVISIBLE);
         } else {
-            tvIndex.setVisibility(View.VISIBLE);
+            tvTitleBarName.setVisibility(View.VISIBLE);
         }
-        tvIndex.setText((currentPosition + 1) + "/" + selectedList.size());
+        tvTitleBarName.setText((currentPosition + 1) + "/" + selectedList.size());
     }
 
     private void displayImage(ImageItem item, ImageView imageView) {
@@ -197,6 +202,11 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
         }
     }
 
+    private void rotateImage(int degree) {
+        showToast("针旋转图片:" + degree);
+    }
+
+
     /** 监听返回按钮 */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -210,12 +220,14 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.btnLeft || id == R.id.btnRight) {
+        if (id == R.id.btnLeft) {//返回
             onOkBtnClicked();
-        } else if (id == R.id.btnDelete) {
-            onDeleteBtnClicked();
-        } else if (id == R.id.btnSavePic) {
-            toastMessage("下载图片");
+        } else if (id == R.id.btnRight) {//保存图片
+            showToast("保存图片");
+        } else if (id == R.id.btnClockwiseRotation) {//顺时针旋转图片
+            rotateImage(90);
+        } else if (id == R.id.btnUnClockwiseRotation) {//逆时针旋转图片
+            rotateImage(-90);
         }
     }
 

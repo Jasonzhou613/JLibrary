@@ -31,7 +31,7 @@ public class GalleryConstants {
     public static final String KEY_CAN_SAVE = "can_save";
 
     /**
-     * 是否显示删除图片按钮
+     * 是否可旋转图片
      */
-    public static final String KEY_CAN_DEL = "can_del";
+    public static final String KEY_CAN_ROTATE = "can_rotate";
 }
