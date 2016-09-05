@@ -2,7 +2,7 @@ package com.ttsea.jlibrary.photo.gallery;
 
 /**
  * //To do <br/>
- * <p/>
+ * <p>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/8/8 22:23 <br/>
  * <b>author:</b> Jason <br/>
@@ -34,4 +34,9 @@ public class GalleryConstants {
      * 是否可旋转图片
      */
     public static final String KEY_CAN_ROTATE = "can_rotate";
+
+    /**
+     * 保存图片的地址
+     */
+    public static final String KEY_SAVE_PATH = "save_path";
 }

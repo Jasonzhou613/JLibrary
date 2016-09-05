@@ -17,6 +17,7 @@ import android.widget.ImageView.ScaleType;
 
 import com.ttsea.jlibrary.common.JLog;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 
 class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
@@ -502,6 +503,22 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         if (null != imageView) {
             imageView.post(new AnimatedZoomRunnable(getScale(), scale, focalX, focalY));
         }
+    }
+
+    @Override
+    public void rotate(float angle, float pivotX, float pivotY) {
+        JLog.d(TAG, "rotate, angle:" + angle + ", pivotX:" + pivotX + ", pivotY:" + pivotY);
+    }
+
+    @Override
+    public void rotate(float angle) {
+        JLog.d(TAG, "rotate, angle:" + angle);
+    }
+
+    @Override
+    public boolean saveImage(String savePath, String fileName) {
+        JLog.d(TAG, "saveImage, savePath:" + savePath + File.separator + fileName);
+        return false;
     }
 
     protected Matrix getDisplayMatrix() {

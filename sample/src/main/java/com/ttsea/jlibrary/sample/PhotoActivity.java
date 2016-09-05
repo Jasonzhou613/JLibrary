@@ -26,7 +26,7 @@ import java.util.List;
 
 /**
  * //To do <br/>
- * <p/>
+ * <p>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/7/12 15:40 <br/>
  * <b>author:</b> Jason <br/>
@@ -50,7 +50,8 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
             "http://hws002.b0.upaiyun.com/team/2162187/20160820/68ec5ce7a7694413e367cb2b22bbea49__",
             "http://hws002.b0.upaiyun.com/team/2162187/20160820/8c748752d963790074bfae4302d0a84f",
             "http://hws002.b0.upaiyun.com/team/2162187/20160820/7f39e67fb78adcbaad955b4466f74fe5",
-            "http://hws002.b0.upaiyun.com/team/2162187/20160820/8715b4585a1c5f7000b40fe0cbc243df",
+            "/storage/sdcard0/test-image/ratio/IMG_0572.JPG",
+            "/storage/sdcard0/test-image/big-pic/中国政区2500.jpg",
             "http://hws002.b0.upaiyun.com/team/2162187/20160820/677ef48b95d71957495a745bc6e64263",
             "http://hws002.b0.upaiyun.com/team/2162187/20160820/fc90c4c9bb54dae3d63642cf20cbbc12"
     };
@@ -137,6 +138,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         bundle.putInt(GalleryConstants.KEY_SELECTED_POSITION, 0);
         bundle.putBoolean(GalleryConstants.KEY_CAN_SAVE, true);
         bundle.putBoolean(GalleryConstants.KEY_CAN_ROTATE, true);
+        bundle.putString(GalleryConstants.KEY_SAVE_PATH, CacheDirUtils.getTempDir(mActivity));
         intent.putExtras(bundle);
         startActivityForResult(intent, REQUEST_CODE_BROWSE_PIC);
     }

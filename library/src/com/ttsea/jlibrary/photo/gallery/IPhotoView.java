@@ -136,4 +136,29 @@ interface IPhotoView {
      * @param focalY - Y Focus Point
      */
     void zoomTo(float scale, float focalX, float focalY);
+
+    /**
+     * 以点(pivotX,pivotY)旋转angle度
+     *
+     * @param angle  旋转角度
+     * @param pivotX x基准点
+     * @param pivotY y基准点
+     */
+    void rotate(float angle, float pivotX, float pivotY);
+
+    /**
+     * 以点图片中心旋转angle度
+     *
+     * @param angle 旋转角度
+     */
+    void rotate(float angle);
+
+    /**
+     * 保存图片
+     *
+     * @param savePath 保存路径
+     * @param fileName 保存名字
+     * @return 是否保存成功，成功返回:true，失败返回:false
+     */
+    boolean saveImage(String savePath, String fileName);
 }

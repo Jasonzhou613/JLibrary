@@ -1,6 +1,5 @@
 package com.ttsea.jlibrary.photo.select;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -66,6 +65,9 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
         selectedList = imageConfig.getPathList();
         if (selectedList == null) {
             selectedList = new ArrayList<ImageItem>();
+        }
+        for (int i = 0; i < selectedList.size(); i++) {
+            selectedList.get(i).setSelected(true);
         }
 
         ViewGroup.LayoutParams params = btnRight.getLayoutParams();

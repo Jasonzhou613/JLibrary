@@ -23,8 +23,13 @@ import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.common.JImageLoader;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.photo.select.ImageItem;
+import com.ttsea.jlibrary.utils.CacheDirUtils;
+import com.ttsea.jlibrary.utils.DateUtils;
+import com.ttsea.jlibrary.utils.Utils;
 
+import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,7 +37,7 @@ import java.util.List;
  * 可以传入的参数有：<br/>
  * selected_list: 被选择了的照片列表<br/>
  * selected_position: 从哪个位置开始查看，从0开始，不能小于0，默认为0<br/>
- * <p/>
+ * <p>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2015.09.10 <br/>
  * <b>author:</b> Jason <br/>
@@ -55,6 +60,7 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
     private ViewPagerFixed viwePager;
     private MyPageAdapter adapter;
 
+    private List<View> views;
     /** 获取前一个activity传过来的图片list */
     private List<ImageItem> selectedList;
     /** 获取前一个activity传过来的position */
@@ -63,6 +69,8 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
     private boolean canSave = false;
     /** 是否可旋转图片, 默认为true */
     private boolean canRotate = true;
+    /** 若图片设置为可保存，这里可以设置保存的地址 */
+    private String savePath;
 
     @SuppressWarnings({"unchecked", "deprecation"})
     @Override
@@ -76,6 +84,7 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
         currentPosition = bundle.getInt(GalleryConstants.KEY_SELECTED_POSITION, 0);
         canSave = bundle.getBoolean(GalleryConstants.KEY_CAN_SAVE, false);
         canRotate = bundle.getBoolean(GalleryConstants.KEY_CAN_ROTATE, true);
+        savePath = bundle.getString(GalleryConstants.KEY_SAVE_PATH);
 
         llyTitleBar = findViewById(R.id.llyTitleBar);
         tvTitleBarName = (TextView) findViewById(R.id.tvTitleBarName);
@@ -104,11 +113,27 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
             this.finish();
             return;
         }
+        //如果保存地址未设置，这里给个默认值
+        if (Utils.isEmpty(savePath)) {
+            savePath = CacheDirUtils.getSdDataDir(mActivity);
+        }
+
+        File dir = new File(savePath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        views = new ArrayList<View>();
+        LayoutInflater inflater = LayoutInflater.from(mActivity);
+        for (int i = 0; i < selectedList.size(); i++) {
+            View itemView = inflater.inflate(R.layout.photo_gallery_item, null);
+            views.add(itemView);
+        }
 
         btnRight.setVisibility(canSave ? View.VISIBLE : View.INVISIBLE);
         llyBottomView.setVisibility(canRotate ? View.VISIBLE : View.INVISIBLE);
 
-        adapter = new MyPageAdapter(selectedList);
+        adapter = new MyPageAdapter(views, selectedList);
         viwePager.setAdapter(adapter);
         viwePager.setPageMargin(10);
         viwePager.setCurrentItem(currentPosition);
@@ -202,8 +227,21 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
         }
     }
 
-    private void rotateImage(int degree) {
-        showToast("针旋转图片:" + degree);
+    private void rotateImage(float degree) {
+        View itemView = views.get(currentPosition);
+        View pvImage = itemView.findViewById(R.id.pvImage);
+        if (pvImage instanceof PhotoView) {
+            ((PhotoView) pvImage).rotate(degree);
+        }
+    }
+
+    private void saveImage() {
+        String fileName = DateUtils.getCurrentTime("yyy-MM-dd_HH_mm_ss") + ".jpg";
+        View itemView = views.get(currentPosition);
+        View pvImage = itemView.findViewById(R.id.pvImage);
+        if (pvImage instanceof PhotoView) {
+            ((PhotoView) pvImage).saveImage(savePath, fileName);
+        }
     }
 
 
@@ -223,7 +261,7 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
         if (id == R.id.btnLeft) {//返回
             onOkBtnClicked();
         } else if (id == R.id.btnRight) {//保存图片
-            showToast("保存图片");
+            saveImage();
         } else if (id == R.id.btnClockwiseRotation) {//顺时针旋转图片
             rotateImage(90);
         } else if (id == R.id.btnUnClockwiseRotation) {//逆时针旋转图片
@@ -248,9 +286,11 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
     }
 
     private class MyPageAdapter extends PagerAdapter {
+        private List<View> viewItems;
         private List<ImageItem> items;
 
-        public MyPageAdapter(List<ImageItem> listViews) {
+        public MyPageAdapter(List<View> views, List<ImageItem> listViews) {
+            this.viewItems = views;
             this.items = listViews;
         }
 
@@ -268,9 +308,7 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
         public Object instantiateItem(ViewGroup container, int position) {
             JLog.d(TAG, "instantiateItem, position:" + position);
 
-            LayoutInflater inflater = LayoutInflater.from(mActivity);
-
-            View itemView = inflater.inflate(R.layout.photo_gallery_item, null);
+            View itemView = viewItems.get(position);
             PhotoView pvImage = (PhotoView) itemView.findViewById(R.id.pvImage);
             pvImage.setBackgroundColor(0xff000000);
 
