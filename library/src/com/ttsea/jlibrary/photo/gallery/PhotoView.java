@@ -158,8 +158,8 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
-    public boolean saveImage(String savePath, String fileName) {
-        return mAttacher.saveImage(savePath, fileName);
+    public void saveImage(String savePath, String fileName) {
+        mAttacher.saveImage(savePath, fileName);
     }
 
     @Override

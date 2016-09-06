@@ -63,6 +63,7 @@
     <string name="image_msg_amount_limit">已经达到最高选择数量</string>
     <string name="image_open_camera_fail">相册初始化失败!</string>
     <string name="image_choice">选择</string>
+    <string name="image_save_imageing">正在保存...</string>
     <string name="photo_not_select_pic">未选择图片</string>
     <string name="photo_position_can_not_less_than_zero">位置不能小于0</string>
     <!-- Photo end -->

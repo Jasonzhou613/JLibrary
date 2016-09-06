@@ -12,8 +12,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
+import android.os.Handler;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,7 +25,7 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
 import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.utils.BitmapUtils;
+import com.ttsea.jlibrary.utils.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -530,7 +532,7 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
 
     @Override
-    public boolean saveImage(String savePath, String fileName) {
+    public void saveImage(String savePath, String fileName) {
         if (imageSaveListener != null) {
             imageSaveListener.onStartSave();
         }
@@ -539,7 +541,7 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         if (imageView == null || !hasDrawable(imageView)) {
             JLog.e(TAG, "saveImage, imageView is null or has no Drawable");
             imageSaveListener.onSaveFailed("image is null");
-            return false;
+            return;
         }
 
         Bitmap bitmap = null;
@@ -559,7 +561,7 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             if (imageSaveListener != null) {
                 imageSaveListener.onSaveFailed("bitmap is null");
             }
-            return false;
+            return;
         }
 
         if (bitmap.isRecycled()) {
@@ -567,66 +569,12 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             if (imageSaveListener != null) {
                 imageSaveListener.onSaveFailed("bitmap is null");
             }
-            return false;
+            return;
         }
 
         File f = new File(savePath, fileName);
-
-        if (f.exists()) {
-            f.deleteOnExit();
-        }
-        if (!f.exists()) {
-            File parentFile = f.getParentFile();
-            if (!parentFile.exists()) {
-                parentFile.mkdirs();
-            }
-            try {
-                f.createNewFile();
-            } catch (IOException e) {
-                JLog.e(TAG, "saveImage, IOException e:" + e.toString());
-                if (imageSaveListener != null) {
-                    imageSaveListener.onSaveFailed(" " + e.toString());
-                }
-                return false;
-            }
-        }
-
-        FileOutputStream fOut = null;
-        try {
-            fOut = new FileOutputStream(f);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-
-        } catch (Exception e) {
-            JLog.e(TAG, "saveImage, Exception e：" + e.toString());
-            if (imageSaveListener != null) {
-                imageSaveListener.onSaveFailed(" " + e.toString());
-            }
-            return false;
-        }
-
-        try {
-            if (fOut != null) {
-                fOut.flush();
-                fOut.close();
-            }
-        } catch (Exception e) {
-            JLog.e(TAG, "saveImage, Exception e：" + e.toString());
-            if (imageSaveListener != null) {
-                imageSaveListener.onSaveFailed(" " + e.toString());
-            }
-            return false;
-        }
-
-        // 最后通知图库更新
-        Uri imgUri = Uri.parse("file://" + f.getAbsolutePath());
-        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, imgUri);
-        imageView.getContext().sendBroadcast(intent);
-
-        JLog.d(TAG, "onSaveComplete, path:" + f.getAbsolutePath());
-        if (imageSaveListener != null) {
-            imageSaveListener.onSaveComplete(f.getAbsolutePath());
-        }
-        return true;
+        SaveImageTask saveImageTask = new SaveImageTask(f, bitmap);
+        saveImageTask.execute();
     }
 
 
@@ -1034,6 +982,109 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
                 // Post On animation
                 Compat.postOnAnimation(imageView, this);
+            }
+        }
+    }
+
+    //AsyncTask<Params, Progress, Result>
+    private class SaveImageTask extends AsyncTask<Void, Void, String> {
+        private File saveFile;
+        private Bitmap bitmap;
+        private Handler handler;
+
+        public SaveImageTask(File saveFile, Bitmap bitmap) {
+            this.saveFile = saveFile;
+            this.bitmap = bitmap;
+            handler = new Handler();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            if (saveFile.exists()) {
+                saveFile.deleteOnExit();
+            }
+            if (!saveFile.exists()) {
+                File parentFile = saveFile.getParentFile();
+                if (!parentFile.exists()) {
+                    parentFile.mkdirs();
+                }
+                try {
+                    saveFile.createNewFile();
+                } catch (IOException e) {
+                    JLog.e(TAG, "saveImage, IOException e:" + e.toString());
+                    final String reason = e.toString();
+                    if (imageSaveListener != null) {
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                imageSaveListener.onSaveFailed(" " + reason);
+                            }
+                        });
+                    }
+                    return null;
+                }
+            }
+
+            FileOutputStream fOut = null;
+            try {
+                fOut = new FileOutputStream(saveFile);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+
+            } catch (Exception e) {
+                JLog.e(TAG, "saveImage, Exception e：" + e.toString());
+                final String reason = e.toString();
+                if (imageSaveListener != null) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            imageSaveListener.onSaveFailed(" " + reason);
+                        }
+                    });
+                }
+                return null;
+            }
+
+            try {
+                if (fOut != null) {
+                    fOut.flush();
+                    fOut.close();
+                }
+            } catch (Exception e) {
+                JLog.e(TAG, "saveImage, Exception e：" + e.toString());
+                final String reason = e.toString();
+                if (imageSaveListener != null) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            imageSaveListener.onSaveFailed(" " + reason);
+                        }
+                    });
+                }
+                return null;
+            }
+
+            return saveFile.getAbsolutePath();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (!Utils.isEmpty(s)) {
+                // 最后通知图库更新
+                Uri imgUri = Uri.parse("file://" + saveFile.getAbsolutePath());
+                Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, imgUri);
+                if (getImageView() != null) {
+                    getImageView().getContext().sendBroadcast(intent);
+                }
+
+                JLog.d(TAG, "onSaveComplete, path:" + saveFile.getAbsolutePath());
+                if (imageSaveListener != null) {
+                    imageSaveListener.onSaveComplete(saveFile.getAbsolutePath());
+                }
             }
         }
     }

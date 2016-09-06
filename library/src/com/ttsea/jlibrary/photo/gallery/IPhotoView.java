@@ -158,7 +158,6 @@ interface IPhotoView {
      *
      * @param savePath 保存路径
      * @param fileName 保存名字
-     * @return 是否保存成功，成功返回:true，失败返回:false
      */
-    boolean saveImage(String savePath, String fileName);
+    void saveImage(String savePath, String fileName);
 }

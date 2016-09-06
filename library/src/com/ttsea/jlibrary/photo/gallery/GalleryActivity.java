@@ -22,6 +22,7 @@ import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.common.JImageLoader;
 import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.component.dialog.TransparentDialog;
 import com.ttsea.jlibrary.photo.select.ImageItem;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
 import com.ttsea.jlibrary.utils.DateUtils;
@@ -37,7 +38,7 @@ import java.util.List;
  * 可以传入的参数有：<br/>
  * selected_list: 被选择了的照片列表<br/>
  * selected_position: 从哪个位置开始查看，从0开始，不能小于0，默认为0<br/>
- * <p>
+ * <p/>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2015.09.10 <br/>
  * <b>author:</b> Jason <br/>
@@ -45,7 +46,7 @@ import java.util.List;
  * <b>last modified date:</b> 2015.10.23
  */
 public class GalleryActivity extends BaseActivity implements OnClickListener,
-        OnPageChangeListener {
+        OnPageChangeListener, ImageSaveListener {
     private final String TAG = "Gallery.GalleryActivity";
 
     private View llyTitleBar;
@@ -59,6 +60,10 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
 
     private ViewPagerFixed viwePager;
     private MyPageAdapter adapter;
+
+    private TransparentDialog saveImageDialog;
+    /** 记录是否正在保存图片 */
+    private boolean isSaveImageing = false;
 
     private List<View> views;
     /** 获取前一个activity传过来的图片list */
@@ -236,14 +241,18 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
     }
 
     private void saveImage() {
+        if (isSaveImageing) {
+            showToast(R.string.image_save_imageing);
+            return;
+        }
         String fileName = DateUtils.getCurrentTime("yyy-MM-dd_HH_mm_ss") + ".jpg";
         View itemView = views.get(currentPosition);
         View pvImage = itemView.findViewById(R.id.pvImage);
         if (pvImage instanceof PhotoView) {
+            ((PhotoView) pvImage).setImageSaveListener(this);
             ((PhotoView) pvImage).saveImage(savePath, fileName);
         }
     }
-
 
     /** 监听返回按钮 */
     @Override
@@ -283,6 +292,32 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
     public void onPageSelected(int arg0) {
         currentPosition = arg0;
         refreshTvIndex();
+    }
+
+    @Override
+    public void onStartSave() {
+        isSaveImageing = true;
+        if (saveImageDialog == null) {
+            saveImageDialog = new TransparentDialog(mActivity);
+            saveImageDialog.setCanceledOnTouchOutside(false);
+        }
+        if (saveImageDialog.isShowing()) {
+            return;
+        }
+        saveImageDialog.show(getStringById(R.string.image_save_imageing));
+    }
+
+    @Override
+    public void onSaveComplete(String path) {
+        isSaveImageing = false;
+        saveImageDialog.dismiss();
+        toastMessage("图片已保存到" + path);
+    }
+
+    @Override
+    public void onSaveFailed(String reason) {
+        isSaveImageing = false;
+        saveImageDialog.dismiss();
     }
 
     private class MyPageAdapter extends PagerAdapter {
