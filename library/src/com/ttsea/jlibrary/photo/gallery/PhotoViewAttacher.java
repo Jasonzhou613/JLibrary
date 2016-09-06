@@ -1,10 +1,17 @@
 package com.ttsea.jlibrary.photo.gallery;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Matrix.ScaleToFit;
+import android.graphics.PixelFormat;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.NinePatchDrawable;
+import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.view.GestureDetector;
@@ -16,13 +23,15 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
 import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.utils.BitmapUtils;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
-        VersionedGestureDetector.OnGestureListener,
-        GestureDetector.OnDoubleTapListener,
+        VersionedGestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener,
         ViewTreeObserver.OnGlobalLayoutListener {
 
     private final String TAG = "Gallery.PhotoViewAttacher";
@@ -41,6 +50,8 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private float mMaxScale = DEFAULT_MAX_SCALE;
 
     private boolean mAllowParentInterceptOnEdge = true;
+
+    private ImageSaveListener imageSaveListener;
 
     private static void checkZoomLevels(float minZoom, float midZoom, float maxZoom) {
         if (minZoom >= midZoom) {
@@ -72,6 +83,10 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             default:
                 return true;
         }
+    }
+
+    public void setImageSaveListener(ImageSaveListener l) {
+        this.imageSaveListener = l;
     }
 
     /**
@@ -499,7 +514,6 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     @Override
     public final void zoomTo(float scale, float focalX, float focalY) {
         ImageView imageView = getImageView();
-
         if (null != imageView) {
             imageView.post(new AnimatedZoomRunnable(getScale(), scale, focalX, focalY));
         }
@@ -517,9 +531,104 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public boolean saveImage(String savePath, String fileName) {
+        if (imageSaveListener != null) {
+            imageSaveListener.onStartSave();
+        }
         JLog.d(TAG, "saveImage, savePath:" + savePath + File.separator + fileName);
-        return false;
+        ImageView imageView = getImageView();
+        if (imageView == null || !hasDrawable(imageView)) {
+            JLog.e(TAG, "saveImage, imageView is null or has no Drawable");
+            imageSaveListener.onSaveFailed("image is null");
+            return false;
+        }
+
+        Bitmap bitmap = null;
+        Drawable drawable = imageView.getDrawable();
+        if (drawable instanceof BitmapDrawable) {
+            bitmap = ((BitmapDrawable) drawable).getBitmap();
+        } else if (drawable instanceof NinePatchDrawable) {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(),
+                    drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            drawable.draw(canvas);
+        }
+
+        if (bitmap == null) {
+            JLog.e(TAG, "saveImage, bitmap is null");
+            if (imageSaveListener != null) {
+                imageSaveListener.onSaveFailed("bitmap is null");
+            }
+            return false;
+        }
+
+        if (bitmap.isRecycled()) {
+            JLog.e(TAG, "saveImage, bitmap is recycled");
+            if (imageSaveListener != null) {
+                imageSaveListener.onSaveFailed("bitmap is null");
+            }
+            return false;
+        }
+
+        File f = new File(savePath, fileName);
+
+        if (f.exists()) {
+            f.deleteOnExit();
+        }
+        if (!f.exists()) {
+            File parentFile = f.getParentFile();
+            if (!parentFile.exists()) {
+                parentFile.mkdirs();
+            }
+            try {
+                f.createNewFile();
+            } catch (IOException e) {
+                JLog.e(TAG, "saveImage, IOException e:" + e.toString());
+                if (imageSaveListener != null) {
+                    imageSaveListener.onSaveFailed(" " + e.toString());
+                }
+                return false;
+            }
+        }
+
+        FileOutputStream fOut = null;
+        try {
+            fOut = new FileOutputStream(f);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+
+        } catch (Exception e) {
+            JLog.e(TAG, "saveImage, Exception e：" + e.toString());
+            if (imageSaveListener != null) {
+                imageSaveListener.onSaveFailed(" " + e.toString());
+            }
+            return false;
+        }
+
+        try {
+            if (fOut != null) {
+                fOut.flush();
+                fOut.close();
+            }
+        } catch (Exception e) {
+            JLog.e(TAG, "saveImage, Exception e：" + e.toString());
+            if (imageSaveListener != null) {
+                imageSaveListener.onSaveFailed(" " + e.toString());
+            }
+            return false;
+        }
+
+        // 最后通知图库更新
+        Uri imgUri = Uri.parse("file://" + f.getAbsolutePath());
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, imgUri);
+        imageView.getContext().sendBroadcast(intent);
+
+        JLog.d(TAG, "onSaveComplete, path:" + f.getAbsolutePath());
+        if (imageSaveListener != null) {
+            imageSaveListener.onSaveComplete(f.getAbsolutePath());
+        }
+        return true;
     }
+
 
     protected Matrix getDisplayMatrix() {
         mDrawMatrix.set(mBaseMatrix);

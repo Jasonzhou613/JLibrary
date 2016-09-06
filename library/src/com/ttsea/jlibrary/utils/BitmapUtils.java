@@ -1,8 +1,11 @@
 package com.ttsea.jlibrary.utils;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.net.Uri;
 import android.util.Base64;
 import android.util.Log;
 
@@ -14,11 +17,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
  * Bitmap处理类 <br/>
- * <p>
+ * <p/>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016.02.17 <br/>
  * <b>author:</b> Jason <br/>
@@ -207,6 +211,70 @@ public class BitmapUtils {
 
     public static Bitmap revisionImageSize(String path) {
         return revisionImageSize(path, 1024);
+    }
+
+    /**
+     * 将bitmap保存
+     *
+     * @param savePath 保存路径
+     * @param fileName 保存名称
+     * @param bitmap   需要保存的bitmap
+     * @return 保存成功：true，保存失败：false
+     */
+    public boolean saveBitmap(Context context, String savePath, String fileName, Bitmap bitmap) {
+        boolean isSaveSuccessful = false;
+        if (bitmap == null || bitmap.isRecycled()) {
+            return isSaveSuccessful;
+        }
+
+        String filePath = savePath + File.separator + fileName;
+        File f = new File(filePath);
+
+        if (f.exists()) {
+            f.deleteOnExit();
+        }
+        if (!f.exists()) {
+            File parentFile = f.getParentFile();
+            if (!parentFile.exists()) {
+                parentFile.mkdirs();
+            }
+            try {
+                f.createNewFile();
+
+            } catch (IOException e) {
+                JLog.e(TAG, "saveBitmap, IOException e：" + e.toString());
+                isSaveSuccessful = false;
+                return isSaveSuccessful;
+            }
+        }
+
+        FileOutputStream fOut = null;
+        try {
+            fOut = new FileOutputStream(f);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+            isSaveSuccessful = true;
+
+        } catch (Exception e) {
+            JLog.e(TAG, "saveBitmap, Exception e：" + e.toString());
+            isSaveSuccessful = false;
+        }
+
+        try {
+            if (fOut != null) {
+                fOut.flush();
+                fOut.close();
+            }
+        } catch (Exception e) {
+            JLog.e(TAG, "saveBitmap, Exception e：" + e.toString());
+        }
+
+        if (isSaveSuccessful) {
+            // 最后通知图库更新
+            Uri imgUri = Uri.parse("file://" + f.getAbsolutePath());
+            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, imgUri);
+            context.sendBroadcast(intent);
+        }
+        return isSaveSuccessful;
     }
 }
 
