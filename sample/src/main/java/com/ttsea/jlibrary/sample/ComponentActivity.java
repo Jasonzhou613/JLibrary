@@ -10,6 +10,7 @@ import android.widget.Button;
 import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.common.JToast;
 import com.ttsea.jlibrary.component.dialog.MyAlertDialog;
+import com.ttsea.jlibrary.component.dialog.TransparentDialog;
 
 /**
  * //To do <br/>
@@ -25,6 +26,7 @@ public class ComponentActivity extends BaseActivity implements View.OnClickListe
 
     private Button btnShowAlterDialog;
     private Button btnShowDialog;
+    private Button btnShowTransparentDialog;
     private Button btnShowProgress;
 
     @Override
@@ -38,10 +40,12 @@ public class ComponentActivity extends BaseActivity implements View.OnClickListe
     private void initView() {
         btnShowAlterDialog = (Button) findViewById(R.id.btnShowAlterDialog);
         btnShowDialog = (Button) findViewById(R.id.btnShowDialog);
+        btnShowTransparentDialog = (Button) findViewById(R.id.btnShowTransparentDialog);
         btnShowProgress = (Button) findViewById(R.id.btnShowProgress);
 
         btnShowAlterDialog.setOnClickListener(this);
         btnShowDialog.setOnClickListener(this);
+        btnShowTransparentDialog.setOnClickListener(this);
         btnShowProgress.setOnClickListener(this);
     }
 
@@ -57,6 +61,10 @@ public class ComponentActivity extends BaseActivity implements View.OnClickListe
 
             case R.id.btnShowDialog:
                 showDialog();
+                break;
+
+            case R.id.btnShowTransparentDialog:
+                showTransparentDialog();
                 break;
 
             case R.id.btnShowProgress:
@@ -104,7 +112,11 @@ public class ComponentActivity extends BaseActivity implements View.OnClickListe
                 JToast.makeTextCenter(mActivity, "dialog dismiss");
             }
         }, true, true);
+    }
 
+    private void showTransparentDialog() {
+        TransparentDialog dialog = new TransparentDialog(mActivity);
+        dialog.show("");
     }
 
     private void showProgress() {

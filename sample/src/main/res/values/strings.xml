@@ -7,6 +7,7 @@
     <string name="component">component</string>
     <string name="show_alter_dialog">show alter dialog</string>
     <string name="show_dialog">show dialog</string>
+    <string name="show_transparent_dialog">show transparent dialog</string>
     <string name="show_progress">show progress</string>
     <string name="photo">photo</string>
     <string name="select_photo">select photo</string>

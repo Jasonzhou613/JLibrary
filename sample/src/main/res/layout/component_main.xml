@@ -19,6 +19,11 @@
             android:text="@string/show_dialog"/>
 
         <Button
+            android:id="@+id/btnShowTransparentDialog"
+            style="@style/btn_style"
+            android:text="@string/show_transparent_dialog"/>
+
+        <Button
             android:id="@+id/btnShowProgress"
             style="@style/btn_style"
             android:text="@string/show_progress"/>

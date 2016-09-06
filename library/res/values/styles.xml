@@ -20,6 +20,17 @@
     </style>
     <!-- MyDialog样式 end-->
 
+    <!-- TransparentDialog样式 start-->
+    <style name="my_transparent_theme" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@drawable/my_dialog_bg</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFrame">@null</item><!--边框-->
+        <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
+        <item name="android:windowIsTranslucent">true</item><!--半透明-->
+        <item name="android:backgroundDimEnabled">false</item><!--模糊-->
+    </style>
+    <!-- TransparentDialog样式 end-->
+
     <!-- MyAlertDialog样式 start-->
     <style name="my_alert_dialog" parent="android:style/Theme.Dialog">
         <item name="android:background">#00000000</item>
