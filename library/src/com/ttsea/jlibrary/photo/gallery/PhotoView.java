@@ -152,6 +152,11 @@ public class PhotoView extends ImageView implements IPhotoView {
         mAttacher.rotate(angle, pivotX, pivotY);
     }
 
+    /**
+     * 暂时不支持
+     *
+     * @deprecated
+     */
     @Override
     public void rotate(float angle) {
         mAttacher.rotate(angle);

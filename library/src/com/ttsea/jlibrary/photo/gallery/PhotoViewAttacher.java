@@ -865,6 +865,27 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         void onViewTap(View view, float x, float y);
     }
 
+
+    //获取变换矩阵Matrix中的每个值
+    private void printMatrix(Matrix matrix) {
+        float matrixValues[] = new float[9];
+        matrix.getValues(matrixValues);
+        JLog.d(TAG, "-------------");
+        for (int i = 0; i < 3; i++) {
+            String valueString = "";
+            for (int j = 0; j < 3; j++) {
+                int index = 3 * i + j;
+                if (index % 3 == 0) {
+                    valueString = valueString + "[ ";
+                }
+                valueString = valueString + matrixValues[index] + ", ";
+            }
+            valueString = valueString + "]";
+            JLog.d(TAG, valueString);
+        }
+        JLog.d(TAG, "-------------");
+    }
+
     private class AnimatedZoomRunnable implements Runnable {
 
         // These are 'postScale' values, means they're compounded each iteration

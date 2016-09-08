@@ -38,7 +38,7 @@ import java.util.List;
  * 可以传入的参数有：<br/>
  * selected_list: 被选择了的照片列表<br/>
  * selected_position: 从哪个位置开始查看，从0开始，不能小于0，默认为0<br/>
- * <p/>
+ * <p>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2015.09.10 <br/>
  * <b>author:</b> Jason <br/>

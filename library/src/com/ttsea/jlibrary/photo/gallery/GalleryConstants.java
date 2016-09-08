@@ -31,7 +31,9 @@ public class GalleryConstants {
     public static final String KEY_CAN_SAVE = "can_save";
 
     /**
-     * 是否可旋转图片
+     * 是否可旋转图片,暂时不支持
+     *
+     * @deprecated
      */
     public static final String KEY_CAN_ROTATE = "can_rotate";
 
