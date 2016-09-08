@@ -528,7 +528,16 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public void rotate(float angle) {
-        JLog.d(TAG, "rotate, angle:" + angle);
+        if (!hasDrawable(getImageView())) {
+            return;
+        }
+        ImageView imageView = getImageView();
+        int width = imageView.getWidth();
+        int height = imageView.getHeight();
+        int x = width / 2;
+        int y = height / 2;
+
+        rotate(angle, x, y);
     }
 
     @Override
