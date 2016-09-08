@@ -119,6 +119,7 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     private final Matrix mBaseMatrix = new Matrix();
     private final Matrix mDrawMatrix = new Matrix();
     private final Matrix mSuppMatrix = new Matrix();
+    private final Matrix mRotate = new Matrix();
     private final RectF mDisplayRect = new RectF();
     private final float[] mMatrixValues = new float[9];
 
@@ -230,6 +231,38 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
 
         return imageView;
+    }
+
+
+    /**
+     * 获取图片的bitmap
+     *
+     * @return bitmap or null
+     */
+    private Bitmap getBitmap() {
+        ImageView imageView = getImageView();
+        if (imageView == null || !hasDrawable(imageView)) {
+            JLog.e(TAG, "saveImage, imageView is null or has no Drawable");
+            return null;
+        }
+
+        Bitmap bitmap = null;
+        Drawable drawable = imageView.getDrawable();
+        if (drawable instanceof BitmapDrawable) {
+            bitmap = ((BitmapDrawable) drawable).getBitmap();
+        } else if (drawable instanceof NinePatchDrawable) {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(),
+                    drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            drawable.draw(canvas);
+        }
+
+        if (bitmap == null) {
+            JLog.e(TAG, "saveImage, bitmap is null");
+        }
+
+        return bitmap;
     }
 
     @Override
@@ -524,6 +557,22 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     @Override
     public void rotate(float angle, float pivotX, float pivotY) {
         JLog.d(TAG, "rotate, angle:" + angle + ", pivotX:" + pivotX + ", pivotY:" + pivotY);
+        if (!hasDrawable(getImageView())) {
+            return;
+        }
+
+        Bitmap bitmap = getBitmap();
+
+        if (bitmap == null || bitmap.isRecycled()) {
+            JLog.e(TAG, "bitmap is null or is recycled");
+            return;
+        }
+        mRotate.postRotate(angle, pivotX, pivotY);
+        Bitmap bm = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), mRotate, true);
+        getImageView().setImageBitmap(bm);
+        bitmap.recycle();
+        update();
+        mRotate.reset();
     }
 
     @Override
@@ -546,24 +595,8 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
             imageSaveListener.onStartSave();
         }
         JLog.d(TAG, "saveImage, savePath:" + savePath + File.separator + fileName);
-        ImageView imageView = getImageView();
-        if (imageView == null || !hasDrawable(imageView)) {
-            JLog.e(TAG, "saveImage, imageView is null or has no Drawable");
-            imageSaveListener.onSaveFailed("image is null");
-            return;
-        }
 
-        Bitmap bitmap = null;
-        Drawable drawable = imageView.getDrawable();
-        if (drawable instanceof BitmapDrawable) {
-            bitmap = ((BitmapDrawable) drawable).getBitmap();
-        } else if (drawable instanceof NinePatchDrawable) {
-            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(),
-                    drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
-            Canvas canvas = new Canvas(bitmap);
-            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-            drawable.draw(canvas);
-        }
+        Bitmap bitmap = getBitmap();
 
         if (bitmap == null) {
             JLog.e(TAG, "saveImage, bitmap is null");
@@ -1016,7 +1049,6 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         }
     }
 
-    //AsyncTask<Params, Progress, Result>
     private class SaveImageTask extends AsyncTask<Void, Void, String> {
         private File saveFile;
         private Bitmap bitmap;

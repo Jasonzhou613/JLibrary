@@ -26,7 +26,7 @@ import java.util.List;
 
 /**
  * //To do <br/>
- * <p>
+ * <p/>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/7/12 15:40 <br/>
  * <b>author:</b> Jason <br/>
@@ -122,11 +122,11 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void browseImages(List<ImageItem> listImage) {
-        selectedList.clear();
-        for (int i = 0; i < testImages.length; i++) {
-            ImageItem item = new ImageItem(testImages[i]);
-            selectedList.add(item);
-        }
+//        listImage.clear();
+//        for (int i = 0; i < testImages.length; i++) {
+//            ImageItem item = new ImageItem(testImages[i]);
+//            listImage.add(item);
+//        }
 
         if (listImage == null || listImage.size() < 1) {
             toastMessage(R.string.image_no_picture);
@@ -137,7 +137,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         bundle.putSerializable(GalleryConstants.KEY_SELECTED_LIST, (Serializable) listImage);
         bundle.putInt(GalleryConstants.KEY_SELECTED_POSITION, 0);
         bundle.putBoolean(GalleryConstants.KEY_CAN_SAVE, true);
-        bundle.putBoolean(GalleryConstants.KEY_CAN_ROTATE, true);
+        bundle.putBoolean(GalleryConstants.KEY_CAN_ROTATE, false);
         bundle.putString(GalleryConstants.KEY_SAVE_PATH, CacheDirUtils.getTempDir(mActivity));
         intent.putExtras(bundle);
         startActivityForResult(intent, REQUEST_CODE_BROWSE_PIC);
@@ -150,7 +150,8 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 .setShowCamera(true)//是否显示拍照项，认为：true
                 //请求code，用于onActivityResult接收，默认为：ImageSelector.TAKE_PHOTO_BY_GALLERY
                 .setRequestCode(REQUEST_CODE_SELECT_PIC)
-                .setPathList(selectedList)
+                //设置原本已经选择了的图片
+                //.setPathList(selectedList)
 
                 .setCrop(false)//设置是否需要剪切,默认为：false，单选时生效
                 //设置剪切图片的输出路径
