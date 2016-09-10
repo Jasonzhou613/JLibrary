@@ -30,6 +30,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.ttsea.jlibrary.R;
+import com.ttsea.jlibrary.common.JImageLoader;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.common.JToast;
 import com.ttsea.jlibrary.interfaces.OnItemViewClickListener;
@@ -142,9 +143,11 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState == SCROLL_STATE_IDLE) {
                     tvDate.setVisibility(View.GONE);
+                    JImageLoader.getInstance().resume(mActivity);
                 } else if (scrollState == SCROLL_STATE_FLING
                         || scrollState == SCROLL_STATE_TOUCH_SCROLL) {
                     tvDate.setVisibility(View.VISIBLE);
+                    JImageLoader.getInstance().pause(mActivity);
                 }
             }
 

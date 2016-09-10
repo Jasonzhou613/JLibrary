@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.ttsea.jlibrary.R;
@@ -35,15 +36,12 @@ public class JImageLoader {
     }
 
     public void displayImage(Context context, String path, ImageView imageView) {
-        JLog.d(TAG, "path:" + path);
         com.nostra13.universalimageloader.core.ImageLoader.getInstance().displayImage(path, imageView);
     }
 
 
     /** 适用图片浏览 */
     public void displayImageForGallery(Context context, String path, ImageView imageView, final ImageLoadingListener listener) {
-        JLog.d(TAG, "path:" + path);
-
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true).cacheOnDisc(true)
                 .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
@@ -87,6 +85,21 @@ public class JImageLoader {
                         }
                     }
                 });
+    }
+
+    public void pause(Context context) {
+        JLog.d(TAG, "JImageLoader pause...");
+        ImageLoader.getInstance().pause();
+    }
+
+    public void resume(Context context) {
+        JLog.d(TAG, "JImageLoader resume...");
+        ImageLoader.getInstance().resume();
+    }
+
+    public void destroy(Context context) {
+        JLog.d(TAG, "JImageLoader destroy...");
+        ImageLoader.getInstance().destroy();
     }
 
     public interface ImageLoadingListener {
