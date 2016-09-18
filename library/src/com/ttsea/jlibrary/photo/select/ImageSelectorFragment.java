@@ -91,7 +91,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.imageselector_main_fragment, container, false);
+        return inflater.inflate(R.layout.jimageselector_main_fragment, container, false);
     }
 
     @Override
@@ -229,7 +229,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
     /*** 创建弹出的ListView */
     private void createPopupFolderList(int width, int height) {
         LayoutInflater inflater = LayoutInflater.from(mActivity);
-        View contentView = inflater.inflate(R.layout.imageselector_pop_item, null);
+        View contentView = inflater.inflate(R.layout.jimageselector_pop_item, null);
         ListView listView = (ListView) contentView.findViewById(R.id.lvFolder);
         View extraView = contentView.findViewById(R.id.extraView);
 

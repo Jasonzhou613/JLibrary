@@ -1,6 +1,5 @@
 package com.ttsea.jlibrary.photo.crop;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -64,7 +63,7 @@ public class CropActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.crop_activity);
+        setContentView(R.layout.jcrop_activity);
 
         initParams();
         initView();

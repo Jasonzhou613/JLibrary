@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:indeterminateDrawable="@drawable/my_dialog_rorate_progress"
+        android:indeterminateDrawable="@drawable/jmy_dialog_rorate_progress"
         android:visibility="visible"/>
 
     <TextView

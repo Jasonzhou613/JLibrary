@@ -6,7 +6,7 @@
 
     <include
         android:id="@+id/titleBar"
-        layout="@layout/title_bar_center"/>
+        layout="@layout/jtitle_bar_center"/>
 
     <LinearLayout
         android:id="@+id/llyBottom"

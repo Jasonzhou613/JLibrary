@@ -56,7 +56,7 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.photo_preview_main);// 切屏到主界面
+        setContentView(R.layout.jphoto_preview_main);// 切屏到主界面
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -74,7 +74,7 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
         viwePager = (ViewPagerFixed) findViewById(R.id.viwePager);
 
         llyTitleBar.setBackgroundColor(getColorById(R.color.photo_title_bar_bg));
-        btnRight.setBackgroundResource(R.drawable.photo_select_ok_btn_selector);
+        btnRight.setBackgroundResource(R.drawable.jphoto_select_ok_btn_selector);
         btnLeft.setOnClickListener(this);
         btnRight.setOnClickListener(this);
         llyCheck.setOnClickListener(this);
@@ -293,7 +293,7 @@ public class ImagePreviewActivity extends BaseActivity implements View.OnClickLi
 
             LayoutInflater inflater = LayoutInflater.from(mActivity);
 
-            View itemView = inflater.inflate(R.layout.photo_gallery_item, null);
+            View itemView = inflater.inflate(R.layout.jphoto_gallery_item, null);
             PhotoView pvImage = (PhotoView) itemView.findViewById(R.id.pvImage);
             pvImage.setBackgroundColor(0xff000000);
 

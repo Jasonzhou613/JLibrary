@@ -60,7 +60,7 @@
             android:paddingRight="16dp"
             android:singleLine="true"
             android:text="@string/image_all_folder"
-            android:textColor="@color/photo_select_all_image_txt_color"
+            android:textColor="@color/jphoto_select_all_image_txt_color"
             android:textSize="14sp"/>
 
         <LinearLayout
@@ -87,7 +87,7 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:text="@string/image_preview"
-                android:textColor="@color/photo_select_all_image_txt_color"
+                android:textColor="@color/jphoto_select_all_image_txt_color"
                 android:textSize="14sp"/>
 
         </LinearLayout>

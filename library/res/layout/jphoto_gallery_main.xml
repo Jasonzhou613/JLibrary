@@ -4,7 +4,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/black">
 
-    <include layout="@layout/title_bar_left"/>
+    <include layout="@layout/jtitle_bar_left"/>
 
     <com.ttsea.jlibrary.photo.gallery.ViewPagerFixed
         android:id="@+id/viwePager"
@@ -29,7 +29,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
-            android:background="@drawable/photo_unclockwise_rotation_selector"/>
+            android:background="@drawable/jphoto_unclockwise_rotation_selector"/>
 
         <Button
             android:id="@+id/btnClockwiseRotation"
@@ -38,7 +38,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="16dp"
-            android:background="@drawable/photo_clockwise_rotation_selector"/>
+            android:background="@drawable/jphoto_clockwise_rotation_selector"/>
 
     </RelativeLayout>
 

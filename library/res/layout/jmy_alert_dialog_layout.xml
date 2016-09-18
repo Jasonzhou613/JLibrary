@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
         android:layout_marginTop="30dp"
-        android:background="@drawable/my_alert_dialog_bg"
+        android:background="@drawable/jmy_alert_dialog_bg"
         android:orientation="vertical">
 
         <LinearLayout
@@ -31,7 +31,7 @@
                 android:textSize="14sp"
                 android:visibility="visible"/>
 
-            <include layout="@layout/divider_line_horizontal"/>
+            <include layout="@layout/jdivider_line_horizontal"/>
 
         </LinearLayout>
 
@@ -54,7 +54,7 @@
                 android:textColor="#FF666666"
                 android:textSize="12sp"/>
 
-            <include layout="@layout/divider_line_horizontal"/>
+            <include layout="@layout/jdivider_line_horizontal"/>
         </LinearLayout>
 
         <LinearLayout
@@ -70,7 +70,7 @@
                 android:layout_width="0dp"
                 android:layout_height="40dip"
                 android:layout_weight="1.0"
-                android:background="@drawable/my_alert_dialog_cancel_btn_selector"
+                android:background="@drawable/jmy_alert_dialog_cancel_btn_selector"
                 android:gravity="center"
                 android:text="@string/cancel"
                 android:textColor="#FF666666"
@@ -79,14 +79,14 @@
 
             <include
                 android:id="@+id/divider"
-                layout="@layout/divider_line_vertical"/>
+                layout="@layout/jdivider_line_vertical"/>
 
             <Button
                 android:id="@+id/positiveButton"
                 android:layout_width="0dp"
                 android:layout_height="40dip"
                 android:layout_weight="1.0"
-                android:background="@drawable/my_alert_dialog_ok_btn_selector"
+                android:background="@drawable/jmy_alert_dialog_ok_btn_selector"
                 android:gravity="center"
                 android:text="@string/ok"
                 android:textColor="#FF45C4D4"

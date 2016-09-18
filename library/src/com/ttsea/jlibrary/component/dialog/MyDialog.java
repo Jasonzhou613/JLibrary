@@ -56,7 +56,7 @@ public class MyDialog extends Dialog {
 
         this.mContext = context;
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.my_dialog_view, null);
+            view = LayoutInflater.from(context).inflate(R.layout.jmy_dialog_view, null);
         }
 
         loadingHintText = (TextView) view.findViewById(R.id.loadingHintText);

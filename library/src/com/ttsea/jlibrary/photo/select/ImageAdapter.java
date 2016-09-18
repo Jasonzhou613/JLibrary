@@ -73,14 +73,14 @@ class ImageAdapter extends BaseAdapter {
         int type = getItemViewType(position);
 
         if (type == TYPE_CAMERA) {
-            convertView = mInflater.inflate(R.layout.imageselector_item_camera, parent, false);
+            convertView = mInflater.inflate(R.layout.jimageselector_item_camera, parent, false);
             convertView.setTag(null);
 
         } else if (type == TYPE_NORMAL) {
             ViewHolder holder;
             if (convertView == null || convertView.getTag() == null
                     || (!(convertView.getTag() instanceof ViewHolder))) {
-                convertView = mInflater.inflate(R.layout.imageselector_item_image, parent, false);
+                convertView = mInflater.inflate(R.layout.jimageselector_item_image, parent, false);
                 holder = new ViewHolder(convertView);
             } else {
                 holder = (ViewHolder) convertView.getTag();

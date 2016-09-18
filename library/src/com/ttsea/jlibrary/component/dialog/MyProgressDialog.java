@@ -50,8 +50,8 @@ public class MyProgressDialog extends ProgressDialog {
 
     @SuppressLint("InflateParams")
     private void init() {
-        animRotate = AnimationUtils.loadAnimation(mContext, R.anim.my_progress_dialog);
-        mView = LayoutInflater.from(mContext).inflate(R.layout.my_progress_dialog, null);
+        animRotate = AnimationUtils.loadAnimation(mContext, R.anim.jmy_progress_dialog);
+        mView = LayoutInflater.from(mContext).inflate(R.layout.jmy_progress_dialog, null);
 
         llyTitle = (LinearLayout) mView.findViewById(R.id.llyTitle);
         ivProgress = (ImageView) mView.findViewById(R.id.ivLoadingView);

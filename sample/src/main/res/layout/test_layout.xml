@@ -49,6 +49,6 @@
 
     </ScrollView>
 
-    <include layout="@layout/divider_line_horizontal"/>
+    <include layout="@layout/jdivider_line_horizontal"/>
 
 </LinearLayout>

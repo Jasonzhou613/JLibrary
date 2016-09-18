@@ -4,7 +4,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/black">
 
-    <include layout="@layout/title_bar_left"/>
+    <include layout="@layout/jtitle_bar_left"/>
 
     <com.ttsea.jlibrary.photo.gallery.ViewPagerFixed
         android:id="@+id/viwePager"

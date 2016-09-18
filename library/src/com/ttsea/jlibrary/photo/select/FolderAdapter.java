@@ -64,7 +64,7 @@ class FolderAdapter extends BaseAdapter {
         ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = mLayoutInflater.inflate(R.layout.imageselector_item_folder, parent, false);
+            convertView = mLayoutInflater.inflate(R.layout.jimageselector_item_folder, parent, false);
 
             holder.ivCover = (ImageView) convertView.findViewById(R.id.ivCover);
             holder.tvFolderName = (TextView) convertView.findViewById(R.id.tvFolderName);

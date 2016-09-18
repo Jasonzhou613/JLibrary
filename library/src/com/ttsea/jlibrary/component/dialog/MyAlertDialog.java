@@ -112,7 +112,7 @@ public class MyAlertDialog extends Dialog {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             // instantiate the dialog with the custom Theme
             final MyAlertDialog dialog = new MyAlertDialog(context, R.style.my_alert_dialog);
-            View layout = inflater.inflate(R.layout.my_alert_dialog_layout, null);
+            View layout = inflater.inflate(R.layout.jmy_alert_dialog_layout, null);
 
             dialog.addContentView(layout, new ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -134,7 +134,7 @@ public class MyAlertDialog extends Dialog {
 
             if (positiveText == null) {
                 positiveButton.setVisibility(View.GONE);
-                negativeButton.setBackgroundResource(R.drawable.my_alert_dialog_one_btn_selector);
+                negativeButton.setBackgroundResource(R.drawable.jmy_alert_dialog_one_btn_selector);
                 divider.setVisibility(View.GONE);
             } else {
                 positiveButton.setVisibility(View.VISIBLE);
@@ -152,7 +152,7 @@ public class MyAlertDialog extends Dialog {
 
             if (negativeText == null) {
                 negativeButton.setVisibility(View.GONE);
-                positiveButton.setBackgroundResource(R.drawable.my_alert_dialog_one_btn_selector);
+                positiveButton.setBackgroundResource(R.drawable.jmy_alert_dialog_one_btn_selector);
                 divider.setVisibility(View.GONE);
             } else {
                 negativeButton.setVisibility(View.VISIBLE);

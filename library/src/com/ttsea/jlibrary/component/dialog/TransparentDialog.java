@@ -38,7 +38,7 @@ public class TransparentDialog extends Dialog {
     private void init(Context context, int gravity, int width, int height, boolean canceledOnTouchOutside) {
 
         this.mContext = context;
-        View view = LayoutInflater.from(context).inflate(R.layout.my_dialog_view, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.jmy_dialog_view, null);
 
         loadingHintText = (TextView) view.findViewById(R.id.loadingHintText);
         setContentView(view);

@@ -37,7 +37,7 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.imageselector_activity);
+        setContentView(R.layout.jimageselector_activity);
 
         imageConfig = ImageSelector.getImageConfig();
         getSupportFragmentManager()
@@ -57,7 +57,7 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
         btnLeft.setOnClickListener(this);
         btnRight.setOnClickListener(this);
 
-        btnRight.setBackgroundResource(R.drawable.photo_select_ok_btn_selector);
+        btnRight.setBackgroundResource(R.drawable.jphoto_select_ok_btn_selector);
         btnRight.setTextColor(getColorById(imageConfig.getTitleSubmitTextColorRes()));
         tvTitleBarName.setTextColor(getColorById(imageConfig.getTitleTextColorRes()));
         llyTitleBar.setBackgroundColor(getColorById(imageConfig.getTitleBgColorRes()));

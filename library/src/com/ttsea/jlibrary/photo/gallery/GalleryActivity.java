@@ -81,7 +81,7 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.photo_gallery_main);// 切屏到主界面
+        setContentView(R.layout.jphoto_gallery_main);// 切屏到主界面
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -101,7 +101,7 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
         btnUnClockwiseRotation = (Button) findViewById(R.id.btnUnClockwiseRotation);
         btnClockwiseRotation = (Button) findViewById(R.id.btnClockwiseRotation);
 
-        btnRight.setBackgroundResource(R.drawable.photo_btn_download_selector);
+        btnRight.setBackgroundResource(R.drawable.jphoto_btn_download_selector);
         btnLeft.setOnClickListener(this);
         btnRight.setOnClickListener(this);
         btnUnClockwiseRotation.setOnClickListener(this);
@@ -131,7 +131,7 @@ public class GalleryActivity extends BaseActivity implements OnClickListener,
         views = new ArrayList<View>();
         LayoutInflater inflater = LayoutInflater.from(mActivity);
         for (int i = 0; i < selectedList.size(); i++) {
-            View itemView = inflater.inflate(R.layout.photo_gallery_item, null);
+            View itemView = inflater.inflate(R.layout.jphoto_gallery_item, null);
             views.add(itemView);
         }
 
