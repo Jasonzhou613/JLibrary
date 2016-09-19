@@ -83,24 +83,19 @@ public class ImageItem implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        try {
-            ImageItem other = (ImageItem) o;
-            return this.path.equalsIgnoreCase(other.path);
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
-        } catch (ClassCastException e) {
-            e.printStackTrace();
-        }
-        return super.equals(o);
+        ImageItem item = (ImageItem) o;
+
+        return path != null ? path.equals(item.path) : item.path == null;
+
     }
 
     @Override
-    public String toString() {
-        return "ImageItem{" +
-                "path='" + path + '\'' +
-                ", name='" + name + '\'' +
-                ", tag='" + tag + '\'' +
-                ", time=" + time +
-                ", isSelected=" + isSelected +
-                '}';
+    public int hashCode() {
+        return path != null ? path.hashCode() : 0;
     }
 }
