@@ -43,7 +43,8 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
         btnAddDownload.setOnClickListener(this);
         btnDownloadDetail.setOnClickListener(this);
 
-        etPath.setText(TestDownloadUrl.TEMP_URL);
+        //etPath.setText(TestDownloadUrl.TEMP_URL);
+        etPath.setText(TestDownloadUrl.DOWNLOAD_URL_4_85);
         if (etPath.getText() != null) {
             String txt = etPath.getText().toString();
             etPath.setSelection(txt.length());

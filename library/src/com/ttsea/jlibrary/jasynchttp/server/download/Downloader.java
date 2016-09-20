@@ -295,13 +295,14 @@ public class Downloader implements TaskHandler {
             URL url = new URL(getUrl());
             conn = httpUrlStack.openConnection(url);
             int responseCode = conn.getResponseCode();
+
             //url被重定向
-            if (!url.getHost().equals(conn.getURL().getHost())) {
-                // we were redirected!
-                JLog.e(TAG, "we were redirected, redirected url:" + conn.getURL());
-                cancel(Downloader.ERROR_TOO_MANY_REDIRECTS);
-                return;
-            }
+//            if (!url.getHost().equals(conn.getURL().getHost())) {
+//                // we were redirected!
+//                JLog.e(TAG, "we were redirected, redirected url:" + conn.getURL());
+//                cancel(Downloader.ERROR_TOO_MANY_REDIRECTS);
+//                return;
+//            }
 
             if (responseCode < 200 || responseCode > 299) {
                 handleErrorResponseCode(responseCode);
@@ -499,7 +500,9 @@ public class Downloader implements TaskHandler {
     }
 
     private String getFileName(HttpURLConnection conn) {
-        String filename = url.substring(url.lastIndexOf("/") + 1);
+        URL uRL = conn.getURL();
+        String urlStr = String.valueOf(uRL);
+        String filename = urlStr.substring(urlStr.lastIndexOf("/") + 1);
 
         return filename;
     }

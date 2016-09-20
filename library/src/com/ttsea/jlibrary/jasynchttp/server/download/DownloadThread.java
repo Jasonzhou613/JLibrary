@@ -14,7 +14,7 @@ import java.net.URL;
 
 /**
  * 下载线程，该线程负责下载内容 <br/>
- * <p>
+ * <p/>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/1/4 9:58 <br/>
  * <b>author:</b> Jason <br/>
@@ -131,15 +131,14 @@ class DownloadThread extends Thread {
         URL url = new URL(getUrl());
         HttpURLConnection conn = httpUrlStack.openConnection(url);
         int responseCode = conn.getResponseCode();
-        JLog.d("jason", "---url.getHost():" + url.getHost());
-        JLog.d("jason", "---conn.getURL().getHost():" + conn.getURL().getHost());
+
         //url被重定向
-        if (!url.getHost().equals(conn.getURL().getHost())) {
-            // we were redirected!
-            JLog.e(TAG, "we were redirected, redirected url:" + conn.getURL());
-            downloader.cancel(Downloader.ERROR_TOO_MANY_REDIRECTS);
-            return;
-        }
+//        if (!url.getHost().equals(conn.getURL().getHost())) {
+//            // we were redirected!
+//            JLog.e(TAG, "we were redirected, redirected url:" + conn.getURL());
+//            downloader.cancel(Downloader.ERROR_TOO_MANY_REDIRECTS);
+//            return;
+//        }
 
         if (responseCode < 200 || responseCode > 299) {
             handleErrorResponseCode(responseCode);

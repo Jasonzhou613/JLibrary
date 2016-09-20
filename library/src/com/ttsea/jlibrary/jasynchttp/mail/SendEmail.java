@@ -27,8 +27,7 @@ public class SendEmail {
      * @return
      * @author Jason
      */
-    public static boolean send(String subject, String content,
-                               String[] receivers, String[] ccs) {
+    public static boolean send(String subject, String content, String[] receivers, String[] ccs) {
         boolean isSended = false;
 
         if (Utils.isEmpty(subject)) {
