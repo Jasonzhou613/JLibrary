@@ -9,6 +9,7 @@ import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.common.AppInformation;
 import com.ttsea.jlibrary.common.ExitApplication;
 import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.sample.jasynchttp.AsyncHttpActivity;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
@@ -19,6 +20,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Button btnExit;
     private Button btnComponent;
     private Button btnPhoto;
+    private Button btnJAsync;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +36,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         btnExit = (Button) findViewById(R.id.btnExit);
         btnComponent = (Button) findViewById(R.id.btnComponent);
         btnPhoto = (Button) findViewById(R.id.btnPhoto);
+        btnJAsync = (Button) findViewById(R.id.btnJAsync);
 
         btnTest.setOnClickListener(this);
         btnAppInfo.setOnClickListener(this);
         btnExit.setOnClickListener(this);
         btnComponent.setOnClickListener(this);
         btnPhoto.setOnClickListener(this);
+        btnJAsync.setOnClickListener(this);
     }
 
     @Override
@@ -67,6 +71,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             case R.id.btnPhoto:
                 intent = new Intent(mActivity, PhotoActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.btnJAsync:
+                intent = new Intent(mActivity, AsyncHttpActivity.class);
                 startActivity(intent);
                 break;
 

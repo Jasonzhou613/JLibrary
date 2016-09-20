@@ -33,6 +33,11 @@
             style="@style/btn_style"
             android:text="@string/photo"/>
 
+        <Button
+            android:id="@+id/btnJAsync"
+            style="@style/btn_style"
+            android:text="@string/async_http"/>
+
     </LinearLayout>
 
 </ScrollView>
