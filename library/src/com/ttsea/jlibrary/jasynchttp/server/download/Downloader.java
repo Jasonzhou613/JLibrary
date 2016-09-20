@@ -210,6 +210,23 @@ public class Downloader implements TaskHandler {
         return id;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        Downloader that = (Downloader) o;
+
+        return getId() == that.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
     /** 初始化 */
     private void init() {
         threads = new ArrayList<DownloadThread>();
@@ -722,6 +739,8 @@ public class Downloader implements TaskHandler {
         isPaused = false;
         setStatus(Downloader.STATUS_PENDING);
         mHandler.sendEmptyMessage(ON_PRE_DOWNLOAD);
+
+        currentRetryCount = 0;
         startNewDownloadTask();
     }
 

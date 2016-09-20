@@ -103,9 +103,7 @@ class DownloadThread extends Thread {
             } catch (FileNotFoundException e) {
                 JLog.e(TAG, "threadId:" + threadId + ", FileNotFoundException e:" + e.toString());
                 isComplete = false;
-                if (currentRetryCount < maxRetryCount) {
-                    continue;
-                }
+                //下载的文件不存在，不需要重试，直接取消
                 downloader.cancel(Downloader.ERROR_HTTP_FILE_NOT_FOUND, e.toString());
 
             } catch (IOException e) {
@@ -148,6 +146,12 @@ class DownloadThread extends Thread {
 
         String fileAbsolutelyPath = downloadInfo.getLocal_file_path()
                 + File.separator + downloadInfo.getLocal_filename();
+        //确认父目录是存在的
+        File parentFile = new File(downloadInfo.getLocal_file_path());
+        if (!parentFile.exists()) {
+            parentFile.mkdirs();
+        }
+
         RandomAccessFile randomAccessFile = new RandomAccessFile(fileAbsolutelyPath, "rwd");
         File file = new File(fileAbsolutelyPath);
 
