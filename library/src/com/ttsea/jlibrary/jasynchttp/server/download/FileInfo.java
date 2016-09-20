@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * 文件信息 <br/>
- * <p>
+ * <p/>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/5/6 14:32 <br/>
  * <b>author:</b> Jason <br/>
@@ -12,9 +12,9 @@ import java.io.Serializable;
  * <b>last modified date:</b> 2016/5/6 14:32
  */
 class FileInfo implements Serializable {
-    private String url;//文件下载地址
-    private String local_filename;//本地保存文件的文件名
-    private String local_file_path;//本地保存路径
+    private String url; //文件下载地址
+    private String local_filename; //本地保存文件的文件名
+    private String local_file_path; //本地保存路径
 
     public String getUrl() {
         return url;
@@ -50,7 +50,6 @@ class FileInfo implements Serializable {
         FileInfo fileInfo = (FileInfo) o;
 
         return url != null ? url.equals(fileInfo.url) : fileInfo.url == null;
-
     }
 
     @Override

@@ -20,7 +20,7 @@ import java.util.Map;
 
 /**
  * 下载器，包含多个下载线程<br/>
- * <p>
+ * <p/>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/1/6 <br/>
  * <b>author:</b> Jason <br/>
@@ -127,6 +127,10 @@ public class Downloader implements TaskHandler {
             option = new DownloadOption.Builder(mContext).build();
         }
         this.downloadOption = option;
+        //如果本地保存地址为空，则设置一个默认值
+        if (com.ttsea.jlibrary.utils.Utils.isEmpty(downloadOption.getSaveFilePath())) {
+            downloadOption.getBuilder().setSaveFilePath(CacheDirUtils.getSdDataDir(mContext));
+        }
 
         setOnDownloadListener(l);
         init();
@@ -208,10 +212,6 @@ public class Downloader implements TaskHandler {
 
     /** 初始化 */
     private void init() {
-        //如果本地保存地址为空，则设置一个默认值
-        if (com.ttsea.jlibrary.utils.Utils.isEmpty(downloadOption.getSaveFilePath())) {
-            downloadOption.getBuilder().setSaveFilePath(CacheDirUtils.getSdDataDir(mContext));
-        }
         threads = new ArrayList<DownloadThread>();
         mHandler = new DownloaderHandler();
     }
@@ -338,7 +338,7 @@ public class Downloader implements TaskHandler {
                 JLog.d(TAG, "file already exists and it will be renamed");
                 int fileTag = 1;
                 //重命名文件，直到该文件不存在
-                while (file.exists()) {
+                while (file.exists() && fileTag < Integer.MAX_VALUE) {
                     String suffix = "";
                     String tempName = "";
                     int index = fileName.lastIndexOf(".");
@@ -373,7 +373,7 @@ public class Downloader implements TaskHandler {
             long needSpace = (contentLength / 1024 / 1024) + 10;
             if (!SdStatus.isABlockEnough((needSpace))) {
                 String msg = "Insufficient space, need space:" + needSpace
-                        + ", SD free space:" + SdStatus.getAvailableBlock();
+                        + "MB, SD free space:" + SdStatus.getAvailableBlock() + "MB";
                 JLog.e(TAG, "cancel download, " + msg);
                 cancel(Downloader.ERROR_INSUFFICIENT_SPACE, msg);
                 return;
@@ -576,10 +576,6 @@ public class Downloader implements TaskHandler {
 
     @Override
     public void pause(int reason) {
-        pause(reason, true);
-    }
-
-    public void pause(int reason, boolean needFitDowloadList) {
         if (!isSupportPause()) {
             JLog.d(TAG, "pause, this downloader not support pause, return");
             return;
@@ -590,14 +586,16 @@ public class Downloader implements TaskHandler {
         }
 
         JLog.d(TAG, "pause, reason:" + getStatusStr(reason));
+        for (int i = 0; i < threads.size(); i++) {
+            DownloadThread thread = threads.get(i);
+            thread.quite();
+        }
+
         mHandler.removeCallbacks(downloadingRunnable);
         isPaused = true;
         setStatus(Downloader.STATUS_PAUSED);
         //保存下载信息
         saveDownloaderStatus(getStatus(), reason);
-        if (needFitDowloadList) {
-            DownloadManager.getInstance(mContext).fitDowloadList();
-        }
 
         Message msg = new Message();
         msg.what = ON_DOWNLOAD_PAUSE;
@@ -662,11 +660,6 @@ public class Downloader implements TaskHandler {
 
         JLog.d(TAG, "downloader has resumed, downloaderId:" + getId()
                 + ", downloader status:" + getStatusStr(getStatus()));
-
-        DownloadManager manager = DownloadManager.getInstance(mContext);
-        if (manager.getMaxDownlodingCount() > manager.getDownloadingCount()) {
-            startTheads();
-        }
     }
 
     @Override
@@ -690,7 +683,6 @@ public class Downloader implements TaskHandler {
         setStatus(Downloader.STATUS_FAILED);
         //保存下载信息
         saveDownloaderStatus(getStatus(), reason);
-        DownloadManager.getInstance(mContext).fitDowloadList();
 
         Message message = new Message();
         message.what = ON_DOWNLOAD_CANCEL;
@@ -710,7 +702,6 @@ public class Downloader implements TaskHandler {
         isPaused = false;
         setStatus(Downloader.STATUS_PENDING);
         mHandler.sendEmptyMessage(ON_PRE_DOWNLOAD);
-        DownloadManager.getInstance(mContext).fitDowloadList();
     }
 
     /** 保存该下载器的信息和状态 */
@@ -881,7 +872,6 @@ public class Downloader implements TaskHandler {
                     long endTimestamp = System.currentTimeMillis();
                     JLog.d(TAG, "startTimestamp:" + startTimestamp + ", endTimestamp:" + endTimestamp
                             + ", spendTime:" + (endTimestamp - startTimestamp));
-                    DownloadManager.getInstance(mContext).fitDowloadList();
                     if (onDownloadListener != null) {
                         onDownloadListener.onComplete(Downloader.this);
                     }

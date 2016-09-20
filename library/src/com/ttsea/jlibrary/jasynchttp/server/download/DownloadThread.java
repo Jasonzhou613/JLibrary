@@ -14,7 +14,7 @@ import java.net.URL;
 
 /**
  * 下载线程，该线程负责下载内容 <br/>
- * <p>
+ * <p/>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/1/4 9:58 <br/>
  * <b>author:</b> Jason <br/>
@@ -87,7 +87,8 @@ class DownloadThread extends Thread {
         HttpURLConnection conn = null;
 
         int maxRetryCount = downloader.getDownloadOption().getReTryCount() + 1;
-        while (currentRetryCount < maxRetryCount) {
+        while (currentRetryCount < maxRetryCount && !isQuite
+                && !downloader.isCancelled() && !downloader.isPaused()) {
             currentRetryCount++;
             if (currentRetryCount > 1) {
                 JLog.d(TAG, "threadId:" + threadId + ", retry... currentRetryCout:" + (currentRetryCount - 1));
