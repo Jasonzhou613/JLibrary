@@ -99,12 +99,12 @@ class HttpUrlStack {
             ((HttpsURLConnection) conn).setSSLSocketFactory(mSslSocketFactory);
         }
 
-        printConnettion(conn);
+        //printConnection(conn);
 
         return conn;
     }
 
-    private void printConnettion(HttpURLConnection c) {
+    private void printConnection(HttpURLConnection c) {
         if (!JLog.isDebugMode()) {
             return;
         }

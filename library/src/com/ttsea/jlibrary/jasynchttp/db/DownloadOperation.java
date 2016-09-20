@@ -45,7 +45,7 @@ public class DownloadOperation {
      * @param url 下载地址
      * @return Cursor 或者 null
      */
-    public synchronized static Cursor getDownloaderCursor(SQLiteDatabase db, String url) {
+    private synchronized static Cursor getDownloaderCursor(SQLiteDatabase db, String url) {
         Cursor cursor = null;
 
         String selection = "url='" + url + "' order by add_timestamp desc";
@@ -69,7 +69,7 @@ public class DownloadOperation {
      * @param threadId 线程id
      * @return Cursor 或者 null
      */
-    public synchronized static Cursor getThreadCursor(SQLiteDatabase db, String url, String threadId) {
+    private synchronized static Cursor getThreadCursor(SQLiteDatabase db, String url, String threadId) {
         Cursor cursor = null;
 
         String selection = "url='" + url + "' AND thread_id='" + threadId + "'";

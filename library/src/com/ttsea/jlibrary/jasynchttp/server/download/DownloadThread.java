@@ -14,7 +14,7 @@ import java.net.URL;
 
 /**
  * 下载线程，该线程负责下载内容 <br/>
- * <p/>
+ * <p>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/1/4 9:58 <br/>
  * <b>author:</b> Jason <br/>
@@ -84,9 +84,8 @@ class DownloadThread extends Thread {
                 + ", threadPriority:" + threadPriority);
         Process.setThreadPriority(threadPriority);
 
-        HttpURLConnection conn = null;
-
         int maxRetryCount = downloader.getDownloadOption().getReTryCount() + 1;
+
         while (currentRetryCount < maxRetryCount && !isQuite
                 && !downloader.isCancelled() && !downloader.isPaused()) {
             currentRetryCount++;
@@ -95,8 +94,7 @@ class DownloadThread extends Thread {
             }
 
             try {
-                perfrom(conn);
-                break;
+                performRequest();
 
             } catch (FileNotFoundException e) {
                 JLog.e(TAG, "threadId:" + threadId + ", FileNotFoundException e:" + e.toString());
@@ -121,19 +119,16 @@ class DownloadThread extends Thread {
                     continue;
                 }
                 downloader.cancel(Downloader.ERROR_UNKNOWN, e.toString());
-
-            } finally {
-                if (conn != null) {
-                    conn.disconnect();
-                }
             }
         }
     }
 
-    private void perfrom(HttpURLConnection conn) throws Exception {
+    private void performRequest() throws Exception {
         URL url = new URL(getUrl());
-        conn = httpUrlStack.openConnection(url);
+        HttpURLConnection conn = httpUrlStack.openConnection(url);
         int responseCode = conn.getResponseCode();
+        JLog.d("jason", "---url.getHost():" + url.getHost());
+        JLog.d("jason", "---conn.getURL().getHost():" + conn.getURL().getHost());
         //url被重定向
         if (!url.getHost().equals(conn.getURL().getHost())) {
             // we were redirected!
@@ -178,6 +173,10 @@ class DownloadThread extends Thread {
             isComplete = true;
         } else {
             isComplete = false;
+        }
+
+        if (conn != null) {
+            conn.disconnect();
         }
 
         JLog.d(TAG, "byte so far:" + downloadInfo.getBytes_so_far()

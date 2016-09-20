@@ -26,7 +26,7 @@ public class HttpOption {
     private boolean useCache = false;
     private boolean doInput = true;
     //To upload data to a web server, configure the connection for output using setDoOutput(true)
-    private boolean doOutput = true;
+    private boolean doOutput = false;
     private Map<String, String> additionalProperty = null;
     private String requestMethod = Http.Method.GET;
     private SSLSocketFactory sslSocketFactory;

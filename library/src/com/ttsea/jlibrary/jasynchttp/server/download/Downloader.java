@@ -607,6 +607,11 @@ public class Downloader implements TaskHandler {
 
     @Override
     public void resume() {
+        if (getStatus() == STATUS_RUNNING) {
+            JLog.d(TAG, "resume, this downloader is already running");
+            return;
+        }
+
         if (!isSupportResume()) {
             JLog.d(TAG, "resume, this downloader not support resume, will reDownload");
             reDownload();
@@ -658,6 +663,10 @@ public class Downloader implements TaskHandler {
         isPaused = false;
         isCancelled = false;
 
+        for (int i = 0; i < threads.size(); i++) {
+            threads.get(i).start();
+        }
+
         JLog.d(TAG, "downloader has resumed, downloaderId:" + getId()
                 + ", downloader status:" + getStatusStr(getStatus()));
     }
@@ -681,8 +690,18 @@ public class Downloader implements TaskHandler {
         mHandler.removeCallbacks(downloadingRunnable);
         isCancelled = true;
         setStatus(Downloader.STATUS_FAILED);
-        //保存下载信息
-        saveDownloaderStatus(getStatus(), reason);
+        //删除所有下载信息
+        DownloadOperation.deleteRecord(mContext, getUrl());
+        //删除下载好的文件
+        String path = downloadOption.getSaveFilePath();
+        String fileName = downloadOption.getFileName();
+        if (!com.ttsea.jlibrary.utils.Utils.isEmpty(path)
+                && !com.ttsea.jlibrary.utils.Utils.isEmpty(fileName)) {
+            File file = new File(path, fileName);
+            if (file.exists()) {
+                file.delete();
+            }
+        }
 
         Message message = new Message();
         message.what = ON_DOWNLOAD_CANCEL;
@@ -702,6 +721,7 @@ public class Downloader implements TaskHandler {
         isPaused = false;
         setStatus(Downloader.STATUS_PENDING);
         mHandler.sendEmptyMessage(ON_PRE_DOWNLOAD);
+        startNewDownloadTask();
     }
 
     /** 保存该下载器的信息和状态 */
@@ -714,6 +734,7 @@ public class Downloader implements TaskHandler {
             DownloadFileInfo info = thread.getDownloadInfo();
             info.setReason(reason);
             info.setStatus(status);
+            info.setLast_modified_timestamp(String.valueOf(System.currentTimeMillis()));
             DownloadOperation.insertOrUpdate(mContext, thread.getDownloadInfo());
         }
     }
