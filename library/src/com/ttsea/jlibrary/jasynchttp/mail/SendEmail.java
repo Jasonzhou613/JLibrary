@@ -11,7 +11,7 @@ public class SendEmail {
     private static final String TAG = "SendEmail";
 
     public static boolean send(String subject, String content) {
-        String[] receivers = new String[]{"zzj@huiweishang.com"};
+        String[] receivers = new String[]{"***@qq.com"};
         // String[] ccs = new String[] { };
 
         return send(subject, content, receivers, null);
@@ -47,9 +47,9 @@ public class SendEmail {
         // 设置发送邮件的服务器信息
         mailInfo.setMailServerHost("smtp.exmail.qq.com");
         mailInfo.setMailServerPort("465");
-        mailInfo.setFromAddress("hws-crash-collection@huiweishang.com");
-        mailInfo.setUserName("hws-crash-collection@huiweishang.com");
-        mailInfo.setPassword("Huiwsh888");// email password
+        mailInfo.setFromAddress("***@qq.com");
+        mailInfo.setUserName("***@qq.com");
+        mailInfo.setPassword("888888");// email password
         mailInfo.setValidate(true);
         mailInfo.setSsl(true);
 
