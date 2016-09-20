@@ -663,9 +663,7 @@ public class Downloader implements TaskHandler {
         isPaused = false;
         isCancelled = false;
 
-        for (int i = 0; i < threads.size(); i++) {
-            threads.get(i).start();
-        }
+        startTheads();
 
         JLog.d(TAG, "downloader has resumed, downloaderId:" + getId()
                 + ", downloader status:" + getStatusStr(getStatus()));

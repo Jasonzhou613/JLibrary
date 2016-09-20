@@ -74,7 +74,7 @@ class DownloadThread extends Thread {
 
     public void run() {
         if (downloader.isCancelled() || downloader.isPaused()
-                || isQuite) {
+                || isQuite || isComplete) {
             JLog.d(TAG, "downloader has cancelled or paused or quited, download status:"
                     + downloader.getStatus() + ", id：" + downloader.getId());
             return;
@@ -86,12 +86,16 @@ class DownloadThread extends Thread {
 
         int maxRetryCount = downloader.getDownloadOption().getReTryCount() + 1;
 
-        while (currentRetryCount < maxRetryCount && !isQuite
-                && !downloader.isCancelled() && !downloader.isPaused()) {
-            currentRetryCount++;
-            if (currentRetryCount > 1) {
-                JLog.d(TAG, "threadId:" + threadId + ", retry... currentRetryCout:" + (currentRetryCount - 1));
+        while (currentRetryCount < maxRetryCount
+                && !isQuite
+                && !isComplete
+                && !downloader.isCancelled()
+                && !downloader.isPaused()) {
+
+            if (currentRetryCount > 0) {
+                JLog.d(TAG, "threadId:" + threadId + ", retry... currentRetryCout:" + currentRetryCount);
             }
+            currentRetryCount++;
 
             try {
                 performRequest();
