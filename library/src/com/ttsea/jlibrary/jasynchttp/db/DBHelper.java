@@ -15,13 +15,12 @@ class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "jasync.db";
     private Context mContext;
 
-    public DBHelper(Context context, String name, CursorFactory factory, int version) {
-        super(context, name, factory, version);
-        this.mContext = context;
+    public DBHelper(Context context) {
+        this(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public DBHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    public DBHelper(Context context, String name, CursorFactory factory, int version) {
+        super(context, name, factory, version);
         this.mContext = context;
     }
 
