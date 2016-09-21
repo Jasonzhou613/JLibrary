@@ -13,7 +13,9 @@ class TestDownloadUrl {
 
     //public static final String TEMP_URL = "http://192.168.3.102/debug/download/07.zip";
     //public static final String TEMP_URL = "http://shouji.360tpcdn.com/160514/98c8f2738d4e1af4362a8f19b78389d6/com.huiweishang.ws_401.apk";
-    public static final String TEMP_URL = "http://android-apps.25pp.com/fs08/2016/08/18/8/110_834460da7f1ea113740d1ee98e914e78.apk";
+    //重定向了
+//    public static final String TEMP_URL = "http://android-apps.25pp.com/fs08/2016/08/18/8/110_834460da7f1ea113740d1ee98e914e78.apk";
+    public static final String TEMP_URL = "http://hws002.b0.upaiyun.com/teamMoments/108/20160919/f62279af2a660c06fb979b1f98abd36f.JPG";
 
     /**
      * 文件名：TortoiseSVN-1.9.0.26652-x64-svn-1.9.0.msi <br/>

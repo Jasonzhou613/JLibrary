@@ -10,8 +10,11 @@ import android.widget.TextView;
 
 import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.jasynchttp.server.download.DownloadOption;
 import com.ttsea.jlibrary.jasynchttp.server.download.Downloader;
+import com.ttsea.jlibrary.jasynchttp.server.download.HttpOption;
 import com.ttsea.jlibrary.jasynchttp.server.download.OnDownloadListener;
+import com.ttsea.jlibrary.jasynchttp.server.download.SaveFileMode;
 import com.ttsea.jlibrary.sample.R;
 import com.ttsea.jlibrary.utils.DigitUtils;
 import com.ttsea.jlibrary.utils.Utils;
@@ -43,14 +46,11 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
         btnAddDownload.setOnClickListener(this);
         btnDownloadDetail.setOnClickListener(this);
 
-        //etPath.setText(TestDownloadUrl.TEMP_URL);
-        etPath.setText(TestDownloadUrl.DOWNLOAD_URL_4_85);
+        etPath.setText(TestDownloadUrl.TEMP_URL);
         if (etPath.getText() != null) {
             String txt = etPath.getText().toString();
             etPath.setSelection(txt.length());
         }
-
-        JLog.copyDB2SD(mActivity, "jasync.db");
     }
 
     @Override
@@ -70,7 +70,6 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
                 break;
         }
     }
-
 
     //////////////////////////////////////////////////////////////////////////////////////////////
     //以下单独测试Downloader
@@ -92,15 +91,6 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
         holder.btnDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (downloader.getStatus() == Downloader.STATUS_PAUSED
-//                        || downloader.getStatus() == Downloader.STATUS_FAILED) {
-//                    downloader.resume();
-//
-//                } else if (downloader.getStatus() == Downloader.STATUS_RUNNING
-//                        || downloader.getStatus() == Downloader.STATUS_PENDING) {
-//                    downloader.pause(Downloader.PAUSED_HUMAN);
-//                }
-
                 int status = downloader.getStatus();
 
                 if (status == Downloader.STATUS_PAUSED
@@ -114,7 +104,6 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
                     downloader.pause(Downloader.PAUSED_HUMAN);
                 }
 
-                JLog.copyDB2SD(mActivity, "jasync.db");
             }
         });
 
@@ -123,7 +112,6 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
             public void onClick(View v) {
                 downloader.cancel(Downloader.ERROR_BLOCKED, "delete by human");
                 downloadView.setVisibility(View.GONE);
-                JLog.copyDB2SD(mActivity, "jasync.db");
             }
         });
 
@@ -131,7 +119,9 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
             downloader.cancel(Downloader.ERROR_BLOCKED);
         }
 
-        downloader = new Downloader(mActivity, downloaderUrl);
+        DownloadOption option = new DownloadOption.Builder(mActivity).build();
+        option.getBuilder().setSaveFileMode(SaveFileMode.OVERRIDE);
+        downloader = new Downloader(mActivity, downloaderUrl, option);
 
         downloader.setOnDownloadListener(
                 new OnDownloadListener() {

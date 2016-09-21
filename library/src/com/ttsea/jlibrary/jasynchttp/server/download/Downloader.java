@@ -582,16 +582,21 @@ public class Downloader implements TaskHandler {
         String fileName = downloadOption.getFileName();
         String filePath = downloadOption.getSaveFilePath();
         JLog.d(TAG, "deleteFile, filePath:" + filePath + ", fileName:" + fileName);
-        try {
+        if (!com.ttsea.jlibrary.utils.Utils.isEmpty(filePath)
+                && !com.ttsea.jlibrary.utils.Utils.isEmpty(fileName)) {
             File file = new File(filePath, fileName);
             if (file.exists()) {
                 return file.delete();
             }
-        } catch (Exception e) {
-            JLog.e(TAG, "Exception e:" + e.toString());
         }
-
         return false;
+    }
+
+    public void clearRecord() {
+        //删除所有下载信息
+        DownloadOperation.deleteRecord(mContext, getUrl());
+        //删除下载好的文件
+        deleteFile();
     }
 
     @Override
@@ -708,18 +713,8 @@ public class Downloader implements TaskHandler {
         mHandler.removeCallbacks(downloadingRunnable);
         isCancelled = true;
         setStatus(Downloader.STATUS_FAILED);
-        //删除所有下载信息
+        //清除下载信息
         DownloadOperation.deleteRecord(mContext, getUrl());
-        //删除下载好的文件
-        String path = downloadOption.getSaveFilePath();
-        String fileName = downloadOption.getFileName();
-        if (!com.ttsea.jlibrary.utils.Utils.isEmpty(path)
-                && !com.ttsea.jlibrary.utils.Utils.isEmpty(fileName)) {
-            File file = new File(path, fileName);
-            if (file.exists()) {
-                file.delete();
-            }
-        }
 
         Message message = new Message();
         message.what = ON_DOWNLOAD_CANCEL;
