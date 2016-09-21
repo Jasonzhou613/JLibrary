@@ -20,7 +20,7 @@ import java.util.Map;
 
 /**
  * 下载器，包含多个下载线程<br/>
- * <p/>
+ * <p>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/1/6 <br/>
  * <b>author:</b> Jason <br/>
@@ -592,6 +592,7 @@ public class Downloader implements TaskHandler {
         return false;
     }
 
+    /** 清除下载记录，并且将下载好的文件也删除 */
     public void clearRecord() {
         //删除所有下载信息
         DownloadOperation.deleteRecord(mContext, getUrl());

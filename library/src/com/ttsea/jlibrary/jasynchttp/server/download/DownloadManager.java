@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * 下载管理类 <br/>
- * <p/>
+ * <p>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/1/5 <br/>
  * <b>author:</b> Jason <br/>
@@ -114,7 +114,7 @@ public class DownloadManager {
         while (position < downloaderList.size()) {
             Downloader loader = downloaderList.get(position);
             if (loader.getUrl().equals(url)) {
-                //首先取消该下载，再从下载列表中移除
+                //取消该下载
                 loader.cancel(Downloader.ERROR_BLOCKED, "delete by human");
                 if (needDeleteFile) {
                     loader.deleteFile();
@@ -125,11 +125,8 @@ public class DownloadManager {
             }
             position++;
         }
-        //从下载记录中移除
-        long count = DownloadOperation.deleteRecord(appContext, url);
-        if (count > 0) {
-            JLog.d(TAG, "downloader record has removed from DB");
-        }
+
+        fitDownloadList();
     }
 
     /**
@@ -168,16 +165,13 @@ public class DownloadManager {
     public void removeAllDownloader(boolean needDeleteFile) {
         while (downloaderList.size() > 0) {
             Downloader loader = downloaderList.get(0);
-            DownloadManager.getInstance(appContext).removeDownloader(loader, needDeleteFile);
+            removeDownloader(loader, needDeleteFile);
         }
     }
 
     /** 移除所有下载器，但不删除已经下载好的文件 */
     public void removeAllDownloader() {
-        while (downloaderList.size() > 0) {
-            Downloader loader = downloaderList.get(0);
-            DownloadManager.getInstance(appContext).removeDownloader(loader, false);
-        }
+        removeAllDownloader(false);
     }
 
     /** 判断该下载是否已经存在列表中 */
@@ -211,6 +205,7 @@ public class DownloadManager {
             return;
         }
         loader.pause(reason);
+        fitDownloadList();
     }
 
     /**
@@ -225,6 +220,7 @@ public class DownloadManager {
             return;
         }
         loader.resume();
+        fitDownloadList();
     }
 
     /**
@@ -240,6 +236,7 @@ public class DownloadManager {
             return;
         }
         loader.cancel(reason);
+        fitDownloadList();
     }
 
     /** 将所有正在运行的下载器暂停 */
@@ -259,6 +256,7 @@ public class DownloadManager {
                 loader.resume();
             }
         }
+        fitDownloadList();
     }
 
     public void cancelAllDownloader(int reason) {
@@ -305,6 +303,13 @@ public class DownloadManager {
      * 并且控制同时下载的数量不超过maxDownloadingCount
      */
     public void fitDownloadList() {
+        //STATUS_PENDING = 0x010;//等待下载
+        //STATUS_LINKING = 0x011;//连接中
+        //STATUS_RUNNING = 0x012;//正在下载
+        //STATUS_PAUSED = 0x013;//暂停
+        //STATUS_SUCCESSFUL = 0x014;//下载成功
+        //STATUS_FAILED = 0x015;//下载失败
+
         if (maxDownloadingCount <= getDownloadingCount()) {
             return;
         }

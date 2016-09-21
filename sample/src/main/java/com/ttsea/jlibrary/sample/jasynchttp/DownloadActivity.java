@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.jasynchttp.server.download.DownloadManager;
 import com.ttsea.jlibrary.jasynchttp.server.download.DownloadOption;
 import com.ttsea.jlibrary.jasynchttp.server.download.Downloader;
 import com.ttsea.jlibrary.jasynchttp.server.download.HttpOption;
@@ -21,7 +22,7 @@ import com.ttsea.jlibrary.utils.Utils;
 
 /**
  * //To do <br/>
- * <p/>
+ * <p>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/9/20 11:07 <br/>
  * <b>author:</b> Jason <br/>
@@ -58,16 +59,33 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
         Intent intent;
         switch (v.getId()) {
             case R.id.btnAddDownload:
-                addDownload(etPath.getText().toString());
+                //addDownload(etPath.getText().toString());
+                addDownloads();
                 break;
 
             case R.id.btnDownloadDetail:
-//                intent = new Intent(mActivity, DownloadDetailActivity.class);
-//                startActivity(intent);
+                intent = new Intent(mActivity, DownloadDetailActivity.class);
+                startActivity(intent);
                 break;
 
             default:
                 break;
+        }
+    }
+
+    private void addDownloads() {
+        String[] urls = new String[]{
+                TestDownloadUrl.TEMP_URL,
+                TestDownloadUrl.DOWNLOAD_URL_0_0_824,
+                TestDownloadUrl.DOWNLOAD_URL_20_3,
+                TestDownloadUrl.DOWNLOAD_URL_4_85,
+                TestDownloadUrl.DOWNLOAD_URL_3_77,
+                // TestDownloadUrl.DOWNLOAD_URL_127_17
+                TestDownloadUrl.DOWNLOAD_URL_20_3
+        };
+
+        for (int i = 0; i < urls.length; i++) {
+            DownloadManager.getInstance(getApplicationContext()).addNewDownloader(urls[i]);
         }
     }
 

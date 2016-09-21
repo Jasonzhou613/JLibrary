@@ -24,21 +24,20 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.ttsea.jlibrary.sample.ComponentActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name="com.ttsea.jlibrary.sample.PhotoActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name="com.ttsea.jlibrary.sample.jasynchttp.AsyncHttpActivity"
             android:screenOrientation="portrait"/>
-
         <activity
             android:name="com.ttsea.jlibrary.sample.jasynchttp.DownloadActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ttsea.jlibrary.sample.jasynchttp.DownloadDetailActivity"
             android:screenOrientation="portrait"/>
 
         <!--Photo Activitys start -->
