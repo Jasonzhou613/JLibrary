@@ -592,11 +592,14 @@ public class Downloader implements TaskHandler {
         return false;
     }
 
-    /** 清除下载记录，并且将下载好的文件也删除 */
+    /** 只是清除下载记录，不删除下载好 */
     public void clearRecord() {
-        //删除所有下载信息
         DownloadOperation.deleteRecord(mContext, getUrl());
-        //删除下载好的文件
+    }
+
+    /** 清除下载记录，并且将下载好的文件也删除 */
+    public void clearAllRecord() {
+        DownloadOperation.deleteRecord(mContext, getUrl());
         deleteFile();
     }
 
