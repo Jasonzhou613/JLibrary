@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.base.BaseFragmentActivity;
 import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.photo.crop.CropActivity;
 import com.ttsea.jlibrary.photo.crop.CropConstants;
 import com.ttsea.jlibrary.utils.DisplayUtils;
 
@@ -89,7 +90,8 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements View.
     /** 跳转到剪切图片页面 */
     private void crop(File imageFile) {
         String imagePath = imageFile.getAbsolutePath();
-        Intent intent = new Intent(CropConstants.ACTION_CROP);
+        //Intent intent = new Intent(CropConstants.ACTION_CROP);
+        Intent intent = new Intent(mActivity, CropActivity.class);
         intent.setDataAndType(Uri.fromFile(new File(imagePath)), "image/*");
         intent.putExtra(CropConstants.OUT_PUT_PATH, imageConfig.getOutPutPath());
         intent.putExtra(CropConstants.ASPECT_X, imageConfig.getAspectX());
