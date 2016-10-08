@@ -1,8 +1,10 @@
-package com.ttsea.jlibrary.common;
+package com.ttsea.jlibrary.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+
+import com.ttsea.jlibrary.common.JLog;
 
 /**
  * 检测网络是否可用、获取网络链类型<br/>
@@ -14,8 +16,8 @@ import android.net.NetworkInfo;
  * <b>version:</b> 1.0 <br/>
  * <b>last modified date:</b> 2015.05.21
  */
-public class NetWork {
-    private final static String TAG = "Common.NetWork";
+public class NetWorkUtils {
+    private final static String TAG = "Utils.NetWorkUtils";
 
     /**
      * 获取网络链接类型，返回值：<br/>
@@ -48,7 +50,7 @@ public class NetWork {
             status = -1;
             JLog.e(TAG, "getNetWorkStatus, Exception: " + e.getMessage());
         }
-        JLog.d(TAG, "NetWork status:" + String.valueOf(status));
+        JLog.d(TAG, "NetWorkUtils status:" + String.valueOf(status));
 
         return status;
     }

@@ -1,7 +1,9 @@
-package com.ttsea.jlibrary.common;
+package com.ttsea.jlibrary.utils;
 
 import android.os.Environment;
 import android.os.StatFs;
+
+import com.ttsea.jlibrary.common.JLog;
 
 import java.io.File;
 
@@ -14,8 +16,8 @@ import java.io.File;
  * <b>version:</b> 1.0 <br/>
  * <b>last modified date:</b> 2016.02.17
  */
-public class SdStatus {
-    private final static String TAG = "Common.SdStatus";
+public class SdStatusUtils {
+    private final static String TAG = "Utils.SdStatusUtils";
 
     /**
      * 判断SD卡的状态是否可用

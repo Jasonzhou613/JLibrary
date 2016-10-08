@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.ttsea.jlibrary.utils.CacheDirUtils;
 import com.ttsea.jlibrary.utils.DateUtils;
+import com.ttsea.jlibrary.utils.SdStatusUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -132,7 +133,7 @@ public class JLog {
         }
         JLog.d(TAG, "Start save content, content=" + content);
         String date = DateUtils.getCurrentTime("yyyy-MM-dd_HH_mm_ss");
-        String debugFiledir = SdStatus.getExternalStorageAbsoluteDir() + "/"
+        String debugFiledir = SdStatusUtils.getExternalStorageAbsoluteDir() + "/"
                 + CacheDirUtils.CACHE_DIR_DEBUG;
         String filePath = debugFiledir + "/" + date + "_" + fileName;
         try {

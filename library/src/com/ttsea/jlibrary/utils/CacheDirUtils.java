@@ -3,7 +3,6 @@ package com.ttsea.jlibrary.utils;
 import android.content.Context;
 
 import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.common.SdStatus;
 
 import java.io.File;
 
@@ -54,7 +53,7 @@ public class CacheDirUtils {
      */
     public static String getCacheDir(Context context) {
         if (JLog.isDebugMode()) {
-            String exSDdir = SdStatus.getExternalStorageAbsoluteDir();
+            String exSDdir = SdStatusUtils.getExternalStorageAbsoluteDir();
             if (exSDdir != null) {
                 CACHE_DIR = exSDdir + File.separator + CACHE_DIR_DEBUG;
                 createDirIfNeed(CACHE_DIR);
@@ -102,7 +101,7 @@ public class CacheDirUtils {
      * @return String
      */
     public static String getSdDataDir(Context context) {
-        String exSDdir = SdStatus.getExternalStorageAbsoluteDir();
+        String exSDdir = SdStatusUtils.getExternalStorageAbsoluteDir();
         if (exSDdir == null) {
             return getCacheDir(context);
         }

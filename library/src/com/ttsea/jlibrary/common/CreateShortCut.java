@@ -11,7 +11,7 @@ import com.ttsea.jlibrary.R;
 /**
  * 在程序第一次启动的时候创建快捷方式<br/>
  * {@link #createShortcut(String)}方法得到应用的Version name<br/>
- * <p/>
+ * <p>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2014.03.01 <br/>
  * <b>author:</b> Jason <br/>
@@ -35,12 +35,10 @@ public class CreateShortCut {
     public void createShortcut(String launcherActivityName) {
         if (!isInstallShortCut(mActivity)) {
             saveShortCutInfo(mActivity);
-            Intent shortcut = new Intent(
-                    "com.android.launcher.action.INSTALL_SHORTCUT");
+            Intent shortcut = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
 
             // 快捷方式的名称
-            shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME,
-                    mActivity.getString(R.string.app_name));
+            shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, mActivity.getString(R.string.app_name));
             shortcut.putExtra("duplicate", false); // 不允许重复创建
 
             Intent shortcutIntent = new Intent(Intent.ACTION_MAIN);
@@ -58,8 +56,7 @@ public class CreateShortCut {
     }
 
     private void saveShortCutInfo(Context context) {
-        SharedPreferences.Editor shortCutInfo = context.getSharedPreferences(
-                "shortCutInfo", 0).edit();
+        SharedPreferences.Editor shortCutInfo = context.getSharedPreferences("shortCutInfo", 0).edit();
         shortCutInfo.putBoolean("isInstalled", true);
         shortCutInfo.commit();
     }
@@ -67,14 +64,12 @@ public class CreateShortCut {
     private boolean isInstallShortCut(Context context) {
         boolean isInstalled = false;
         try {
-            SharedPreferences shortCutInfo = context.getSharedPreferences(
-                    "shortCutInfo", 0);
+            SharedPreferences shortCutInfo = context.getSharedPreferences("shortCutInfo", 0);
             if (shortCutInfo != null) {
                 isInstalled = shortCutInfo.getBoolean("isInstalled", false);
             }
 
         } catch (Exception e) {
-            // TODO: handle exception
             isInstalled = false;
             JLog.e(TAG, "isInstallShortCut, Exception: " + e.toString());
         }

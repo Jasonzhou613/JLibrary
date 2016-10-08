@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Message;
 
 import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.common.SdStatus;
+import com.ttsea.jlibrary.utils.SdStatusUtils;
 import com.ttsea.jlibrary.jasynchttp.db.DownloadOperation;
 import com.ttsea.jlibrary.jasynchttp.server.http.Http;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
@@ -389,9 +389,9 @@ public class Downloader implements TaskHandler {
 
             //判断文件所需空间“MB”
             long needSpace = (contentLength / 1024 / 1024) + 10;
-            if (!SdStatus.isABlockEnough((needSpace))) {
+            if (!SdStatusUtils.isABlockEnough((needSpace))) {
                 String msg = "Insufficient space, need space:" + needSpace
-                        + "MB, SD free space:" + SdStatus.getAvailableBlock() + "MB";
+                        + "MB, SD free space:" + SdStatusUtils.getAvailableBlock() + "MB";
                 JLog.e(TAG, "cancel download, " + msg);
                 cancel(Downloader.ERROR_INSUFFICIENT_SPACE, msg);
                 return;

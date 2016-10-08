@@ -6,10 +6,10 @@ import android.view.View;
 import android.widget.Button;
 
 import com.ttsea.jlibrary.base.BaseActivity;
-import com.ttsea.jlibrary.common.AppInformation;
 import com.ttsea.jlibrary.common.ExitApplication;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.sample.jasynchttp.AsyncHttpActivity;
+import com.ttsea.jlibrary.utils.AppInformationUtils;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
@@ -108,10 +108,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void showAppInfo() {
-        AppInformation appInfomation = new AppInformation(this);
-        appInfomation.getPackageName();
-        appInfomation.getVersionName();
-        appInfomation.getVersionCode();
+        AppInformationUtils.getPackageName(mActivity);
+        AppInformationUtils.getVersionName(mActivity);
+        AppInformationUtils.getVersionCode(mActivity);
 
         JLog.d(TAG, "cacheDir:" + CacheDirUtils.getCacheDir(this) +
                 ", dataCacheDir:" + CacheDirUtils.getDataCacheDir(this) +
