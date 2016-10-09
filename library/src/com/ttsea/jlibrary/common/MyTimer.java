@@ -24,7 +24,7 @@ public class MyTimer {
     /** 总共计时时间，毫秒 */
     private long endTimeMillis = DEFAULT_TIME_MILLIS;
 
-    private boolean isStoped = false;
+    private boolean isStoped = true;
 
     private Handler mHander;
     private OnTimerListener onTimerListener;
