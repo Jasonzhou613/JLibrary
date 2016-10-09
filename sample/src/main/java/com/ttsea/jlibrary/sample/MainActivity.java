@@ -22,6 +22,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Button btnPhoto;
     private Button btnJAsync;
     private Button btnTimer;
+    private Button btnRoundImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         btnPhoto = (Button) findViewById(R.id.btnPhoto);
         btnJAsync = (Button) findViewById(R.id.btnJAsync);
         btnTimer = (Button) findViewById(R.id.btnTimer);
+        btnRoundImage = (Button) findViewById(R.id.btnRoundImage);
 
         btnTest.setOnClickListener(this);
         btnAppInfo.setOnClickListener(this);
@@ -47,6 +49,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         btnPhoto.setOnClickListener(this);
         btnJAsync.setOnClickListener(this);
         btnTimer.setOnClickListener(this);
+        btnRoundImage.setOnClickListener(this);
     }
 
     @Override
@@ -84,6 +87,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             case R.id.btnTimer:
                 intent = new Intent(mActivity, MyTimerActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.btnRoundImage:
+                intent = new Intent(mActivity, RoundImageActivity.class);
                 startActivity(intent);
                 break;
 

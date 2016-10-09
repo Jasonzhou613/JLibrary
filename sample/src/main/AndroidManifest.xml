@@ -42,9 +42,11 @@
         <activity
             android:name="com.ttsea.jlibrary.sample.MyTimerActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ttsea.jlibrary.sample.RoundImageActivity"
+            android:screenOrientation="portrait"/>
 
         <!--Photo Activitys start -->
-
         <activity
             android:name="com.ttsea.jlibrary.photo.select.ImageSelectorActivity"
             android:theme="@android:style/Theme.Light.NoTitleBar"/>
@@ -72,7 +74,6 @@
                 <data android:mimeType="image/*"/>
             </intent-filter>
         </activity>
-
         <!--Photo Activitys end -->
 
     </application>

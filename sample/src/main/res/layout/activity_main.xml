@@ -43,6 +43,11 @@
             style="@style/btn_style"
             android:text="@string/my_timer"/>
 
+        <Button
+            android:id="@+id/btnRoundImage"
+            style="@style/btn_style"
+            android:text="@string/round_image"/>
+
     </LinearLayout>
 
 </ScrollView>
