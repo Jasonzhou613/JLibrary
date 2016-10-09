@@ -12,6 +12,7 @@
     <string name="photo">photo</string>
     <string name="async_http">async http</string>
     <string name="select_photo">select photo</string>
+    <string name="my_timer">timer</string>
 
     <string name="get_data">get data</string>
     <string name="send_email">send email</string>

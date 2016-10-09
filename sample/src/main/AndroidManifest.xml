@@ -39,6 +39,9 @@
         <activity
             android:name="com.ttsea.jlibrary.sample.jasynchttp.DownloadDetailActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ttsea.jlibrary.sample.MyTimerActivity"
+            android:screenOrientation="portrait"/>
 
         <!--Photo Activitys start -->
 
