@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Point;
-import android.support.annotation.BoolRes;
 import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
 import android.view.View;
@@ -28,10 +27,10 @@ public class SmoothCheckBox extends View implements Checkable {
     private final int TYPE_RECTANGLE = 0;//矩形
     private final int TYPE_OVAL = 1;//椭圆
 
-    private final int DEFAULT_BORDER_WIDTH = 5;
-    private final ColorStateList DEFAULT_BORDER_UNCHECKED_COLOR = ColorStateList.valueOf(0xFFC0C0C0);
+    private final int DEFAULT_STROKE_WIDTH = 5;
+    private final ColorStateList DEFAULT_STROKE_UNCHECKED_COLOR = ColorStateList.valueOf(0xFFC0C0C0);
     private final ColorStateList DEFAULT_SOLID_UNCHECKED_COLOR = ColorStateList.valueOf(0);
-    private final ColorStateList DEFAULT_BORDER_CHECKED_COLOR = ColorStateList.valueOf(0);
+    private final ColorStateList DEFAULT_STROKE_CHECKED_COLOR = ColorStateList.valueOf(0);
     private final ColorStateList DEFAULT_SOLID_CHECKED_COLOR = ColorStateList.valueOf(0xFFDFDFDF);
     private final int DEFAULT_TICK_WIDTH = 4;
     private final ColorStateList DEFAULT_TICK_COLOR = ColorStateList.valueOf(0xFFFFFFFF);
@@ -39,13 +38,13 @@ public class SmoothCheckBox extends View implements Checkable {
     private final boolean DEFAULT_SHOULD_ANIMATE = true;
 
     /** 边框宽度 */
-    private int borderWidth = DEFAULT_BORDER_WIDTH;
+    private int strokeWidth = DEFAULT_STROKE_WIDTH;
     /** 未checked边框颜色 */
-    private ColorStateList borderUncheckedColor = DEFAULT_BORDER_UNCHECKED_COLOR;
+    private ColorStateList strokeUncheckedColor = DEFAULT_STROKE_UNCHECKED_COLOR;
     /** 未checked填充颜色 */
     private ColorStateList solidUncheckedColor = DEFAULT_SOLID_UNCHECKED_COLOR;
     /** checked边框颜色 */
-    private ColorStateList borderCheckedColor = DEFAULT_BORDER_CHECKED_COLOR;
+    private ColorStateList strokeCheckedColor = DEFAULT_STROKE_CHECKED_COLOR;
     /** checked填充颜色 */
     private ColorStateList solidCheckedColor = DEFAULT_SOLID_CHECKED_COLOR;
     /** 勾的宽度 */
@@ -62,7 +61,8 @@ public class SmoothCheckBox extends View implements Checkable {
     private boolean shouldAnimate = DEFAULT_SHOULD_ANIMATE;
 
     private boolean mChecked;
-    private ColorStateList borderColor;
+    private int width, height;
+    private ColorStateList strokeColor;
     private ColorStateList solidColor;
     private Point mCenterPoint;
 
@@ -85,18 +85,18 @@ public class SmoothCheckBox extends View implements Checkable {
     }
 
     private void initStyleable(TypedArray a) {
-        borderWidth = a.getDimensionPixelOffset(R.styleable.SmoothCheckBox_strokeWidth, DEFAULT_BORDER_WIDTH);
-        borderUncheckedColor = a.getColorStateList(R.styleable.SmoothCheckBox_strokeUncheckedColor);
-        if (borderUncheckedColor == null) {
-            borderUncheckedColor = DEFAULT_BORDER_UNCHECKED_COLOR;
+        strokeWidth = a.getDimensionPixelOffset(R.styleable.SmoothCheckBox_strokeWidth, DEFAULT_STROKE_WIDTH);
+        strokeUncheckedColor = a.getColorStateList(R.styleable.SmoothCheckBox_strokeUncheckedColor);
+        if (strokeUncheckedColor == null) {
+            strokeUncheckedColor = DEFAULT_STROKE_UNCHECKED_COLOR;
         }
         solidUncheckedColor = a.getColorStateList(R.styleable.SmoothCheckBox_solidUncheckedColor);
         if (solidUncheckedColor == null) {
             solidUncheckedColor = DEFAULT_SOLID_UNCHECKED_COLOR;
         }
-        borderCheckedColor = a.getColorStateList(R.styleable.SmoothCheckBox_strokeCheckedColor);
-        if (borderCheckedColor == null) {
-            borderCheckedColor = DEFAULT_BORDER_CHECKED_COLOR;
+        strokeCheckedColor = a.getColorStateList(R.styleable.SmoothCheckBox_strokeCheckedColor);
+        if (strokeCheckedColor == null) {
+            strokeCheckedColor = DEFAULT_STROKE_CHECKED_COLOR;
         }
         solidCheckedColor = a.getColorStateList(R.styleable.SmoothCheckBox_solidCheckedColor);
         if (solidCheckedColor == null) {
@@ -135,10 +135,10 @@ public class SmoothCheckBox extends View implements Checkable {
             }
         }
 
-        JLog.d(TAG, "borderWidth:" + borderWidth
-                + ",\n borderUncheckedColor:" + borderUncheckedColor
+        JLog.d(TAG, "strokeWidth:" + strokeWidth
+                + ",\n strokeUncheckedColor:" + strokeUncheckedColor
                 + ",\n solidUncheckedColor:" + solidUncheckedColor
-                + ",\n borderCheckedColor:" + borderCheckedColor
+                + ",\n strokeCheckedColor:" + strokeCheckedColor
                 + ",\n solidCheckedColor:" + solidCheckedColor
                 + ",\n tickWidth:" + tickWidth
                 + ",\n tickColor:" + tickColor
@@ -160,12 +160,14 @@ public class SmoothCheckBox extends View implements Checkable {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
+        //super.onLayout(changed, left, top, right, bottom);
+        width = getMeasuredWidth();
+        height = getMeasuredHeight();
     }
 
     @Override
     public void setChecked(boolean checked) {
-        setChecked(checked, true);
+        setChecked(checked, shouldAnimate);
     }
 
     /**
@@ -194,6 +196,10 @@ public class SmoothCheckBox extends View implements Checkable {
         this.setChecked(!isChecked());
     }
 
+    private void reset() {
+
+    }
+
     public OnCheckedChangeListener getOnCheckedChangeListener() {
         return onCheckedChangeListener;
     }
@@ -202,20 +208,20 @@ public class SmoothCheckBox extends View implements Checkable {
         this.onCheckedChangeListener = l;
     }
 
-    public int getBorderWidth() {
-        return borderWidth;
+    public int getStrokeWidth() {
+        return strokeWidth;
     }
 
-    public void setBorderWidth(int borderWidth) {
-        this.borderWidth = borderWidth;
+    public void setStrokeWidth(int strokeWidth) {
+        this.strokeWidth = strokeWidth;
     }
 
-    public void setBorderUncheckedColor(ColorStateList color) {
-        this.borderUncheckedColor = (color != null) ? color : DEFAULT_BORDER_UNCHECKED_COLOR;
+    public void setStrokeUncheckedColor(ColorStateList color) {
+        this.strokeUncheckedColor = (color != null) ? color : DEFAULT_STROKE_UNCHECKED_COLOR;
     }
 
     public void setBorderUncheckedColor(@ColorInt int color) {
-        setBorderUncheckedColor(ColorStateList.valueOf(color));
+        setStrokeUncheckedColor(ColorStateList.valueOf(color));
     }
 
     public void setSolidUncheckedColor(ColorStateList color) {
@@ -226,16 +232,16 @@ public class SmoothCheckBox extends View implements Checkable {
         setSolidUncheckedColor(ColorStateList.valueOf(color));
     }
 
-    public void setBorderCheckedColor(ColorStateList color) {
-        this.borderCheckedColor = (color != null) ? color : DEFAULT_BORDER_CHECKED_COLOR;
+    public void setStrokeCheckedColor(ColorStateList color) {
+        this.strokeCheckedColor = (color != null) ? color : DEFAULT_STROKE_CHECKED_COLOR;
     }
 
     public void setBorderCheckedColor(@ColorInt int color) {
-        setBorderCheckedColor(ColorStateList.valueOf(color));
+        setStrokeCheckedColor(ColorStateList.valueOf(color));
     }
 
     public void setSolidCheckedColor(ColorStateList color) {
-        this.solidCheckedColor = (color != null) ? color : DEFAULT_BORDER_CHECKED_COLOR;
+        this.solidCheckedColor = (color != null) ? color : DEFAULT_STROKE_CHECKED_COLOR;
     }
 
     public void setSolidCheckedColor(@ColorInt int color) {
