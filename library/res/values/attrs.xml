@@ -96,4 +96,27 @@
     </declare-styleable>
     <!-- com.ttsea.jlibrary.component.widget.roundImage.RoundedImageView attrs end -->
 
+    <!-- com.ttsea.jlibrary.component.widget.SmoothCheckBox attrs start -->
+    <declare-styleable name="SmoothCheckBox">
+        <attr name="strokeWidth" format="dimension"/>
+        <attr name="strokeUncheckedColor" format="color"/>
+        <attr name="solidUncheckedColor" format="color"/>
+        <attr name="strokeCheckedColor" format="color"/>
+        <attr name="solidCheckedColor" format="color"/>
+        <attr name="tickWidth" format="dimension"/>
+        <attr name="tickColor" format="color"/>
+        <attr name="duration" format="integer"/>
+        <attr name="type">
+            <enum name="RECTANGLE" value="0"/>
+            <enum name="OVAL" value="1"/>
+        </attr>
+        <attr name="radius" format="dimension"/>
+        <attr name="radiusTopLeft" format="dimension"/>
+        <attr name="radiusTopRight" format="dimension"/>
+        <attr name="radiusBottomRight" format="dimension"/>
+        <attr name="radiusBottomLeft" format="dimension"/>
+        <attr name="shouldAnimate" format="boolean"/>
+    </declare-styleable>
+    <!-- com.ttsea.jlibrary.component.widget.SmoothCheckBox attrs start -->
+
 </resources>

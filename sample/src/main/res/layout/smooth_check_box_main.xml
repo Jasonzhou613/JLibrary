@@ -1,0 +1,20 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center_horizontal"
+              android:orientation="vertical">
+
+    <com.ttsea.jlibrary.component.widget.SmoothCheckBoxTmp
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="40dp"/>
+
+
+    <com.ttsea.jlibrary.component.widget.SmoothCheckBox
+        android:id="@+id/scBox"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="40dp"
+        android:background="@color/goldenrod"/>
+
+</LinearLayout>

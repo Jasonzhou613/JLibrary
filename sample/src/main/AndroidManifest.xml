@@ -45,6 +45,10 @@
         <activity
             android:name="com.ttsea.jlibrary.sample.RoundImageActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ttsea.jlibrary.sample.SmoothCheckBoxActivity"
+            android:screenOrientation="portrait"/>
+
 
         <!--Photo Activitys start -->
         <activity

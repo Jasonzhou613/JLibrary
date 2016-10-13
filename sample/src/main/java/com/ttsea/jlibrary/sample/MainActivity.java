@@ -23,6 +23,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Button btnJAsync;
     private Button btnTimer;
     private Button btnRoundImage;
+    private Button btnCheckBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         btnJAsync = (Button) findViewById(R.id.btnJAsync);
         btnTimer = (Button) findViewById(R.id.btnTimer);
         btnRoundImage = (Button) findViewById(R.id.btnRoundImage);
+        btnCheckBox = (Button) findViewById(R.id.btnCheckBox);
 
         btnTest.setOnClickListener(this);
         btnAppInfo.setOnClickListener(this);
@@ -50,6 +52,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         btnJAsync.setOnClickListener(this);
         btnTimer.setOnClickListener(this);
         btnRoundImage.setOnClickListener(this);
+        btnCheckBox.setOnClickListener(this);
     }
 
     @Override
@@ -95,6 +98,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 startActivity(intent);
                 break;
 
+            case R.id.btnCheckBox:
+                intent = new Intent(mActivity, SmoothCheckBoxActivity.class);
+                startActivity(intent);
+                break;
+
             default:
                 break;
         }
@@ -104,18 +112,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //         JLog.d(TAG, "isPackageInstalled:" + ApkUtils.isPackageInstalled(mActivity, "com.huiweishang.ws"));
 //         ApkUtils.install(mActivity, new File(""));
 //         ApkUtils.launch(mActivity, "com.huiweishang.ws");
-
+//
 //        JLog.d(TAG, "getCacheDir:" + CacheDirUtils.getCacheDir(mActivity));
 //        JLog.d(TAG, "getDataCacheDir:" + CacheDirUtils.getDataCacheDir(mActivity));
 //        JLog.d(TAG, "getImageCacheDir:" + CacheDirUtils.getImageCacheDir(mActivity));
 //        JLog.d(TAG, "getImageCacheDir:" + CacheDirUtils.getSdDataDir(mActivity));
 //        JLog.d(TAG, "getTempDir:" + CacheDirUtils.getTempDir(mActivity));
-
+//
 //        JLog.d(TAG, "getFloat:" + DigitUtils.getFloat(5.153456f, 5));
-
+//
 //        JLog.d(TAG, "randomString:" + RandomUtils.randomString(5));
 //        JLog.d(TAG, "limitInt:" + RandomUtils.limitInt(5));
-
+//
 //        JToast.makeTextTop(mActivity, "top", 50);
 //        JToast.makeTextBottom(mActivity, "botom", 50);
 //        JToast.makeTextLeft(mActivity, "left");

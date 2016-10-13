@@ -14,6 +14,7 @@
     <string name="select_photo">select photo</string>
     <string name="my_timer">timer</string>
     <string name="round_image">round image</string>
+    <string name="smooth_check_box">SmoothCheckBox</string>
 
     <string name="get_data">get data</string>
     <string name="send_email">send email</string>

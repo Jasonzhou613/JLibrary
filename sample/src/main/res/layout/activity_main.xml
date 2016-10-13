@@ -48,6 +48,11 @@
             style="@style/btn_style"
             android:text="@string/round_image"/>
 
+        <Button
+            android:id="@+id/btnCheckBox"
+            style="@style/btn_style"
+            android:text="@string/smooth_check_box"/>
+
     </LinearLayout>
 
 </ScrollView>
