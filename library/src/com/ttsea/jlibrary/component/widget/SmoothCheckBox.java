@@ -3,6 +3,8 @@ package com.ttsea.jlibrary.component.widget;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
@@ -62,18 +64,21 @@ public class SmoothCheckBox extends View implements Checkable {
 
     private boolean mChecked;
     private int width, height;
+    private float mLeftTickDistance, mRightTickDistance;
+    private Paint mTickPaint;
     private ColorStateList strokeColor;
     private ColorStateList solidColor;
     private Point mCenterPoint;
+    private Point[] mTickPoints;
 
     private OnCheckedChangeListener onCheckedChangeListener;
 
     public SmoothCheckBox(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public SmoothCheckBox(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public SmoothCheckBox(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -144,13 +149,39 @@ public class SmoothCheckBox extends View implements Checkable {
                 + ",\n tickColor:" + tickColor
                 + ",\n type:" + type
                 + ",\n animDuration:" + animDuration
-                + ",\n radius:" + radius
+                + ",\n radius[0]:" + radius[0] + ", radius[1]:" + radius[1]
+                + ", radius[2]:" + radius[2] + ", radius[3]:" + radius[3]
                 + ",\n shouldAnimate:" + shouldAnimate
         );
     }
 
     private void init() {
+        if (isChecked()) {
+            strokeColor = strokeCheckedColor;
+            solidColor = solidCheckedColor;
+        } else {
+            strokeColor = strokeUncheckedColor;
+            solidColor = solidUncheckedColor;
+        }
 
+        mCenterPoint = new Point();
+        mTickPoints = new Point[3];
+        mTickPoints[0] = new Point();
+        mTickPoints[1] = new Point();
+        mTickPoints[2] = new Point();
+
+        mTickPaint = new Paint();
+        mTickPaint.setStyle(Paint.Style.STROKE);
+        mTickPaint.setStrokeCap(Paint.Cap.ROUND);
+        mTickPaint.setColor(tickColor.getDefaultColor());
+        mTickPaint.setStrokeWidth(strokeWidth);
+
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggle();
+            }
+        });
     }
 
     @Override
@@ -163,6 +194,39 @@ public class SmoothCheckBox extends View implements Checkable {
         //super.onLayout(changed, left, top, right, bottom);
         width = getMeasuredWidth();
         height = getMeasuredHeight();
+        mCenterPoint.x = width / 2;
+        mCenterPoint.y = height / 2;
+
+        mTickPoints[0].x = Math.round((float) getMeasuredWidth() / 30 * 7);
+        mTickPoints[0].y = Math.round((float) getMeasuredHeight() / 30 * 14);
+        mTickPoints[1].x = Math.round((float) getMeasuredWidth() / 30 * 13);
+        mTickPoints[1].y = Math.round((float) getMeasuredHeight() / 30 * 20);
+        mTickPoints[2].x = Math.round((float) getMeasuredWidth() / 30 * 22);
+        mTickPoints[2].y = Math.round((float) getMeasuredHeight() / 30 * 10);
+
+        mLeftTickDistance = (float) Math.sqrt(Math.pow(mTickPoints[1].x - mTickPoints[0].x, 2) +
+                Math.pow(mTickPoints[1].y - mTickPoints[0].y, 2));
+        mRightTickDistance = (float) Math.sqrt(Math.pow(mTickPoints[2].x - mTickPoints[1].x, 2) +
+                Math.pow(mTickPoints[2].y - mTickPoints[1].y, 2));
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        drawSolid(canvas);
+        drawBorder(canvas);
+        drawTick(canvas);
+    }
+
+    private void drawSolid(Canvas canvas) {
+        JLog.d(TAG, "drawSolid...");
+    }
+
+    private void drawBorder(Canvas canvas) {
+        JLog.d(TAG, "drawBorder...");
+    }
+
+    private void drawTick(Canvas canvas) {
+        JLog.d(TAG, "drawTick...");
     }
 
     @Override
@@ -177,13 +241,20 @@ public class SmoothCheckBox extends View implements Checkable {
      * @param animate change with animation
      */
     public void setChecked(boolean checked, boolean animate) {
+        JLog.d(TAG, "checked:" + checked + ", animate:" + animate);
         mChecked = checked;
-        if (mChecked) {
-
+        if (isChecked()) {
+            strokeColor = strokeCheckedColor;
+            solidColor = solidCheckedColor;
         } else {
-
+            strokeColor = strokeUncheckedColor;
+            solidColor = solidUncheckedColor;
         }
 
+        invalidate();
+        if (onCheckedChangeListener != null) {
+            onCheckedChangeListener.onCheckedChanged(this, isChecked());
+        }
     }
 
     @Override
