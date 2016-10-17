@@ -4,11 +4,13 @@ import android.content.res.ColorStateList;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 
 import com.ttsea.jlibrary.common.JLog;
 
@@ -51,9 +53,12 @@ class CheckBoxDrawable extends Drawable {
 
     private Point mCenterPoint;
     private Point[] mTickPoints;
-
+    private Path mTickPath;
     private RectF mBounds = new RectF();
     private RectF mBorderRect = new RectF();
+
+    private float mLeftLineDistance, mRightLineDistance, mDrewDistance;
+    private Handler mHandler;
 
     public CheckBoxDrawable() {
         super();
@@ -65,6 +70,7 @@ class CheckBoxDrawable extends Drawable {
         mTickPoints[0] = new Point();
         mTickPoints[1] = new Point();
         mTickPoints[2] = new Point();
+        mTickPath = new Path();
 
         if (mStrokePaint == null) {
             mStrokePaint = new Paint();
@@ -91,6 +97,8 @@ class CheckBoxDrawable extends Drawable {
         mTickPaint.setAntiAlias(true);
         mTickPaint.setColor(getColorForState(tickColor));
         mTickPaint.setStrokeWidth(tickWidth);
+
+        mHandler = new Handler();
     }
 
     @Override
@@ -211,12 +219,12 @@ class CheckBoxDrawable extends Drawable {
 
     @Override
     public int getIntrinsicWidth() {
-        return super.getIntrinsicWidth();
+        return mBounds == null ? 0 : (int) mBounds.width();
     }
 
     @Override
     public int getIntrinsicHeight() {
-        return super.getIntrinsicHeight();
+        return mBounds == null ? 0 : (int) mBounds.height();
     }
 
     public int getStrokeWidth() {
