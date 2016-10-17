@@ -20,12 +20,12 @@
         app:duration="500"
         app:radius="5dp"
         app:shouldAnimate="true"
-        app:solidCheckedColor="@color/zFF4444"
-        app:solidUncheckedColor="@color/white"
-        app:strokeCheckedColor="@color/zCC0000"
-        app:strokeUncheckedColor="@color/lightGrey"
+        app:solidCheckedColor="@color/smooth_solid_checked_color"
+        app:solidUncheckedColor="@color/smooth_solid_unchecked_color"
+        app:strokeCheckedColor="@color/smooth_border_checked_color"
+        app:strokeUncheckedColor="@color/smooth_border_unchecked_color"
         app:strokeWidth="5dp"
-        app:tickColor="@color/blue"
+        app:tickColor="@color/white"
         app:tickWidth="10dp"
         app:type="OVAL"/>
 

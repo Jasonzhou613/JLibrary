@@ -97,14 +97,17 @@ class CheckBoxDrawable extends Drawable {
     public void draw(Canvas canvas) {
         drawSolid(canvas);
         drawBorder(canvas);
-        drawTick(canvas);
+        if (isChecked()) {
+            drawTick(canvas);
+        }
     }
 
     private void drawSolid(Canvas canvas) {
-        canvas.drawOval(mBorderRect, mSolidPaint);
+        canvas.drawOval(mBounds, mSolidPaint);
     }
 
     private void drawBorder(Canvas canvas) {
+        mStrokePaint.setColor(getColorForState(strokeColor));
         if (type == SmoothCheckBox.TYPE_OVAL) {
             canvas.drawOval(mBorderRect, mStrokePaint);
         }
@@ -163,14 +166,14 @@ class CheckBoxDrawable extends Drawable {
 
     @Override
     public boolean isStateful() {
-        return solidColor.isStateful();
+        return strokeColor.isStateful() || solidColor.isStateful() || tickColor.isStateful();
     }
 
     @Override
     protected boolean onStateChange(int[] state) {
-        int newStrokeColor = getColorForState(strokeColor);
-        int newSolidColor = getColorForState(solidColor);
-        int newTickColor = getColorForState(tickColor);
+        int newStrokeColor = getColorForState(state, strokeColor);
+        int newSolidColor = getColorForState(state, solidColor);
+        int newTickColor = getColorForState(state, tickColor);
 
         if (newStrokeColor != mStrokePaint.getColor()) {
             mStrokePaint.setColor(newStrokeColor);
@@ -181,7 +184,7 @@ class CheckBoxDrawable extends Drawable {
         if (newTickColor != mTickPaint.getColor()) {
             mTickPaint.setColor(newTickColor);
         }
-        JLog.d(TAG, "onStateChange...");
+        invalidateSelf();
         return super.onStateChange(state);
     }
 
@@ -198,6 +201,14 @@ class CheckBoxDrawable extends Drawable {
         JLog.d(TAG, "mBounds:" + mBounds + ", mBorderRect:" + mBorderRect);
     }
 
+    private int getColorForState(int[] state, ColorStateList colors) {
+        return colors.getColorForState(state, colors.getDefaultColor());
+    }
+
+    private int getColorForState(ColorStateList colors) {
+        return getColorForState(getState(), colors);
+    }
+
     @Override
     public int getIntrinsicWidth() {
         return super.getIntrinsicWidth();
@@ -206,10 +217,6 @@ class CheckBoxDrawable extends Drawable {
     @Override
     public int getIntrinsicHeight() {
         return super.getIntrinsicHeight();
-    }
-
-    private int getColorForState(ColorStateList colors) {
-        return colors.getColorForState(getState(), colors.getDefaultColor());
     }
 
     public int getStrokeWidth() {
