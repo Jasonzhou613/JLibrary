@@ -5,16 +5,17 @@
               android:gravity="center_horizontal"
               android:orientation="vertical">
 
-    <com.ttsea.jlibrary.component.widget.SmoothCheckBoxTmp
+    <com.ttsea.jlibrary.component.widget.checkBox.SmoothCheckBoxTmp
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginTop="40dp"/>
 
-    <com.ttsea.jlibrary.component.widget.SmoothCheckBox
+    <com.ttsea.jlibrary.component.widget.checkBox.SmoothCheckBox
         android:id="@+id/scBox"
         android:layout_width="250dp"
         android:layout_height="200dp"
         android:layout_marginTop="40dp"
+        app:checked="false"
         app:duration="500"
         app:radius="5dp"
         app:shouldAnimate="true"
