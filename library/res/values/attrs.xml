@@ -117,6 +117,8 @@
         <attr name="radiusBottomLeft" format="dimension"/>
         <attr name="shouldAnimate" format="boolean"/>
         <attr name="checked" format="boolean"/>
+        <!-- 透明度，取值0~255 -->
+        <attr name="alpha" format="integer"/>
     </declare-styleable>
     <!-- com.ttsea.jlibrary.component.widget.checkBox.SmoothCheckBox attrs start -->
 

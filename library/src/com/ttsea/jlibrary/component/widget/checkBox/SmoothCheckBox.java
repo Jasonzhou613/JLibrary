@@ -34,6 +34,7 @@ public class SmoothCheckBox extends View implements Checkable {
     private final int DEFAULT_TICK_WIDTH = 4;
     private final ColorStateList DEFAULT_TICK_COLOR = ColorStateList.valueOf(0xFFFFFFFF);
     private final int DEFAULT_ANIM_DURATION = 300;
+    private final int DEFAULT_ALPHA = 255;
     private final boolean DEFAULT_SHOULD_ANIMATE = true;
     private final boolean DEFAULT_CHECKED = false;
 
@@ -45,8 +46,6 @@ public class SmoothCheckBox extends View implements Checkable {
     private ColorStateList strokeCheckedColor = DEFAULT_STROKE_CHECKED_COLOR;
     /** checked填充颜色 */
     private ColorStateList solidCheckedColor = DEFAULT_SOLID_CHECKED_COLOR;
-    /** 切换的时候是否显示动画,默认为true */
-    private boolean shouldAnimate = DEFAULT_SHOULD_ANIMATE;
 
     private CheckBoxDrawable mDrawable;
     private OnCheckedChangeListener onCheckedChangeListener;
@@ -90,10 +89,16 @@ public class SmoothCheckBox extends View implements Checkable {
         if (tickColor == null) {
             tickColor = DEFAULT_TICK_COLOR;
         }
+        boolean shouldAnimate = a.getBoolean(R.styleable.SmoothCheckBox_shouldAnimate, DEFAULT_SHOULD_ANIMATE);
         int animDuration = a.getInt(R.styleable.SmoothCheckBox_duration, DEFAULT_ANIM_DURATION);
         int type = a.getInt(R.styleable.SmoothCheckBox_type, TYPE_OVAL);
-        shouldAnimate = a.getBoolean(R.styleable.SmoothCheckBox_shouldAnimate, DEFAULT_SHOULD_ANIMATE);
         boolean checked = a.getBoolean(R.styleable.SmoothCheckBox_checked, DEFAULT_CHECKED);
+        int alpha = a.getInt(R.styleable.SmoothCheckBox_alpha, DEFAULT_ALPHA);
+        if (alpha < 0) {
+            alpha = 0;
+        } else if (alpha > 255) {
+            alpha = 255;
+        }
 
         boolean hasSetRadius = false;
         float[] radius = new float[4];
@@ -132,6 +137,7 @@ public class SmoothCheckBox extends View implements Checkable {
         mDrawable.setAnimDuration(animDuration);
         mDrawable.setRadius(radius);
         mDrawable.setChecked(checked);
+        mDrawable.setAlpha(alpha);
 
         if (isChecked()) {
             mDrawable.setStrokeColor(strokeCheckedColor);
@@ -140,6 +146,7 @@ public class SmoothCheckBox extends View implements Checkable {
             mDrawable.setStrokeColor(strokeUncheckedColor);
             mDrawable.setSolidColor(solidUncheckedColor);
         }
+        mDrawable.init();
 
         JLog.d(TAG, "strokeWidth:" + strokeWidth
                 + ",\n strokeUncheckedColor:" + strokeUncheckedColor
@@ -151,6 +158,8 @@ public class SmoothCheckBox extends View implements Checkable {
                 + ",\n type:" + type
                 + ",\n shouldAnimate:" + shouldAnimate
                 + ",\n animDuration:" + animDuration
+                + ",\n checked:" + checked
+                + ",\n alpha:" + alpha
                 + ",\n radius[TOP_LEFT]:" + radius[Corner.TOP_LEFT]
                 + ", radius[TOP_RIGHT]:" + radius[Corner.TOP_RIGHT]
                 + ", radius[BOTTOM_RIGHT]:" + radius[Corner.BOTTOM_RIGHT]
@@ -181,7 +190,7 @@ public class SmoothCheckBox extends View implements Checkable {
 
     @Override
     public void setChecked(boolean checked) {
-        setChecked(checked, shouldAnimate);
+        setChecked(checked, true);
     }
 
     /**
@@ -323,6 +332,15 @@ public class SmoothCheckBox extends View implements Checkable {
         mDrawable.getRadius()[Corner.TOP_RIGHT] = topRight;
         mDrawable.getRadius()[Corner.BOTTOM_RIGHT] = bottomRight;
         mDrawable.getRadius()[Corner.BOTTOM_LEFT] = bottomLeft;
+    }
+
+    /** 透明度，取值0~255 */
+    public void setAlpha(int alpha) {
+        mDrawable.setAlpha(alpha);
+    }
+
+    public int getIntAlpha() {
+        return mDrawable.getAlpha();
     }
 
     public interface OnCheckedChangeListener {

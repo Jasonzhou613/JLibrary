@@ -56,30 +56,35 @@ class CheckBoxDrawable extends Drawable {
 
     public CheckBoxDrawable() {
         super();
-        init();
     }
 
-    private void init() {
+    public void init() {
         mCenterPoint = new Point();
         mTickPoints = new Point[3];
         mTickPoints[0] = new Point();
         mTickPoints[1] = new Point();
         mTickPoints[2] = new Point();
 
-        mStrokePaint = new Paint();
+        if (mStrokePaint == null) {
+            mStrokePaint = new Paint();
+        }
         mStrokePaint.setStyle(Paint.Style.STROKE);
         mStrokePaint.setStrokeCap(Paint.Cap.ROUND);
         mStrokePaint.setAntiAlias(true);
         mStrokePaint.setColor(getColorForState(strokeColor));
         mStrokePaint.setStrokeWidth(strokeWidth);
 
-        mSolidPaint = new Paint();
+        if (mSolidPaint == null) {
+            mSolidPaint = new Paint();
+        }
         mSolidPaint.setStyle(Paint.Style.FILL);
         mSolidPaint.setStrokeCap(Paint.Cap.ROUND);
         mSolidPaint.setAntiAlias(true);
         mSolidPaint.setColor(getColorForState(solidColor));
 
-        mTickPaint = new Paint();
+        if (mTickPaint == null) {
+            mTickPaint = new Paint();
+        }
         mTickPaint.setStyle(Paint.Style.STROKE);
         mTickPaint.setStrokeCap(Paint.Cap.ROUND);
         mTickPaint.setAntiAlias(true);
@@ -94,7 +99,18 @@ class CheckBoxDrawable extends Drawable {
 
     @Override
     public void setAlpha(int alpha) {
-
+        if (mStrokePaint == null) {
+            mStrokePaint = new Paint();
+        }
+        if (mSolidPaint == null) {
+            mSolidPaint = new Paint();
+        }
+        if (mTickPaint == null) {
+            mTickPaint = new Paint();
+        }
+        mStrokePaint.setAlpha(alpha);
+        mSolidPaint.setAlpha(alpha);
+        mTickPaint.setAlpha(alpha);
     }
 
     @Override
@@ -111,7 +127,6 @@ class CheckBoxDrawable extends Drawable {
     public int getAlpha() {
         return super.getAlpha();
     }
-
 
     @Override
     public boolean isStateful() {
