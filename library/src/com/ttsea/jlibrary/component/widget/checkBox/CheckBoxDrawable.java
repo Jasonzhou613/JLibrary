@@ -4,6 +4,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -94,7 +95,23 @@ class CheckBoxDrawable extends Drawable {
 
     @Override
     public void draw(Canvas canvas) {
-        JLog.d(TAG, "draw...");
+        drawSolid(canvas);
+        drawBorder(canvas);
+        drawTick(canvas);
+    }
+
+    private void drawSolid(Canvas canvas) {
+        canvas.drawOval(mBorderRect, mSolidPaint);
+    }
+
+    private void drawBorder(Canvas canvas) {
+        if (type == SmoothCheckBox.TYPE_OVAL) {
+            canvas.drawOval(mBorderRect, mStrokePaint);
+        }
+    }
+
+    private void drawTick(Canvas canvas) {
+
     }
 
     @Override
@@ -114,41 +131,71 @@ class CheckBoxDrawable extends Drawable {
     }
 
     @Override
-    public void setColorFilter(ColorFilter colorFilter) {
+    public int getAlpha() {
+        return mSolidPaint.getAlpha();
+    }
 
+    @Override
+    public void setColorFilter(ColorFilter colorFilter) {
+        if (mStrokePaint == null) {
+            mStrokePaint = new Paint();
+        }
+        if (mSolidPaint == null) {
+            mSolidPaint = new Paint();
+        }
+        if (mTickPaint == null) {
+            mTickPaint = new Paint();
+        }
+        mStrokePaint.setColorFilter(colorFilter);
+        mSolidPaint.setColorFilter(colorFilter);
+        mTickPaint.setColorFilter(colorFilter);
+    }
+
+    @Override
+    public ColorFilter getColorFilter() {
+        return mSolidPaint.getColorFilter();
     }
 
     @Override
     public int getOpacity() {
-        return 0;
-    }
-
-    @Override
-    public int getAlpha() {
-        return super.getAlpha();
+        return PixelFormat.TRANSLUCENT;
     }
 
     @Override
     public boolean isStateful() {
-        return super.isStateful();
+        return solidColor.isStateful();
     }
-
-
-    @Override
-    public Drawable getCurrent() {
-        return super.getCurrent();
-    }
-
 
     @Override
     protected boolean onStateChange(int[] state) {
+        int newStrokeColor = getColorForState(strokeColor);
+        int newSolidColor = getColorForState(solidColor);
+        int newTickColor = getColorForState(tickColor);
+
+        if (newStrokeColor != mStrokePaint.getColor()) {
+            mStrokePaint.setColor(newStrokeColor);
+        }
+        if (newSolidColor != mSolidPaint.getColor()) {
+            mSolidPaint.setColor(newSolidColor);
+        }
+        if (newTickColor != mTickPaint.getColor()) {
+            mTickPaint.setColor(newTickColor);
+        }
+        JLog.d(TAG, "onStateChange...");
         return super.onStateChange(state);
     }
-
 
     @Override
     protected void onBoundsChange(Rect bounds) {
         super.onBoundsChange(bounds);
+
+        mBounds.set(bounds);
+        int offset = strokeWidth / 2;
+        mBorderRect.set(mBounds.left + offset, mBounds.top + offset, mBounds.right - offset, mBounds.bottom - offset);
+        mCenterPoint.x = (int) mBounds.width() / 2;
+        mCenterPoint.y = (int) mBounds.height() / 2;
+
+        JLog.d(TAG, "mBounds:" + mBounds + ", mBorderRect:" + mBorderRect);
     }
 
     @Override
@@ -249,9 +296,5 @@ class CheckBoxDrawable extends Drawable {
 
     public void setSolidColor(ColorStateList solidColor) {
         this.solidColor = solidColor;
-    }
-
-    public void setBounds(RectF bounds) {
-        this.mBounds = bounds;
     }
 }

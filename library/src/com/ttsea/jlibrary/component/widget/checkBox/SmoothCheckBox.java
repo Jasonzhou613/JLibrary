@@ -3,6 +3,7 @@ package com.ttsea.jlibrary.component.widget.checkBox;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.ColorFilter;
 import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
 import android.view.View;
@@ -341,6 +342,14 @@ public class SmoothCheckBox extends View implements Checkable {
 
     public int getIntAlpha() {
         return mDrawable.getAlpha();
+    }
+
+    public void setColorFilter(ColorFilter colorFilter) {
+        mDrawable.setColorFilter(colorFilter);
+    }
+
+    public ColorFilter getColorFilter() {
+        return mDrawable.getColorFilter();
     }
 
     public interface OnCheckedChangeListener {
