@@ -96,7 +96,7 @@
     </declare-styleable>
     <!-- com.ttsea.jlibrary.component.widget.roundImage.RoundedImageView attrs end -->
 
-    <!-- com.ttsea.jlibrary.component.widget.checkBox.SmoothCheckBox attrs start -->
+    <!-- com.ttsea.jlibrary.component.widget.SmoothCheckBox attrs start -->
     <declare-styleable name="SmoothCheckBox">
         <attr name="strokeWidth" format="dimension"/>
         <attr name="strokeUncheckedColor" format="color"/>
@@ -120,6 +120,6 @@
         <!-- 透明度，取值0~255 -->
         <attr name="alpha" format="integer"/>
     </declare-styleable>
-    <!-- com.ttsea.jlibrary.component.widget.checkBox.SmoothCheckBox attrs start -->
+    <!-- com.ttsea.jlibrary.component.widget.SmoothCheckBox attrs start -->
 
 </resources>

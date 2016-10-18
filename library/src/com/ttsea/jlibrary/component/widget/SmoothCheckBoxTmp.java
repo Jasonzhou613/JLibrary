@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ttsea.jlibrary.component.widget.checkBox;
+package com.ttsea.jlibrary.component.widget;
 
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;

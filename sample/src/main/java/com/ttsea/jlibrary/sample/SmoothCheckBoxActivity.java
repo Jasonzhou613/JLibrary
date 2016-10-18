@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.component.widget.checkBox.SmoothCheckBox;
+import com.ttsea.jlibrary.component.widget.SmoothCheckBox;
 
 /**
  * //To do <br/>
