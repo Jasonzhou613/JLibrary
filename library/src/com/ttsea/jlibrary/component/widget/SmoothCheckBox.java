@@ -436,8 +436,10 @@ public class SmoothCheckBox extends View implements Checkable {
             mSolidPaint.setColor(mSolidColor);
             canvas.drawOval(mSolidRect, mSolidPaint);
 
-            mSolidPaint.setColor(getColorForState(solidUnCheckedColor));
-            canvas.drawOval(mGradientBounds, mSolidPaint);
+            if (shouldAnimate) {
+                mSolidPaint.setColor(getColorForState(solidUnCheckedColor));
+                canvas.drawOval(mGradientBounds, mSolidPaint);
+            }
 
             //加这句话，是为了显示pressed效果
             if (mGradientBounds.isEmpty()) {
