@@ -1,5 +1,6 @@
 package com.ttsea.jlibrary.component.widget;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
@@ -17,6 +18,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.Checkable;
 
 import com.ttsea.jlibrary.R;
@@ -27,7 +29,7 @@ import java.lang.annotation.RetentionPolicy;
 
 /**
  * CheckBox <br/>
- * <p>
+ * <p/>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/10/12 16:37 <br/>
  * <b>author:</b> Jason <br/>
@@ -57,7 +59,7 @@ public class SmoothCheckBox extends View implements Checkable {
     /** checked边框颜色 */
     private ColorStateList strokeCheckedColor = DEFAULT_STROKE_CHECKED_COLOR;
     /** 未checked填充颜色 */
-    private ColorStateList solidUncheckedColor = DEFAULT_SOLID_UNCHECKED_COLOR;
+    private ColorStateList solidUnCheckedColor = DEFAULT_SOLID_UNCHECKED_COLOR;
     /** checked填充颜色 */
     private ColorStateList solidCheckedColor = DEFAULT_SOLID_CHECKED_COLOR;
 
@@ -81,6 +83,7 @@ public class SmoothCheckBox extends View implements Checkable {
     private RectF mSolidRect = new RectF();
     private RectF mBorderRect = new RectF();
     private CheckBoxDrawable mDrawable;
+    private boolean checkChangedByClick = false;
     private float mLeftTickDistance, mRightTickDistance;
     private float mLeftLineDistance, mRightLineDistance, mDrewDistance;
 
@@ -112,9 +115,9 @@ public class SmoothCheckBox extends View implements Checkable {
         if (strokeCheckedColor == null) {
             strokeCheckedColor = DEFAULT_STROKE_CHECKED_COLOR;
         }
-        solidUncheckedColor = a.getColorStateList(R.styleable.SmoothCheckBox_solidUncheckedColor);
-        if (solidUncheckedColor == null) {
-            solidUncheckedColor = DEFAULT_SOLID_UNCHECKED_COLOR;
+        solidUnCheckedColor = a.getColorStateList(R.styleable.SmoothCheckBox_solidUncheckedColor);
+        if (solidUnCheckedColor == null) {
+            solidUnCheckedColor = DEFAULT_SOLID_UNCHECKED_COLOR;
         }
         solidCheckedColor = a.getColorStateList(R.styleable.SmoothCheckBox_solidCheckedColor);
         if (solidCheckedColor == null) {
@@ -164,7 +167,7 @@ public class SmoothCheckBox extends View implements Checkable {
         JLog.d(TAG, "strokeWidth:" + strokeWidth
                 + ",\n strokeUncheckedColor:" + strokeUncheckedColor
                 + ",\n strokeCheckedColor:" + strokeCheckedColor
-                + ",\n solidUncheckedColor:" + solidUncheckedColor
+                + ",\n solidUnCheckedColor:" + solidUnCheckedColor
                 + ",\n solidCheckedColor:" + solidCheckedColor
                 + ",\n tickWidth:" + tickWidth
                 + ",\n tickColor:" + tickColor
@@ -215,6 +218,7 @@ public class SmoothCheckBox extends View implements Checkable {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                checkChangedByClick = true;
                 toggle();
             }
         });
@@ -276,12 +280,12 @@ public class SmoothCheckBox extends View implements Checkable {
         setStrokeCheckedColor(ColorStateList.valueOf(color));
     }
 
-    public void setSolidUncheckedColor(ColorStateList color) {
-        this.solidUncheckedColor = (color != null) ? color : DEFAULT_SOLID_UNCHECKED_COLOR;
+    public void setSolidUnCheckedColor(ColorStateList color) {
+        this.solidUnCheckedColor = (color != null) ? color : DEFAULT_SOLID_UNCHECKED_COLOR;
     }
 
     public void setSolidUncheckedColor(@ColorInt int color) {
-        setSolidUncheckedColor(ColorStateList.valueOf(color));
+        setSolidUnCheckedColor(ColorStateList.valueOf(color));
     }
 
     public void setSolidCheckedColor(ColorStateList color) {
@@ -308,7 +312,7 @@ public class SmoothCheckBox extends View implements Checkable {
         if (isChecked()) {
             return solidCheckedColor;
         } else {
-            return solidUncheckedColor;
+            return solidUnCheckedColor;
         }
     }
 
@@ -405,15 +409,93 @@ public class SmoothCheckBox extends View implements Checkable {
     }
 
     private class CheckBoxDrawable extends Drawable {
+        private RectF mGradientBounds;
+        private float mScaleVal;
+        private int mFloorColor;
+
         public CheckBoxDrawable() {
             super();
+            mGradientBounds = new RectF();
+            mGradientBounds.setEmpty();
         }
 
         @Override
         public void draw(Canvas canvas) {
-            drawSolid(canvas);
-            drawBorder(canvas);
-            drawTick(canvas);
+            if (isChecked()) {
+                drawCheckedGraphics(canvas);
+            } else {
+                drawUnCheckedGraphics(canvas);
+            }
+        }
+
+        private void drawCheckedGraphics(Canvas canvas) {
+            mSolidPaint.setColor(mFloorColor);
+            canvas.drawOval(mSolidRect, mSolidPaint);
+            mSolidPaint.setColor(getColorForState(solidUnCheckedColor));
+            canvas.drawOval(mGradientBounds, mSolidPaint);
+            //加这句话，是为了显示pressed效果
+            if (mGradientBounds.isEmpty()) {
+                mSolidPaint.setColor(getColorForState(solidCheckedColor));
+                canvas.drawOval(mSolidRect, mSolidPaint);
+            }
+            canvas.drawOval(mBorderRect, mStrokePaint);
+        }
+
+        private void drawUnCheckedGraphics(Canvas canvas) {
+            mSolidPaint.setColor(mFloorColor);
+            canvas.drawOval(mSolidRect, mSolidPaint);
+            mSolidPaint.setColor(getColorForState(solidUnCheckedColor));
+            canvas.drawOval(mGradientBounds, mSolidPaint);
+            canvas.drawOval(mBorderRect, mStrokePaint);
+        }
+
+        private void startCheckedAnimation() {
+            //ValueAnimator animator = ValueAnimator.ofFloat(0.0f, 1.0f);
+            ValueAnimator animator = ValueAnimator.ofFloat(0.0f, 0.1f, 0.3f, 0.6f, 1.0f);
+            animator.setDuration(animDuration);
+            animator.setInterpolator(new LinearInterpolator());
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    mScaleVal = (float) animation.getAnimatedValue();
+                    mFloorColor = getGradientColor(getColorForState(solidUnCheckedColor), getColorForState(solidCheckedColor), mScaleVal);
+                    float offsetX = (mSolidRect.width() / 2) * (1 - mScaleVal);
+                    float offsetY = (mSolidRect.height() / 2) * (1 - mScaleVal);
+                    float left = mCenterPoint.x - offsetX;
+                    float top = mCenterPoint.y - offsetY;
+                    float right = mCenterPoint.x + offsetX;
+                    float bottom = mCenterPoint.y + offsetY;
+
+                    mGradientBounds.set(left, top, right, bottom);
+
+                    invalidateSelf();
+                }
+            });
+            animator.start();
+        }
+
+        private void startUnCheckedAnimation() {
+            //ValueAnimator animator = ValueAnimator.ofFloat(0.0f, 1.0f);
+            ValueAnimator animator = ValueAnimator.ofFloat(0.0f, 0.1f, 0.3f, 0.6f, 1.0f);
+            animator.setDuration(animDuration);
+            animator.setInterpolator(new LinearInterpolator());
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    mScaleVal = (float) animation.getAnimatedValue();
+                    mFloorColor = getGradientColor(getColorForState(solidCheckedColor), getColorForState(solidUnCheckedColor), mScaleVal);
+                    float offsetX = (mSolidRect.width() / 2) * mScaleVal;
+                    float offsetY = (mSolidRect.height() / 2) * mScaleVal;
+                    float left = mCenterPoint.x - offsetX;
+                    float top = mCenterPoint.y - offsetY;
+                    float right = mCenterPoint.x + offsetX;
+                    float bottom = mCenterPoint.y + offsetY;
+                    mGradientBounds.set(left, top, right, bottom);
+
+                    invalidateSelf();
+                }
+            });
+            animator.start();
         }
 
         @Override
@@ -437,24 +519,18 @@ public class SmoothCheckBox extends View implements Checkable {
                 mTickPaint.setColor(newTickColor);
             }
 
-            invalidateSelf();
-
-            return true;
-        }
-
-        private void drawSolid(Canvas canvas) {
-            canvas.drawOval(mSolidRect, mSolidPaint);
-        }
-
-        private void drawBorder(Canvas canvas) {
-            mStrokePaint.setColor(getColorForState(getStrokeColor()));
-            if (type == TYPE_OVAL) {
-                canvas.drawOval(mBorderRect, mStrokePaint);
+            boolean animate = shouldAnimate && checkChangedByClick && !isPressed();
+            if (animate) {
+                checkChangedByClick = false;
+                if (isChecked()) {
+                    startCheckedAnimation();
+                } else {
+                    startUnCheckedAnimation();
+                }
+            } else {
+                invalidateSelf();
             }
-        }
-
-        private void drawTick(Canvas canvas) {
-
+            return true;
         }
 
         private boolean isPressed() {
