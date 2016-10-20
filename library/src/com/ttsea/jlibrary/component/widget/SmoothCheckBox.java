@@ -73,9 +73,9 @@ public class SmoothCheckBox extends View implements Checkable {
     private boolean mTickDrawing;
     private boolean mChecked;
 
-    private Paint mStrokePaint;
-    private Paint mSolidPaint;
-    private Paint mTickPaint;
+    private CheckBoxPaint mStrokePaint;
+    private CheckBoxPaint mSolidPaint;
+    private CheckBoxPaint mTickPaint;
 
     private CheckBoxDrawable mDrawable;
     private boolean checkChangedByClick = false;
@@ -157,18 +157,18 @@ public class SmoothCheckBox extends View implements Checkable {
         if (mDrawable == null) {
             mDrawable = new CheckBoxDrawable();
         }
-        mStrokePaint = new Paint();
+        mStrokePaint = new CheckBoxPaint();
         mStrokePaint.setStyle(Paint.Style.STROKE);
         mStrokePaint.setStrokeCap(Paint.Cap.ROUND);
         mStrokePaint.setAntiAlias(true);
         mStrokePaint.setStrokeWidth(strokeWidth);
 
-        mSolidPaint = new Paint();
+        mSolidPaint = new CheckBoxPaint();
         mSolidPaint.setStyle(Paint.Style.FILL);
         mSolidPaint.setStrokeCap(Paint.Cap.ROUND);
         mSolidPaint.setAntiAlias(true);
 
-        mTickPaint = new Paint();
+        mTickPaint = new CheckBoxPaint();
         mTickPaint.setStyle(Paint.Style.STROKE);
         mTickPaint.setStrokeCap(Paint.Cap.ROUND);
         mTickPaint.setAntiAlias(true);
@@ -702,9 +702,7 @@ public class SmoothCheckBox extends View implements Checkable {
 
         @Override
         public void setAlpha(int alpha) {
-            mStrokePaint.setAlpha(alpha);
-            mSolidPaint.setAlpha(alpha);
-            mTickPaint.setAlpha(alpha);
+            SmoothCheckBox.this.alpha = alpha;
         }
 
         @Override
@@ -785,6 +783,15 @@ public class SmoothCheckBox extends View implements Checkable {
         @Override
         public int getIntrinsicHeight() {
             return mSolidRect == null ? 0 : (int) mSolidRect.height();
+        }
+    }
+
+    private class CheckBoxPaint extends Paint {
+
+        @Override
+        public void setColor(int color) {
+            super.setColor(color);
+            setAlpha(alpha);
         }
     }
 }
