@@ -111,10 +111,6 @@
             <enum name="OVAL" value="1"/>
         </attr>
         <attr name="radius" format="dimension"/>
-        <attr name="radiusTopLeft" format="dimension"/>
-        <attr name="radiusTopRight" format="dimension"/>
-        <attr name="radiusBottomRight" format="dimension"/>
-        <attr name="radiusBottomLeft" format="dimension"/>
         <attr name="shouldAnimate" format="boolean"/>
         <attr name="checked" format="boolean"/>
         <!-- 透明度，取值0~255 -->

@@ -8,11 +8,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
 import android.util.AttributeSet;
@@ -41,13 +43,13 @@ public class SmoothCheckBox extends View implements Checkable {
     private final int TYPE_RECTANGLE = 0;//矩形
     private final int TYPE_OVAL = 1;//椭圆
 
-    private final int DEFAULT_STROKE_WIDTH = 5;
     private final ColorStateList DEFAULT_STROKE_UNCHECKED_COLOR = ColorStateList.valueOf(0xFFC0C0C0);
     private final ColorStateList DEFAULT_SOLID_UNCHECKED_COLOR = ColorStateList.valueOf(0);
     private final ColorStateList DEFAULT_STROKE_CHECKED_COLOR = ColorStateList.valueOf(0);
     private final ColorStateList DEFAULT_SOLID_CHECKED_COLOR = ColorStateList.valueOf(0xFFDFDFDF);
-    private final int DEFAULT_TICK_WIDTH = 4;
     private final ColorStateList DEFAULT_TICK_COLOR = ColorStateList.valueOf(0xFFFFFFFF);
+    private final int DEFAULT_STROKE_WIDTH = -1;
+    private final int DEFAULT_TICK_WIDTH = -1;
     private final int DEFAULT_ANIM_DURATION = 300;
     private final int DEFAULT_ALPHA = 255;
     private final boolean DEFAULT_SHOULD_ANIMATE = true;
@@ -70,6 +72,8 @@ public class SmoothCheckBox extends View implements Checkable {
     private int type;
     private int alpha;
     private boolean shouldAnimate;
+    private boolean animateStarting;
+    private boolean mTickDrawing;
     private boolean mChecked;
     private float[] radius;
 
@@ -132,29 +136,13 @@ public class SmoothCheckBox extends View implements Checkable {
             alpha = 255;
         }
 
-        boolean hasSetRadius = false;
         radius = new float[4];
-        radius[Corner.TOP_LEFT] = a.getDimensionPixelOffset(R.styleable.SmoothCheckBox_radiusTopLeft, -1);
-        radius[Corner.TOP_RIGHT] = a.getDimensionPixelOffset(R.styleable.SmoothCheckBox_radiusTopRight, -1);
-        radius[Corner.BOTTOM_RIGHT] = a.getDimensionPixelOffset(R.styleable.SmoothCheckBox_radiusBottomRight, -1);
-        radius[Corner.BOTTOM_LEFT] = a.getDimensionPixelOffset(R.styleable.SmoothCheckBox_radiusBottomLeft, -1);
-
-        for (int i = 0; i < radius.length; i++) {
-            if (radius[i] < 0) {
-                radius[i] = 0f;
-            } else {
-                hasSetRadius = true;
-            }
+        float radiu = a.getDimensionPixelOffset(R.styleable.SmoothCheckBox_radius, -1);
+        if (radiu < 0) {
+            radiu = 0f;
         }
-
-        if (!hasSetRadius) {
-            float radiusOverride = a.getDimensionPixelOffset(R.styleable.SmoothCheckBox_radius, -1);
-            if (radiusOverride < 0) {
-                radiusOverride = 0f;
-            }
-            for (int i = 0; i < radius.length; i++) {
-                radius[i] = radiusOverride;
-            }
+        for (int i = 0; i < radius.length; i++) {
+            radius[i] = radiu;
         }
 
         JLog.d(TAG, "strokeWidth:" + strokeWidth
@@ -201,6 +189,7 @@ public class SmoothCheckBox extends View implements Checkable {
             @Override
             public void onClick(View v) {
                 checkChangedByClick = true;
+                mDrawable.reset();
                 toggle();
             }
         });
@@ -410,6 +399,12 @@ public class SmoothCheckBox extends View implements Checkable {
         private int mStrokeColor;
         private int mTickColor;
 
+        private Point[] mTickPoints;
+        private Path mTickPath;
+        private float mLeftLineDistance, mRightLineDistance, mDrewDistance;
+
+        private Handler mHandler;
+
         public CheckBoxDrawable() {
             super();
             mCenterPoint = new Point();
@@ -421,15 +416,98 @@ public class SmoothCheckBox extends View implements Checkable {
             mGradientBounds.setEmpty();
             mSolidRect.setEmpty();
             mBorderRect.setEmpty();
+
+            mTickPoints = new Point[3];
+            mTickPoints[0] = new Point();
+            mTickPoints[1] = new Point();
+            mTickPoints[2] = new Point();
+
+            mTickPath = new Path();
+            mHandler = new Handler();
+        }
+
+        private void reset() {
+            mDrewDistance = 0;
         }
 
         @Override
         public void draw(Canvas canvas) {
             if (isChecked()) {
                 drawCheckedGraphics(canvas);
+                drawTick(canvas);
             } else {
                 drawUnCheckedGraphics(canvas);
             }
+        }
+
+        private void drawTick(Canvas canvas) {
+            mTickPaint.setColor(mTickColor);
+
+            if (!animateStarting) {
+                mTickPath.moveTo(mTickPoints[0].x, mTickPoints[0].y);
+                mTickPath.lineTo(mTickPoints[1].x, mTickPoints[1].y);
+                canvas.drawPath(mTickPath, mTickPaint);
+
+                mTickPath.moveTo(mTickPoints[1].x, mTickPoints[1].y);
+                mTickPath.lineTo(mTickPoints[2].x, mTickPoints[2].y);
+                canvas.drawPath(mTickPath, mTickPaint);
+                return;
+            }
+
+            if (!mTickDrawing) {
+                return;
+            }
+
+            if (mDrewDistance < mLeftLineDistance) {
+                float step = (getMeasuredWidth() / 20.0f) < 3 ? 3 : (getMeasuredWidth() / 20.0f);
+                mDrewDistance += step;
+                float stopX = mTickPoints[0].x + (mTickPoints[1].x - mTickPoints[0].x) * mDrewDistance / mLeftLineDistance;
+                float stopY = mTickPoints[0].y + (mTickPoints[1].y - mTickPoints[0].y) * mDrewDistance / mLeftLineDistance;
+
+                mTickPath.reset();
+                mTickPath.moveTo(mTickPoints[0].x, mTickPoints[0].y);
+                mTickPath.lineTo(stopX, stopY);
+                canvas.drawPath(mTickPath, mTickPaint);
+
+                if (mDrewDistance > mLeftLineDistance) {
+                    mDrewDistance = mLeftLineDistance;
+                }
+            } else {
+                mTickPath.moveTo(mTickPoints[0].x, mTickPoints[0].y);
+                mTickPath.lineTo(mTickPoints[1].x, mTickPoints[1].y);
+                canvas.drawPath(mTickPath, mTickPaint);
+
+                // draw right of the tick
+                if (mDrewDistance < mLeftLineDistance + mRightLineDistance) {
+                    float stopX = mTickPoints[1].x + (mTickPoints[2].x - mTickPoints[1].x) * (mDrewDistance - mLeftLineDistance) / mRightLineDistance;
+                    float stopY = mTickPoints[1].y - (mTickPoints[1].y - mTickPoints[2].y) * (mDrewDistance - mLeftLineDistance) / mRightLineDistance;
+
+                    mTickPath.reset();
+                    mTickPath.moveTo(mTickPoints[1].x, mTickPoints[1].y);
+                    mTickPath.lineTo(stopX, stopY);
+                    canvas.drawPath(mTickPath, mTickPaint);
+
+                    float step = (getMeasuredWidth() / 20.0f) < 3 ? 3 : (getMeasuredWidth() / 20.0f);
+                    mDrewDistance += step;
+                }
+            }
+
+            // invalidate
+            if (mDrewDistance < mLeftLineDistance + mRightLineDistance) {
+                drawTickDelay(10);
+            } else {
+                mTickDrawing = false;
+            }
+        }
+
+        private void drawTickDelay(long delayMillis) {
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mTickDrawing = true;
+                    invalidate();
+                }
+            }, delayMillis);
         }
 
         private void drawCheckedGraphics(Canvas canvas) {
@@ -504,8 +582,6 @@ public class SmoothCheckBox extends View implements Checkable {
                 }
             });
             strokeColorAnimator.start();
-
-
         }
 
         private void startCheckedAnimation() {
@@ -531,6 +607,7 @@ public class SmoothCheckBox extends View implements Checkable {
             animator.start();
 
             startCommonAnimation();
+            drawTickDelay(animDuration);
         }
 
         private void startUnCheckedAnimation() {
@@ -591,12 +668,12 @@ public class SmoothCheckBox extends View implements Checkable {
 
         @Override
         protected boolean onStateChange(int[] state) {
-            mSolidColor = getColorForState(state, solidCheckedColor);
+            mSolidColor = getColorForState(state, getSolidColorStateList());
             mStrokeColor = getColorForState(state, getStrokeColor());
             mTickColor = getColorForState(state, getTickColor());
 
-            boolean animate = shouldAnimate && checkChangedByClick && !isPressed();
-            if (animate) {
+            animateStarting = shouldAnimate && checkChangedByClick && !isPressed();
+            if (animateStarting) {
                 checkChangedByClick = false;
                 if (isChecked()) {
                     startCheckedAnimation();
@@ -652,6 +729,19 @@ public class SmoothCheckBox extends View implements Checkable {
         protected void onBoundsChange(Rect bounds) {
             super.onBoundsChange(bounds);
 
+            int width = getMeasuredWidth();
+            int height = getMeasuredHeight();
+
+            if (strokeWidth < 0) {
+                strokeWidth = (Math.min(width, height) / 15) < 1 ? 1 : Math.min(width, height) / 15;
+                mStrokePaint.setStrokeWidth(strokeWidth);
+            }
+
+            if (tickWidth < 0) {
+                tickWidth = (Math.min(width, height) / 10) < 1 ? 1 : Math.min(width, height) / 10;
+                mTickPaint.setStrokeWidth(tickWidth);
+            }
+
             mBounds.set(bounds);
             mSolidRect.set(bounds);
             mGradientBounds.set(bounds);
@@ -661,6 +751,18 @@ public class SmoothCheckBox extends View implements Checkable {
 
             mCenterPoint.x = (int) mSolidRect.centerX();
             mCenterPoint.y = (int) mSolidRect.centerY();
+
+            mTickPoints[0].x = Math.round((float) width / 30 * 7);
+            mTickPoints[0].y = Math.round((float) height / 30 * 14);
+            mTickPoints[1].x = Math.round((float) width / 30 * 13);
+            mTickPoints[1].y = Math.round((float) height / 30 * 20);
+            mTickPoints[2].x = Math.round((float) width / 30 * 22);
+            mTickPoints[2].y = Math.round((float) height / 30 * 10);
+
+            mLeftLineDistance = (float) Math.sqrt(Math.pow(mTickPoints[1].x - mTickPoints[0].x, 2) +
+                    Math.pow(mTickPoints[1].y - mTickPoints[0].y, 2));
+            mRightLineDistance = (float) Math.sqrt(Math.pow(mTickPoints[2].x - mTickPoints[1].x, 2) +
+                    Math.pow(mTickPoints[2].y - mTickPoints[1].y, 2));
         }
 
         private int getColorForState(int[] state, ColorStateList colors) {

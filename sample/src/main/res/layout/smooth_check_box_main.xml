@@ -12,8 +12,8 @@
 
     <com.ttsea.jlibrary.component.widget.SmoothCheckBox
         android:id="@+id/scBox"
-        android:layout_width="250dp"
-        android:layout_height="200dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginTop="40dp"
         app:alpha="255"
         app:checked="false"
@@ -24,9 +24,7 @@
         app:solidUncheckedColor="@color/smooth_solid_unchecked_color"
         app:strokeCheckedColor="@color/smooth_border_checked_color"
         app:strokeUncheckedColor="@color/smooth_border_unchecked_color"
-        app:strokeWidth="5dp"
         app:tickColor="@color/white"
-        app:tickWidth="10dp"
         app:type="OVAL"/>
 
 </LinearLayout>
