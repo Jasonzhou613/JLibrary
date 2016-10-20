@@ -791,7 +791,9 @@ public class SmoothCheckBox extends View implements Checkable {
         @Override
         public void setColor(int color) {
             super.setColor(color);
-            setAlpha(alpha);
+            if (color != 0) {
+                setAlpha(alpha);
+            }
         }
     }
 }
