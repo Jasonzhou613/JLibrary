@@ -16,7 +16,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.annotation.ColorInt;
-import android.support.annotation.IntDef;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -25,12 +24,9 @@ import android.widget.Checkable;
 import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.common.JLog;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
 /**
  * CheckBox <br/>
- * <p/>
+ * <p>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/10/12 16:37 <br/>
  * <b>author:</b> Jason <br/>
@@ -71,11 +67,11 @@ public class SmoothCheckBox extends View implements Checkable {
     private int animDuration;
     private int type;
     private int alpha;
+    private int radius;
     private boolean shouldAnimate;
     private boolean animateStarting;
     private boolean mTickDrawing;
     private boolean mChecked;
-    private float[] radius;
 
     private Paint mStrokePaint;
     private Paint mSolidPaint;
@@ -136,13 +132,9 @@ public class SmoothCheckBox extends View implements Checkable {
             alpha = 255;
         }
 
-        radius = new float[4];
-        float radiu = a.getDimensionPixelOffset(R.styleable.SmoothCheckBox_radius, -1);
-        if (radiu < 0) {
-            radiu = 0f;
-        }
-        for (int i = 0; i < radius.length; i++) {
-            radius[i] = radiu;
+        radius = a.getDimensionPixelOffset(R.styleable.SmoothCheckBox_radius, -1);
+        if (radius < 0) {
+            radius = 0;
         }
 
         JLog.d(TAG, "strokeWidth:" + strokeWidth
@@ -157,10 +149,7 @@ public class SmoothCheckBox extends View implements Checkable {
                 + ",\n animDuration:" + animDuration
                 + ",\n mChecked:" + mChecked
                 + ",\n alpha:" + alpha
-                + ",\n radius[TOP_LEFT]:" + radius[Corner.TOP_LEFT]
-                + ", radius[TOP_RIGHT]:" + radius[Corner.TOP_RIGHT]
-                + ", radius[BOTTOM_RIGHT]:" + radius[Corner.BOTTOM_RIGHT]
-                + ", radius[BOTTOM_LEFT]:" + radius[Corner.BOTTOM_LEFT]
+                + ",\n radius:" + radius
         );
     }
 
@@ -319,25 +308,12 @@ public class SmoothCheckBox extends View implements Checkable {
         this.animDuration = animDuration;
     }
 
-    /** 默认获取四个角的最大的弧度 */
-    public float getRadius() {
-        float radiu = 0;
-        for (int i = 0; i < radius.length; i++) {
-            radiu = Math.max(radiu, radius[i]);
-        }
-        return radiu;
+    public int getRadius() {
+        return radius;
     }
 
-    /** 0=TopLeft,1=TopRight,2=BottomRight,3=BottomLeft */
-    public float getRadius(int index) {
-        return radius[index];
-    }
-
-    public void setRadius(float topLeft, float topRight, float bottomRight, float bottomLeft) {
-        radius[Corner.TOP_LEFT] = topLeft;
-        radius[Corner.TOP_RIGHT] = topRight;
-        radius[Corner.BOTTOM_RIGHT] = bottomRight;
-        radius[Corner.BOTTOM_LEFT] = bottomLeft;
+    public void setRadius(int radius) {
+        this.radius = radius;
     }
 
     /** 透明度，取值0~255 */
@@ -512,32 +488,60 @@ public class SmoothCheckBox extends View implements Checkable {
 
         private void drawCheckedGraphics(Canvas canvas) {
             mSolidPaint.setColor(mSolidColor);
-            canvas.drawOval(mSolidRect, mSolidPaint);
+            if (type == TYPE_RECTANGLE) {
+                canvas.drawRoundRect(mSolidRect, radius, radius, mSolidPaint);
+            } else {
+                canvas.drawOval(mSolidRect, mSolidPaint);
+            }
 
             if (shouldAnimate) {
                 mSolidPaint.setColor(getColorForState(solidUnCheckedColor));
-                canvas.drawOval(mGradientBounds, mSolidPaint);
+                if (type == TYPE_RECTANGLE) {
+                    canvas.drawRoundRect(mGradientBounds, radius, radius, mSolidPaint);
+                } else {
+                    canvas.drawOval(mGradientBounds, mSolidPaint);
+                }
             }
 
             //加这句话，是为了显示pressed效果
             if (mGradientBounds.isEmpty()) {
                 mSolidPaint.setColor(getColorForState(solidCheckedColor));
-                canvas.drawOval(mSolidRect, mSolidPaint);
+                if (type == TYPE_RECTANGLE) {
+                    canvas.drawRoundRect(mSolidRect, radius, radius, mSolidPaint);
+                } else {
+                    canvas.drawOval(mSolidRect, mSolidPaint);
+                }
             }
 
             mStrokePaint.setColor(mStrokeColor);
-            canvas.drawOval(mBorderRect, mStrokePaint);
+            if (type == TYPE_RECTANGLE) {
+                canvas.drawRoundRect(mBorderRect, radius, radius, mStrokePaint);
+            } else {
+                canvas.drawOval(mBorderRect, mStrokePaint);
+            }
         }
 
         private void drawUnCheckedGraphics(Canvas canvas) {
             mSolidPaint.setColor(mSolidColor);
-            canvas.drawOval(mSolidRect, mSolidPaint);
+            if (type == TYPE_RECTANGLE) {
+                canvas.drawRoundRect(mSolidRect, radius, radius, mSolidPaint);
+            } else {
+                canvas.drawOval(mSolidRect, mSolidPaint);
+            }
 
             mSolidPaint.setColor(getColorForState(solidUnCheckedColor));
-            canvas.drawOval(mGradientBounds, mSolidPaint);
+            if (type == TYPE_RECTANGLE) {
+                canvas.drawRoundRect(mGradientBounds, radius, radius, mSolidPaint);
+            } else {
+                canvas.drawOval(mGradientBounds, mSolidPaint);
+            }
 
             mStrokePaint.setColor(mStrokeColor);
-            canvas.drawOval(mBorderRect, mStrokePaint);
+            if (type == TYPE_RECTANGLE) {
+                canvas.drawRoundRect(mBorderRect, radius, radius, mStrokePaint);
+            } else {
+                canvas.drawOval(mBorderRect, mStrokePaint);
+            }
         }
 
         private void startCommonAnimation() {
@@ -746,7 +750,7 @@ public class SmoothCheckBox extends View implements Checkable {
             mSolidRect.set(bounds);
             mGradientBounds.set(bounds);
 
-            int offset = strokeWidth / 2;
+            float offset = ((float) strokeWidth) / 2;
             mBorderRect.set(mSolidRect.left + offset, mSolidRect.top + offset, mSolidRect.right - offset, mSolidRect.bottom - offset);
 
             mCenterPoint.x = (int) mSolidRect.centerX();
@@ -782,17 +786,5 @@ public class SmoothCheckBox extends View implements Checkable {
         public int getIntrinsicHeight() {
             return mSolidRect == null ? 0 : (int) mSolidRect.height();
         }
-    }
-
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({
-            Corner.TOP_LEFT, Corner.TOP_RIGHT,
-            Corner.BOTTOM_LEFT, Corner.BOTTOM_RIGHT
-    })
-    @interface Corner {
-        int TOP_LEFT = 0;
-        int TOP_RIGHT = 1;
-        int BOTTOM_RIGHT = 2;
-        int BOTTOM_LEFT = 3;
     }
 }

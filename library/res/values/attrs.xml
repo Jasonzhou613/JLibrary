@@ -107,8 +107,8 @@
         <attr name="tickColor" format="color"/>
         <attr name="duration" format="integer"/>
         <attr name="type">
-            <enum name="RECTANGLE" value="0"/>
-            <enum name="OVAL" value="1"/>
+            <enum name="rectangle" value="0"/>
+            <enum name="oval" value="1"/>
         </attr>
         <attr name="radius" format="dimension"/>
         <attr name="shouldAnimate" format="boolean"/>
