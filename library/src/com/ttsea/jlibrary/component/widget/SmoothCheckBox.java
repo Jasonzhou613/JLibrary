@@ -26,7 +26,7 @@ import com.ttsea.jlibrary.common.JLog;
 
 /**
  * CheckBox <br/>
- * <p>
+ * <p/>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/10/12 16:37 <br/>
  * <b>author:</b> Jason <br/>
@@ -378,6 +378,7 @@ public class SmoothCheckBox extends View implements Checkable {
         private Point[] mTickPoints;
         private Path mTickPath;
         private float mLeftLineDistance, mRightLineDistance, mDrewDistance;
+        private boolean isReset = false;
 
         private Handler mHandler;
 
@@ -404,6 +405,8 @@ public class SmoothCheckBox extends View implements Checkable {
 
         private void reset() {
             mDrewDistance = 0;
+            isReset = true;
+            JLog.d(TAG, "isReset = true;");
         }
 
         @Override
@@ -481,7 +484,7 @@ public class SmoothCheckBox extends View implements Checkable {
                 @Override
                 public void run() {
                     mTickDrawing = true;
-                    invalidate();
+                    invalidateSelf();
                 }
             }, delayMillis);
         }
@@ -545,7 +548,7 @@ public class SmoothCheckBox extends View implements Checkable {
         }
 
         private void startCommonAnimation() {
-            ValueAnimator scaleAnimator = ValueAnimator.ofFloat(1.0f, 0.8f, 1.0f);
+            final ValueAnimator scaleAnimator = ValueAnimator.ofFloat(1.0f, 0.8f, 1.0f);
             scaleAnimator.setDuration((animDuration * 2) / 3);
             scaleAnimator.setInterpolator(new LinearInterpolator());
             scaleAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -555,12 +558,14 @@ public class SmoothCheckBox extends View implements Checkable {
                     mSolidRect = getSolidRect(value);
                     mBorderRect = getBorderRect(value);
 
-                    invalidateSelf();
+                    if (isReset) {
+                        scaleAnimator.cancel();
+                    }
                 }
             });
             scaleAnimator.start();
 
-            ValueAnimator solidColorAnimator = ValueAnimator.ofFloat(1.0f, 0.3f, 1.0f);
+            final ValueAnimator solidColorAnimator = ValueAnimator.ofFloat(1.0f, 0.3f, 1.0f);
             solidColorAnimator.setDuration((animDuration * 2) / 3);
             solidColorAnimator.setInterpolator(new LinearInterpolator());
             solidColorAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -568,11 +573,14 @@ public class SmoothCheckBox extends View implements Checkable {
                 public void onAnimationUpdate(ValueAnimator animation) {
                     float value = (float) animation.getAnimatedValue();
                     mSolidColor = getAlphaColor(getColorForState(solidCheckedColor), value);
+                    if (isReset) {
+                        solidColorAnimator.cancel();
+                    }
                 }
             });
             solidColorAnimator.start();
 
-            ValueAnimator strokeColorAnimator = ValueAnimator.ofFloat(0, 1.0f);
+            final ValueAnimator strokeColorAnimator = ValueAnimator.ofFloat(0, 1.0f);
             strokeColorAnimator.setDuration((animDuration));
             strokeColorAnimator.setInterpolator(new LinearInterpolator());
             strokeColorAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -583,13 +591,16 @@ public class SmoothCheckBox extends View implements Checkable {
                         value = 0.0f;
                     }
                     mStrokeColor = getAlphaColor(getColorForState(getStrokeColor()), value);
+                    if (isReset) {
+                        strokeColorAnimator.cancel();
+                    }
                 }
             });
             strokeColorAnimator.start();
         }
 
         private void startCheckedAnimation() {
-            ValueAnimator animator = ValueAnimator.ofFloat(0.0f, 1.0f);
+            final ValueAnimator animator = ValueAnimator.ofFloat(0.0f, 1.0f);
             animator.setDuration(animDuration);
             animator.setInterpolator(new LinearInterpolator());
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -605,17 +616,22 @@ public class SmoothCheckBox extends View implements Checkable {
                     float bottom = mCenterPoint.y + offsetY;
                     mGradientBounds.set(left, top, right, bottom);
 
-                    invalidateSelf();
+                    if (isReset) {
+                        animator.cancel();
+                        JLog.d(TAG, "animator.cancel()");
+                    } else {
+                        invalidateSelf();
+                    }
                 }
             });
             animator.start();
 
             startCommonAnimation();
-            drawTickDelay(animDuration);
+            drawTickDelay(animDuration + 50);
         }
 
         private void startUnCheckedAnimation() {
-            ValueAnimator animator = ValueAnimator.ofFloat(0.0f, 1.0f);
+            final ValueAnimator animator = ValueAnimator.ofFloat(0.0f, 1.0f);
             animator.setDuration(animDuration);
             animator.setInterpolator(new LinearInterpolator());
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -631,7 +647,12 @@ public class SmoothCheckBox extends View implements Checkable {
                     float bottom = mCenterPoint.y + offsetY;
                     mGradientBounds.set(left, top, right, bottom);
 
-                    invalidateSelf();
+                    if (isReset) {
+                        animator.cancel();
+                        JLog.d(TAG, "animator.cancel()");
+                    } else {
+                        invalidateSelf();
+                    }
                 }
             });
             animator.start();
@@ -672,6 +693,7 @@ public class SmoothCheckBox extends View implements Checkable {
 
         @Override
         protected boolean onStateChange(int[] state) {
+            reset();
             mSolidColor = getColorForState(state, getSolidColorStateList());
             mStrokeColor = getColorForState(state, getStrokeColor());
             mTickColor = getColorForState(state, getTickColor());
@@ -679,6 +701,7 @@ public class SmoothCheckBox extends View implements Checkable {
             animateStarting = shouldAnimate && checkChangedByClick && !isPressed();
             if (animateStarting) {
                 checkChangedByClick = false;
+                isReset = false;
                 if (isChecked()) {
                     startCheckedAnimation();
                 } else {
@@ -730,6 +753,8 @@ public class SmoothCheckBox extends View implements Checkable {
         @Override
         protected void onBoundsChange(Rect bounds) {
             super.onBoundsChange(bounds);
+
+            reset();
 
             int width = getMeasuredWidth();
             int height = getMeasuredHeight();
