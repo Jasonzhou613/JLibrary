@@ -805,12 +805,12 @@ public class Downloader implements TaskHandler {
         switch (responseCode) {
             case 404:
                 msg = getStatusStr(Downloader.ERROR_HTTP_FILE_NOT_FOUND);
-                cancel(Downloader.ERROR_HTTP_FILE_NOT_FOUND, "responseCode:" + responseCode, true);
+                cancel(Downloader.ERROR_HTTP_FILE_NOT_FOUND, "responseCode:" + responseCode, false);
                 break;
 
             default:
                 msg = getStatusStr(Downloader.ERROR_UNHANDLED_HTTP_CODE);
-                cancel(Downloader.ERROR_UNHANDLED_HTTP_CODE, "responseCode:" + responseCode, true);
+                cancel(Downloader.ERROR_UNHANDLED_HTTP_CODE, "responseCode:" + responseCode, false);
                 break;
         }
         JLog.e(TAG, "cancel download, responseCode:" + responseCode + ", msg:" + msg);

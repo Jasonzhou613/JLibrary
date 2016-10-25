@@ -73,6 +73,15 @@ class DownloadThread extends Thread {
     }
 
     public void run() {
+        //如果某个下载线程已经下载完成，则不需要再去请求下载了
+        long startIndex = downloadInfo.getStart_bytes();
+        long endIndex = downloadInfo.getEnd_bytes();
+        long hasDownloaded = downloadInfo.getBytes_so_far();
+        if (hasDownloaded >= (endIndex - startIndex)) {
+            isComplete = true;
+            return;
+        }
+
         if (downloader.isCancelled() || downloader.isPaused()
                 || isQuite || isComplete) {
             JLog.d(TAG, "downloader has cancelled or paused or quited, download status:"
@@ -190,12 +199,12 @@ class DownloadThread extends Thread {
         switch (responseCode) {
             case 404:
                 msg = "file not found";
-                downloader.cancel(Downloader.ERROR_HTTP_FILE_NOT_FOUND, "responseCode:" + responseCode, true);
+                downloader.cancel(Downloader.ERROR_HTTP_FILE_NOT_FOUND, "responseCode:" + responseCode, false);
                 break;
 
             default:
                 msg = "ERROR_UNHANDLED_HTTP_CODE";
-                downloader.cancel(Downloader.ERROR_UNHANDLED_HTTP_CODE, "responseCode:" + responseCode, true);
+                downloader.cancel(Downloader.ERROR_UNHANDLED_HTTP_CODE, "responseCode:" + responseCode, false);
                 break;
         }
         JLog.e(TAG, "cancel download, responseCode:" + responseCode + ", msg:" + msg);
