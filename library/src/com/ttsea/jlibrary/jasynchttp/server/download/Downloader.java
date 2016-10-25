@@ -341,6 +341,42 @@ public class Downloader implements TaskHandler {
                 JLog.d(TAG, "get file name from connection, fileName:" + fileName);
             }
 
+            int threadPool = downloadOption.getThreadPool();
+            contentLength = conn.getContentLength();
+            //内容长度均分时，可能不能整除，所以先求余，再将余数放在最后的线程里下载
+            long remainder = contentLength % threadPool;
+            long average = (contentLength - remainder) / threadPool;
+
+            JLog.d(TAG, "contentLength:" + contentLength + ", threadPool:" + threadPool
+                    + ", average:" + average + ", remainder:" + remainder + ", isCuttedCorrect:"
+                    + (contentLength == ((threadPool * average) + remainder)));
+
+            threads.clear();
+            for (int i = 0; i < downloadOption.getThreadPool(); i++) {
+                DownloadFileInfo info = getNewDownloadInfo(getUrl(), String.valueOf(i));
+
+                long bytes_so_far = 0;//已经下载了的长度
+                long start_bytes = i * average;//最初开始位置
+                long end_bytes = start_bytes + average;//结束位置
+                if (i == (threadPool - 1)) {//最后一项需要加上内容长度的余数：remainder
+                    end_bytes = end_bytes + remainder;
+                }
+                info.setTotal_size_bytes(contentLength);
+                info.setBytes_so_far(bytes_so_far);
+                info.setStart_bytes(start_bytes);
+                info.setEnd_bytes(end_bytes);
+                info.setEtag(conn.getHeaderField(Http.ResponseHeadField.ETag));
+                info.setMedia_type(conn.getHeaderField(Http.ResponseHeadField.Content_Type));
+                info.setTitle(info.getLocal_filename());
+                info.setDescription(info.getLocal_filename());
+                info.setStatus(getStatus());
+
+                DownloadThread task = new DownloadThread(this, info);
+                threads.add(task);
+                //将对应的下载线程信息存入数据库
+                DownloadDBHelper.insertOrUpdate(mContext, task.getDownloadInfo());
+            }
+
             //根据文件的保存方式，来设置文件
             JLog.d(TAG, "saveFileMode: " + downloadOption.getSaveFileMode());
             String filePath = downloadOption.getSaveFilePath();
@@ -351,11 +387,16 @@ public class Downloader implements TaskHandler {
             //文件已经存在，通过比较文件大小和判读文件是否过期来判断该文件是否就是需要下载的文件
             if (isFileExists) {
                 long timeInterval = System.currentTimeMillis() - file.lastModified();
-                if (file.length() == conn.getContentLength() && timeInterval < downloadOption.getExpiredTime()) {
+                if (file.length() == contentLength && timeInterval < downloadOption.getExpiredTime()) {
                     JLog.d(TAG, "file already downloaded, downloader will stop.");
-                    setStatus(STATUS_SUCCESSFUL);
-                    saveDownloaderStatus(getStatus(), STATUS_SUCCESSFUL);
-                    mHandler.sendEmptyMessage(ON_DOWNLOAD_COMPLETED);
+                    for (int i = 0; i < threads.size(); i++) {
+                        DownloadFileInfo info = threads.get(i).getDownloadInfo();
+                        info.setBytes_so_far(average);
+                        if (i == (threadPool - 1)) {
+                            info.setBytes_so_far(average + remainder);
+                        }
+                    }
+                    mHandler.sendEmptyMessage(ON_DOWNLOADING);
                     return;
                 }
             }
@@ -394,18 +435,15 @@ public class Downloader implements TaskHandler {
                 }
                 //设置文件的新名字
                 downloadOption.getBuilder().setFileName(fileName);
+                for (int i = 0; i < threads.size(); i++) {
+                    threads.get(i).getDownloadInfo().setLocal_filename(downloadOption.getFileName());
+                }
                 JLog.d(TAG, "renamed file name:" + downloadOption.getFileName());
 
                 //文件已经存在，默认处理方式:覆盖
             } else if (isFileExists) {
                 file.delete();
             }
-
-            int threadPool = downloadOption.getThreadPool();
-            contentLength = conn.getContentLength();
-            //内容长度均分时，可能不能整除，所以先求余，再将余数放在最后的线程里下载
-            long remainder = contentLength % threadPool;
-            long average = (contentLength - remainder) / threadPool;
 
             //判断文件所需空间“MB”
             long needSpace = (contentLength / 1024 / 1024) + 10;
@@ -417,36 +455,7 @@ public class Downloader implements TaskHandler {
                 return;
             }
 
-            JLog.d(TAG, "contentLength:" + contentLength + ", threadPool:" + threadPool
-                    + ", average:" + average + ", remainder:" + remainder + ", isCuttedCorrect:"
-                    + (contentLength == ((threadPool * average) + remainder)));
             JLog.d(TAG, "filePath:" + downloadOption.getSaveFilePath() + ", fileName:" + downloadOption.getFileName());
-
-            threads.clear();
-            for (int i = 0; i < downloadOption.getThreadPool(); i++) {
-                DownloadFileInfo info = getNewDownloadInfo(getUrl(), String.valueOf(i));
-
-                long bytes_so_far = 0;//已经下载了的长度
-                long start_bytes = i * average;//最初开始位置
-                long end_bytes = start_bytes + average;//结束位置
-                if (i == (threadPool - 1)) {//最后一项需要加上内容长度的余数：remainder
-                    end_bytes = end_bytes + remainder;
-                }
-                info.setTotal_size_bytes(contentLength);
-                info.setBytes_so_far(bytes_so_far);
-                info.setStart_bytes(start_bytes);
-                info.setEnd_bytes(end_bytes);
-                info.setEtag(conn.getHeaderField(Http.ResponseHeadField.ETag));
-                info.setMedia_type(conn.getHeaderField(Http.ResponseHeadField.Content_Type));
-                info.setTitle(info.getLocal_filename());
-                info.setDescription(info.getLocal_filename());
-                info.setStatus(getStatus());
-
-                DownloadThread task = new DownloadThread(this, info);
-                threads.add(task);
-                //将对应的下载线程信息存入数据库
-                DownloadDBHelper.insertOrUpdate(mContext, task.getDownloadInfo());
-            }
             startTheads();
 
         } catch (SocketTimeoutException e) {//超时

@@ -13,7 +13,6 @@ import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.jasynchttp.server.download.DownloadManager;
 import com.ttsea.jlibrary.jasynchttp.server.download.DownloadOption;
 import com.ttsea.jlibrary.jasynchttp.server.download.Downloader;
-import com.ttsea.jlibrary.jasynchttp.server.download.HttpOption;
 import com.ttsea.jlibrary.jasynchttp.server.download.OnDownloadListener;
 import com.ttsea.jlibrary.jasynchttp.server.download.SaveFileMode;
 import com.ttsea.jlibrary.sample.R;
@@ -142,7 +141,7 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
         DownloadOption option = new DownloadOption.Builder(mActivity).build();
         option.getBuilder()
                 .setSaveFileMode(SaveFileMode.OVERRIDE)
-                .setExpiredTime(1000 * 60 * 5);
+                .setExpiredTime(1000 * 60 * 2);
         downloader = new Downloader(mActivity, downloaderUrl, option);
 
         downloader.setOnDownloadListener(
