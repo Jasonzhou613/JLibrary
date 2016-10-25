@@ -128,7 +128,7 @@ public class Downloader implements TaskHandler {
         }
         this.downloadOption = option;
         //如果本地保存地址为空，则设置一个默认值
-        if (com.ttsea.jlibrary.utils.Utils.isEmpty(downloadOption.getSaveFilePath())) {
+        if (Utils.isEmpty(downloadOption.getSaveFilePath())) {
             downloadOption.getBuilder().setSaveFilePath(CacheDirUtils.getSdDataDir(mContext));
         }
 
@@ -293,19 +293,20 @@ public class Downloader implements TaskHandler {
     }
 
     private void startNewDownloaderRunnable() {
+        startTimestamp = System.currentTimeMillis();
         if (currentRetryCount > 0) {
             JLog.d(TAG, "retry... currentRetryCout:" + currentRetryCount);
         } else {
             JLog.d(TAG, "start a new download task...");
         }
 
+        isPaused = false;
+        isCancelled = false;
         //如果存在有记录，则先删除
-        DownloadDBHelper.deleteRecord(mContext, getUrl());
+        deleteRecord();
         //设置下载器状态
         setStatus(Downloader.STATUS_LINKING);
         mHandler.sendEmptyMessage(ON_DOWNLOAD_LINKING);
-        isPaused = false;
-        isCancelled = false;
 
         DownloadFileInfo downloadInfo = getNewDownloadInfo(url, "-1");
         httpUrlStack = new HttpUrlStack(downloadOption.getHttpOption(), downloadInfo);
@@ -314,6 +315,11 @@ public class Downloader implements TaskHandler {
             URL url = new URL(getUrl());
             conn = httpUrlStack.openConnection(url);
             int responseCode = conn.getResponseCode();
+
+            if (isCancelled() || isPaused()) {
+                JLog.d(TAG, "downloader has cancelled or has paused, will return.");
+                return;
+            }
 
             //url被重定向
 //            if (!url.getHost().equals(conn.getURL().getHost())) {
@@ -329,7 +335,7 @@ public class Downloader implements TaskHandler {
             }
 
             //如果用户未设置保存的文件名，则自动从url中获取该文件名
-            if (com.ttsea.jlibrary.utils.Utils.isEmpty(downloadOption.getFileName())) {
+            if (Utils.isEmpty(downloadOption.getFileName())) {
                 String fileName = getFileName(conn);
                 downloadOption.getBuilder().setFileName(fileName);
                 JLog.d(TAG, "get file name from connection, fileName:" + fileName);
@@ -341,6 +347,18 @@ public class Downloader implements TaskHandler {
             String fileName = downloadOption.getFileName();
             File file = new File(filePath, fileName);
             boolean isFileExists = file.exists();
+
+            //文件已经存在，通过比较文件大小和判读文件是否过期来判断该文件是否就是需要下载的文件
+            if (isFileExists) {
+                long timeInterval = System.currentTimeMillis() - file.lastModified();
+                if (file.length() == conn.getContentLength() && timeInterval < downloadOption.getExpiredTime()) {
+                    JLog.d(TAG, "file already downloaded, downloader will stop.");
+                    setStatus(STATUS_SUCCESSFUL);
+                    saveDownloaderStatus(getStatus(), STATUS_SUCCESSFUL);
+                    mHandler.sendEmptyMessage(ON_DOWNLOAD_COMPLETED);
+                    return;
+                }
+            }
 
             //文件已经存在，并且保存方式为 NONACTION，则取消该下载
             if (isFileExists && downloadOption.getSaveFileMode() == SaveFileMode.NONACTION) {
@@ -464,7 +482,6 @@ public class Downloader implements TaskHandler {
 
     /** 启动所有线程 */
     private void startTheads() {
-        startTimestamp = System.currentTimeMillis();
         setStatus(Downloader.STATUS_RUNNING);
         saveDownloaderStatus(getStatus(), Downloader.STATUS_RUNNING);
         mHandler.sendEmptyMessage(ON_DOWNLOAD_START);
@@ -521,9 +538,8 @@ public class Downloader implements TaskHandler {
     private String getFileName(HttpURLConnection conn) {
         URL uRL = conn.getURL();
         String urlStr = String.valueOf(uRL);
-        String filename = urlStr.substring(urlStr.lastIndexOf("/") + 1);
 
-        return filename;
+        return urlStr.substring(urlStr.lastIndexOf("/") + 1);
     }
 
     public void setOnDownloadListener(OnDownloadListener l) {
@@ -579,13 +595,13 @@ public class Downloader implements TaskHandler {
         return true;
     }
 
-    /** 删除下载的文件 */
+    /** 删除下载好的文件，不删除下载记录 */
     public boolean deleteFile() {
         String fileName = downloadOption.getFileName();
         String filePath = downloadOption.getSaveFilePath();
         JLog.d(TAG, "deleteFile, filePath:" + filePath + ", fileName:" + fileName);
-        if (!com.ttsea.jlibrary.utils.Utils.isEmpty(filePath)
-                && !com.ttsea.jlibrary.utils.Utils.isEmpty(fileName)) {
+
+        if (!Utils.isEmpty(filePath) && !Utils.isEmpty(fileName)) {
             File file = new File(filePath, fileName);
             if (file.exists()) {
                 return file.delete();
@@ -594,14 +610,15 @@ public class Downloader implements TaskHandler {
         return false;
     }
 
-    /** 只是清除下载记录，不删除下载好 */
-    public void clearRecord() {
+    /** 只是清除下载记录，不删除下载好的文件 */
+    public void deleteRecord() {
         DownloadDBHelper.deleteRecord(mContext, getUrl());
+        JLog.d(TAG, "deleteRecord...");
     }
 
     /** 清除下载记录，并且将下载好的文件也删除 */
-    public void clearAllRecord() {
-        DownloadDBHelper.deleteRecord(mContext, getUrl());
+    public void deleteAllRecord() {
+        deleteRecord();
         deleteFile();
     }
 
@@ -660,8 +677,8 @@ public class Downloader implements TaskHandler {
 
         String fileName = infos.get(0).getLocal_filename();
         String filePath = infos.get(0).getLocal_file_path();
-        if (com.ttsea.jlibrary.utils.Utils.isEmpty(fileName)
-                || com.ttsea.jlibrary.utils.Utils.isEmpty(filePath)
+        if (Utils.isEmpty(fileName)
+                || Utils.isEmpty(filePath)
                 || infos.get(0).getTotal_size_bytes() <= 0) {
             JLog.d(TAG, "download info error, will reDownload");
             reDownload();
@@ -694,6 +711,7 @@ public class Downloader implements TaskHandler {
         isPaused = false;
         isCancelled = false;
 
+        startTimestamp = System.currentTimeMillis();
         startTheads();
 
         JLog.d(TAG, "downloader has resumed, downloaderId:" + getId()
@@ -720,7 +738,7 @@ public class Downloader implements TaskHandler {
         isCancelled = true;
         setStatus(Downloader.STATUS_FAILED);
         //清除下载信息
-        DownloadDBHelper.deleteRecord(mContext, getUrl());
+        deleteRecord();
 
         Message message = new Message();
         message.what = ON_DOWNLOAD_CANCEL;
@@ -888,7 +906,6 @@ public class Downloader implements TaskHandler {
                     break;
 
                 case ON_DOWNLOADING://下载中...
-                    JLog.d(TAG, "on downloading...");
                     long byteSoFar = 0;
                     for (int i = 0; i < threads.size(); i++) {
                         byteSoFar = byteSoFar + threads.get(i).getDownloadInfo().getBytes_so_far();
@@ -908,6 +925,7 @@ public class Downloader implements TaskHandler {
                     }
 
                     mHandler.postDelayed(downloadingRunnable, DEFAULT_UPDATE_UI_PERIOD);
+                    JLog.d(TAG, "on downloading...,contentLength:" + contentLength + ", totalByteSoFar:" + totalByteSoFar + ", speed:" + speed);
                     break;
 
                 case ON_DOWNLOAD_COMPLETED://下载完成

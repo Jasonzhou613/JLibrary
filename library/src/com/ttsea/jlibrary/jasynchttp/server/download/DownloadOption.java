@@ -45,6 +45,10 @@ public class DownloadOption {
         return builder.fileName;
     }
 
+    public long getExpiredTime() {
+        return builder.expiredTimeMillis;
+    }
+
     public int getSaveFileMode() {
         return builder.saveFileMode;
     }
@@ -69,6 +73,8 @@ public class DownloadOption {
         private String fileName;
         //文件保存方式
         private int saveFileMode = -1;
+        //本地文件过期时间(单位：毫秒)默认为2天
+        private long expiredTimeMillis = 1000 * 60 * 60 * 24 * 2;
         //http请求选项
         private HttpOption httpOption;
 
@@ -105,6 +111,12 @@ public class DownloadOption {
          */
         public Builder setSaveFileMode(int saveFileMode) {
             this.saveFileMode = saveFileMode;
+            return this;
+        }
+
+        /** 设置下载文件的过期时间（单位：毫秒），默认为2天 */
+        public Builder setExpiredTime(long expiredTimeMillis) {
+            this.expiredTimeMillis = expiredTimeMillis;
             return this;
         }
 
@@ -147,6 +159,7 @@ public class DownloadOption {
                     ", saveFilePath='" + saveFilePath + '\'' +
                     ", fileName='" + fileName + '\'' +
                     ", saveFileMode=" + saveFileMode +
+                    ", expiredTimeMillis=" + expiredTimeMillis +
                     ", httpOption=" + httpOption.toString() +
                     '}';
         }

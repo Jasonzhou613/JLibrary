@@ -43,4 +43,12 @@ class Utils {
         }
         return sortedMap;
     }
+
+    /** 判断str是否为空 */
+    public static boolean isEmpty(String str) {
+        if (str == null || str.length() < 1) {
+            return true;
+        }
+        return false;
+    }
 }

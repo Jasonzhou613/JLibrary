@@ -52,6 +52,8 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
             String txt = etPath.getText().toString();
             etPath.setSelection(txt.length());
         }
+
+        JLog.copyDB2SD(mActivity, "jasync.db");
     }
 
     @Override
@@ -138,7 +140,9 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
         }
 
         DownloadOption option = new DownloadOption.Builder(mActivity).build();
-        option.getBuilder().setSaveFileMode(SaveFileMode.OVERRIDE);
+        option.getBuilder()
+                .setSaveFileMode(SaveFileMode.OVERRIDE)
+                .setExpiredTime(1000 * 60 * 5);
         downloader = new Downloader(mActivity, downloaderUrl, option);
 
         downloader.setOnDownloadListener(
@@ -176,6 +180,7 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
                     @Override
                     public void onComplete(Downloader downloader) {
                         refreshView();
+                        downloader.deleteRecord();
                     }
                 }
         );
