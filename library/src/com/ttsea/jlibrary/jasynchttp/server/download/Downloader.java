@@ -642,7 +642,6 @@ public class Downloader implements TaskHandler {
             return;
         }
 
-        JLog.d(TAG, "pause, reason:" + getStatusStr(reason));
         for (int i = 0; i < threads.size(); i++) {
             DownloadThread thread = threads.get(i);
             thread.quite();

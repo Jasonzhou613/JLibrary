@@ -79,12 +79,13 @@ class DownloadThread extends Thread {
         long hasDownloaded = downloadInfo.getBytes_so_far();
         if (hasDownloaded >= (endIndex - startIndex)) {
             isComplete = true;
+            JLog.d(TAG, "thread:" + threadId + ", download completed:" + isComplete);
             return;
         }
 
         if (downloader.isCancelled() || downloader.isPaused()
                 || isQuite || isComplete) {
-            JLog.d(TAG, "downloader has cancelled or paused or quited, download status:"
+            JLog.d(TAG, "threadId:" + threadId + ", downloader has cancelled or paused or quited, download status:"
                     + downloader.getStatus() + ", id：" + downloader.getId());
             return;
         }
@@ -187,7 +188,7 @@ class DownloadThread extends Thread {
             conn.disconnect();
         }
 
-        JLog.d(TAG, "byte so far:" + downloadInfo.getBytes_so_far()
+        JLog.d(TAG, "threadId:" + threadId + ", byte so far:" + downloadInfo.getBytes_so_far()
                 + ", need download:" + (downloadInfo.getEnd_bytes() - downloadInfo.getStart_bytes()));
         JLog.d(TAG, "thread:" + threadId + ", download completed:" + isComplete);
     }
@@ -207,6 +208,6 @@ class DownloadThread extends Thread {
                 downloader.cancel(Downloader.ERROR_UNHANDLED_HTTP_CODE, "responseCode:" + responseCode, false);
                 break;
         }
-        JLog.e(TAG, "cancel download, responseCode:" + responseCode + ", msg:" + msg);
+        JLog.e(TAG, "threadId:" + threadId + ", cancel download, responseCode:" + responseCode + ", msg:" + msg);
     }
 }
