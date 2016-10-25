@@ -104,7 +104,7 @@ class DownloadThread extends Thread {
                 JLog.e(TAG, "threadId:" + threadId + ", FileNotFoundException e:" + e.toString());
                 isComplete = false;
                 //下载的文件不存在，不需要重试，直接取消
-                downloader.cancel(Downloader.ERROR_HTTP_FILE_NOT_FOUND, e.toString());
+                downloader.cancel(Downloader.ERROR_HTTP_FILE_NOT_FOUND, e.toString(), true);
 
             } catch (IOException e) {
                 JLog.e(TAG, "threadId:" + threadId + ", IOException e:" + e.toString());
@@ -112,7 +112,7 @@ class DownloadThread extends Thread {
                 if (currentRetryCount < maxRetryCount) {
                     continue;
                 }
-                downloader.cancel(Downloader.ERROR_HTTP_DATA_ERROR, e.toString());
+                downloader.cancel(Downloader.ERROR_HTTP_DATA_ERROR, e.toString(), true);
 
             } catch (Exception e) {
                 JLog.e(TAG, "threadId:" + threadId + ", Exception e:" + e.toString());
@@ -120,7 +120,7 @@ class DownloadThread extends Thread {
                 if (currentRetryCount < maxRetryCount) {
                     continue;
                 }
-                downloader.cancel(Downloader.ERROR_UNKNOWN, e.toString());
+                downloader.cancel(Downloader.ERROR_UNKNOWN, e.toString(), true);
             }
         }
     }
@@ -160,7 +160,7 @@ class DownloadThread extends Thread {
             //下载过程中，文件被删除了后需要退出并取消下载
             if (!file.exists()) {
                 isQuite = true;
-                downloader.cancel(Downloader.ERROR_HTTP_FILE_NOT_FOUND, "FILE_NOT_FOUND");
+                downloader.cancel(Downloader.ERROR_HTTP_FILE_NOT_FOUND, "FILE_NOT_FOUND", true);
                 continue;
             }
             randomAccessFile.write(buffer, 0, length);
@@ -190,12 +190,12 @@ class DownloadThread extends Thread {
         switch (responseCode) {
             case 404:
                 msg = "file not found";
-                downloader.cancel(Downloader.ERROR_HTTP_FILE_NOT_FOUND, "responseCode:" + responseCode);
+                downloader.cancel(Downloader.ERROR_HTTP_FILE_NOT_FOUND, "responseCode:" + responseCode, true);
                 break;
 
             default:
                 msg = "ERROR_UNHANDLED_HTTP_CODE";
-                downloader.cancel(Downloader.ERROR_UNHANDLED_HTTP_CODE, "responseCode:" + responseCode);
+                downloader.cancel(Downloader.ERROR_UNHANDLED_HTTP_CODE, "responseCode:" + responseCode, true);
                 break;
         }
         JLog.e(TAG, "cancel download, responseCode:" + responseCode + ", msg:" + msg);

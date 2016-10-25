@@ -122,14 +122,13 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
                         || status == Downloader.STATUS_RUNNING) {
                     downloader.pause(Downloader.PAUSED_HUMAN);
                 }
-
             }
         });
 
         holder.btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                downloader.cancel(Downloader.ERROR_BLOCKED, "delete by human");
+                downloader.cancel(Downloader.ERROR_BLOCKED, "delete by human", false);
                 downloadView.setVisibility(View.GONE);
             }
         });
@@ -141,7 +140,7 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
         DownloadOption option = new DownloadOption.Builder(mActivity).build();
         option.getBuilder()
                 .setSaveFileMode(SaveFileMode.OVERRIDE)
-                .setExpiredTime(1000 * 60 * 2);
+                .setExpiredTime(1000 * 60 * 1);
         downloader = new Downloader(mActivity, downloaderUrl, option);
 
         downloader.setOnDownloadListener(

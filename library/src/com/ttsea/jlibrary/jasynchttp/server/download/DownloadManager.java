@@ -115,7 +115,7 @@ public class DownloadManager {
             Downloader loader = downloaderList.get(position);
             if (loader.getUrl().equals(url)) {
                 //取消该下载
-                loader.cancel(Downloader.ERROR_BLOCKED, "delete by human");
+                loader.cancel(Downloader.ERROR_BLOCKED, "delete by human", true);
                 if (needDeleteFile) {
                     loader.deleteFile();
                 }

@@ -404,7 +404,7 @@ public class Downloader implements TaskHandler {
             //文件已经存在，并且保存方式为 NONACTION，则取消该下载
             if (isFileExists && downloadOption.getSaveFileMode() == SaveFileMode.NONACTION) {
                 JLog.e(TAG, "file already exists, downloader will cancel");
-                cancel(Downloader.ERROR_FILE_ALREADY_EXISTS, "file already exists, file:" + file.getAbsolutePath());
+                cancel(Downloader.ERROR_FILE_ALREADY_EXISTS, "file already exists, file:" + file.getAbsolutePath(), true);
                 return;
 
                 //文件已经存在，并且保存方式为 OVERRIDE，则覆盖该文件
@@ -451,7 +451,7 @@ public class Downloader implements TaskHandler {
                 String msg = "Insufficient space, need space:" + needSpace
                         + "MB, SD free space:" + SdStatusUtils.getAvailableBlock() + "MB";
                 JLog.e(TAG, "cancel download, " + msg);
-                cancel(Downloader.ERROR_INSUFFICIENT_SPACE, msg);
+                cancel(Downloader.ERROR_INSUFFICIENT_SPACE, msg, true);
                 return;
             }
 
@@ -464,7 +464,7 @@ public class Downloader implements TaskHandler {
                 retry();
                 return;
             }
-            cancel(Downloader.ERROR_HTTP_TIMEOUT, e.getMessage());
+            cancel(Downloader.ERROR_HTTP_TIMEOUT, e.getMessage(), true);
 
         } catch (IOException e) {
             JLog.e(TAG, "IOException e:" + e.toString());
@@ -472,7 +472,7 @@ public class Downloader implements TaskHandler {
                 retry();
                 return;
             }
-            cancel(Downloader.ERROR_HTTP_DATA_ERROR, e.getMessage());
+            cancel(Downloader.ERROR_HTTP_DATA_ERROR, e.getMessage(), true);
 
         } catch (Exception e) {
             JLog.e(TAG, "Exception e:" + e.toString());
@@ -480,7 +480,7 @@ public class Downloader implements TaskHandler {
                 retry();
                 return;
             }
-            cancel(Downloader.ERROR_UNKNOWN, e.getMessage());
+            cancel(Downloader.ERROR_UNKNOWN, e.getMessage(), true);
 
         } finally {
             if (conn != null) {
@@ -729,10 +729,17 @@ public class Downloader implements TaskHandler {
 
     @Override
     public void cancel(int reason) {
-        cancel(reason, "");
+        cancel(reason, "", false);
     }
 
-    public void cancel(int reason, String msg) {
+    /**
+     * 取消下载
+     *
+     * @param reason         取消原因
+     * @param msg            原因
+     * @param needSaveStatus 是否需要保存下载记录
+     */
+    public void cancel(int reason, String msg, boolean needSaveStatus) {
         currentRetryCount = 0;
         if (!isSupportCancel()) {
             JLog.d(TAG, "cancel, this downloader not support cancel, return");
@@ -746,8 +753,13 @@ public class Downloader implements TaskHandler {
         mHandler.removeCallbacks(downloadingRunnable);
         isCancelled = true;
         setStatus(Downloader.STATUS_FAILED);
-        //清除下载信息
-        deleteRecord();
+        if (needSaveStatus) {
+            //保存信息
+            saveDownloaderStatus(getStatus(), reason);
+        } else {
+            //清除下载信息
+            deleteRecord();
+        }
 
         Message message = new Message();
         message.what = ON_DOWNLOAD_CANCEL;
@@ -793,12 +805,12 @@ public class Downloader implements TaskHandler {
         switch (responseCode) {
             case 404:
                 msg = getStatusStr(Downloader.ERROR_HTTP_FILE_NOT_FOUND);
-                cancel(Downloader.ERROR_HTTP_FILE_NOT_FOUND, "responseCode:" + responseCode);
+                cancel(Downloader.ERROR_HTTP_FILE_NOT_FOUND, "responseCode:" + responseCode, true);
                 break;
 
             default:
                 msg = getStatusStr(Downloader.ERROR_UNHANDLED_HTTP_CODE);
-                cancel(Downloader.ERROR_UNHANDLED_HTTP_CODE, "responseCode:" + responseCode);
+                cancel(Downloader.ERROR_UNHANDLED_HTTP_CODE, "responseCode:" + responseCode, true);
                 break;
         }
         JLog.e(TAG, "cancel download, responseCode:" + responseCode + ", msg:" + msg);
