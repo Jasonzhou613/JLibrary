@@ -378,7 +378,6 @@ public class SmoothCheckBox extends View implements Checkable {
         private Point[] mTickPoints;
         private Path mTickPath;
         private float mLeftLineDistance, mRightLineDistance, mDrewDistance;
-        private boolean isReset = false;
 
         private Handler mHandler;
 
@@ -405,8 +404,6 @@ public class SmoothCheckBox extends View implements Checkable {
 
         private void reset() {
             mDrewDistance = 0;
-            isReset = true;
-            JLog.d(TAG, "isReset = true;");
         }
 
         @Override
@@ -557,10 +554,6 @@ public class SmoothCheckBox extends View implements Checkable {
                     float value = (float) animation.getAnimatedValue();
                     mSolidRect = getSolidRect(value);
                     mBorderRect = getBorderRect(value);
-
-                    if (isReset) {
-                        scaleAnimator.cancel();
-                    }
                 }
             });
             scaleAnimator.start();
@@ -573,9 +566,6 @@ public class SmoothCheckBox extends View implements Checkable {
                 public void onAnimationUpdate(ValueAnimator animation) {
                     float value = (float) animation.getAnimatedValue();
                     mSolidColor = getAlphaColor(getColorForState(solidCheckedColor), value);
-                    if (isReset) {
-                        solidColorAnimator.cancel();
-                    }
                 }
             });
             solidColorAnimator.start();
@@ -591,9 +581,6 @@ public class SmoothCheckBox extends View implements Checkable {
                         value = 0.0f;
                     }
                     mStrokeColor = getAlphaColor(getColorForState(getStrokeColor()), value);
-                    if (isReset) {
-                        strokeColorAnimator.cancel();
-                    }
                 }
             });
             strokeColorAnimator.start();
@@ -615,19 +602,13 @@ public class SmoothCheckBox extends View implements Checkable {
                     float right = mCenterPoint.x + offsetX;
                     float bottom = mCenterPoint.y + offsetY;
                     mGradientBounds.set(left, top, right, bottom);
-
-                    if (isReset) {
-                        animator.cancel();
-                        JLog.d(TAG, "animator.cancel()");
-                    } else {
-                        invalidateSelf();
-                    }
+                    invalidateSelf();
                 }
             });
             animator.start();
 
             startCommonAnimation();
-            drawTickDelay(animDuration + 50);
+            drawTickDelay(animDuration + 100);
         }
 
         private void startUnCheckedAnimation() {
@@ -646,13 +627,7 @@ public class SmoothCheckBox extends View implements Checkable {
                     float right = mCenterPoint.x + offsetX;
                     float bottom = mCenterPoint.y + offsetY;
                     mGradientBounds.set(left, top, right, bottom);
-
-                    if (isReset) {
-                        animator.cancel();
-                        JLog.d(TAG, "animator.cancel()");
-                    } else {
-                        invalidateSelf();
-                    }
+                    invalidateSelf();
                 }
             });
             animator.start();
@@ -701,7 +676,6 @@ public class SmoothCheckBox extends View implements Checkable {
             animateStarting = shouldAnimate && checkChangedByClick && !isPressed();
             if (animateStarting) {
                 checkChangedByClick = false;
-                isReset = false;
                 if (isChecked()) {
                     startCheckedAnimation();
                 } else {
