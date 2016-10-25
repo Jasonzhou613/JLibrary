@@ -7,7 +7,7 @@ import com.ttsea.jlibrary.utils.CacheDirUtils;
 
 /**
  * 下载选项，使用建造者模式 <br/>
- * <p/>
+ * <p>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/5/19 10:16 <br/>
  * <b>author:</b> Jason <br/>
@@ -76,30 +76,39 @@ public class DownloadOption {
             this.mContext = context;
         }
 
+        /** 设置同时采用多少个线程来下载该文件,默认为2 */
         public Builder setThreadPool(int threadPool) {
             this.threadPool = threadPool;
             return this;
         }
 
+        /** 设置当请求失败时，再重试数次，默认为2 */
         public Builder setReTryCount(int reTryCount) {
             this.reTryCount = reTryCount;
             return this;
         }
 
+        /** 设置文件保存地址，默认为{@link CacheDirUtils#getSdDataDir(Context)} */
         public Builder setSaveFilePath(String saveFilePath) {
             this.saveFilePath = saveFilePath;
             return this;
         }
 
+        /** 设置文件名称，若不设置 则会尝试通过下载地址来获取文件名 */
         public void setFileName(String fileName) {
             this.fileName = fileName;
         }
 
+        /**
+         * 设置文件保存方式，有三种方式：{@link SaveFileMode#NONACTION},{@link SaveFileMode#OVERRIDE}
+         * ,{@link SaveFileMode#RENAME}，默认为:OVERRIDE
+         */
         public Builder setSaveFileMode(int saveFileMode) {
             this.saveFileMode = saveFileMode;
             return this;
         }
 
+        /** 设置Http请求选项 */
         public Builder setHttpOption(HttpOption httpOption) {
             this.httpOption = httpOption;
             return this;
@@ -138,7 +147,7 @@ public class DownloadOption {
                     ", saveFilePath='" + saveFilePath + '\'' +
                     ", fileName='" + fileName + '\'' +
                     ", saveFileMode=" + saveFileMode +
-                    ", httpOption=" + httpOption +
+                    ", httpOption=" + httpOption.toString() +
                     '}';
         }
     }

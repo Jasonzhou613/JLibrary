@@ -90,7 +90,7 @@ class HttpUrlStack {
         if (additionalProperty != null) {
             for (String key : additionalProperty.keySet()) {
                 conn.addRequestProperty(key, additionalProperty.get(key));
-                JLog.d(TAG, "threadId:" + threadId + ", openConnection, additionalProperty, key:" + key + ", value:" + additionalProperty.get(key));
+                JLog.d(TAG, "threadId:" + threadId + ", additionalProperty, key:" + key + ", value:" + additionalProperty.get(key));
             }
         }
 

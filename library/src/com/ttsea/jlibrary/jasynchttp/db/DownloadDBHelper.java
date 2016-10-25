@@ -17,8 +17,8 @@ import java.util.List;
  * 下载数据表操作
  * Created by Jason on 2016/1/5.
  */
-public class DownloadOperation {
-    private final static String TAG = "DownloadOperation";
+public class DownloadDBHelper {
+    private final static String TAG = "DownloadDBHelper";
     private final static String DOWNLOAD_INFO = DBConstants.TableNames.DOWNLOAD_INFO;
 
     public static final String THREAD_ID = DBConstants.DOWNLOAD_INFO_COLUMN.COLUMN_THREAD_ID;
@@ -178,22 +178,22 @@ public class DownloadOperation {
             }
 
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-                String thread_id = cursor.getString(cursor.getColumnIndex(DownloadOperation.THREAD_ID));
-                //String url = cursor.getString(cursor.getColumnIndex(DownloadOperation._URL));
-                String title = cursor.getString(cursor.getColumnIndex(DownloadOperation.TITLE));
-                String description = cursor.getString(cursor.getColumnIndex(DownloadOperation.DESCRIPTION));
-                String add_timestamp = cursor.getString(cursor.getColumnIndex(DownloadOperation.ADD_TIMESTAMP));
-                String last_modified_timestamp = cursor.getString(cursor.getColumnIndex(DownloadOperation.LAST_MODIFIED_TIMESTAMP));
-                String local_file_path = cursor.getString(cursor.getColumnIndex(DownloadOperation.LOCAL_FILE_PATH));
-                String local_filename = cursor.getString(cursor.getColumnIndex(DownloadOperation.LOCAL_FILENAME));
-                String media_type = cursor.getString(cursor.getColumnIndex(DownloadOperation.MEDIA_TYPE));
-                int reason = cursor.getInt(cursor.getColumnIndex(DownloadOperation.REASON));
-                int status = cursor.getInt(cursor.getColumnIndex(DownloadOperation.STATUS));
-                long total_size_bytes = cursor.getLong(cursor.getColumnIndex(DownloadOperation.TOTAL_SIZE_BYTES));
-                long bytes_so_far = cursor.getLong(cursor.getColumnIndex(DownloadOperation.BYTES_DOWNLOADED_SO_FAR));
-                long start_bytes = cursor.getLong(cursor.getColumnIndex(DownloadOperation.START_BYTES));
-                long end_bytes = cursor.getLong(cursor.getColumnIndex(DownloadOperation.END_BYTES));
-                String etag = cursor.getString(cursor.getColumnIndex(DownloadOperation.ETAG));
+                String thread_id = cursor.getString(cursor.getColumnIndex(DownloadDBHelper.THREAD_ID));
+                //String url = cursor.getString(cursor.getColumnIndex(DownloadDBHelper._URL));
+                String title = cursor.getString(cursor.getColumnIndex(DownloadDBHelper.TITLE));
+                String description = cursor.getString(cursor.getColumnIndex(DownloadDBHelper.DESCRIPTION));
+                String add_timestamp = cursor.getString(cursor.getColumnIndex(DownloadDBHelper.ADD_TIMESTAMP));
+                String last_modified_timestamp = cursor.getString(cursor.getColumnIndex(DownloadDBHelper.LAST_MODIFIED_TIMESTAMP));
+                String local_file_path = cursor.getString(cursor.getColumnIndex(DownloadDBHelper.LOCAL_FILE_PATH));
+                String local_filename = cursor.getString(cursor.getColumnIndex(DownloadDBHelper.LOCAL_FILENAME));
+                String media_type = cursor.getString(cursor.getColumnIndex(DownloadDBHelper.MEDIA_TYPE));
+                int reason = cursor.getInt(cursor.getColumnIndex(DownloadDBHelper.REASON));
+                int status = cursor.getInt(cursor.getColumnIndex(DownloadDBHelper.STATUS));
+                long total_size_bytes = cursor.getLong(cursor.getColumnIndex(DownloadDBHelper.TOTAL_SIZE_BYTES));
+                long bytes_so_far = cursor.getLong(cursor.getColumnIndex(DownloadDBHelper.BYTES_DOWNLOADED_SO_FAR));
+                long start_bytes = cursor.getLong(cursor.getColumnIndex(DownloadDBHelper.START_BYTES));
+                long end_bytes = cursor.getLong(cursor.getColumnIndex(DownloadDBHelper.END_BYTES));
+                String etag = cursor.getString(cursor.getColumnIndex(DownloadDBHelper.ETAG));
 
                 DownloadFileInfo downloadInfo = new DownloadFileInfo();
                 downloadInfo.setThread_id(thread_id);

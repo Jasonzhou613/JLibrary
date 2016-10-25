@@ -130,14 +130,6 @@ class DownloadThread extends Thread {
         HttpURLConnection conn = httpUrlStack.openConnection(url);
         int responseCode = conn.getResponseCode();
 
-        //url被重定向
-//        if (!url.getHost().equals(conn.getURL().getHost())) {
-//            // we were redirected!
-//            JLog.e(TAG, "we were redirected, redirected url:" + conn.getURL());
-//            downloader.cancel(Downloader.ERROR_TOO_MANY_REDIRECTS);
-//            return;
-//        }
-
         if (responseCode < 200 || responseCode > 299) {
             handleErrorResponseCode(responseCode);
             return;

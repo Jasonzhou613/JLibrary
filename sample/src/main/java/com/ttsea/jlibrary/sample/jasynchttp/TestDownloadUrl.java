@@ -2,7 +2,7 @@ package com.ttsea.jlibrary.sample.jasynchttp;
 
 /**
  * 用于测试下载URL <br/>
- * <p/>
+ * <p>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/1/5 <br/>
  * <b>author:</b> Jason <br/>
@@ -12,10 +12,10 @@ package com.ttsea.jlibrary.sample.jasynchttp;
 class TestDownloadUrl {
 
     //public static final String TEMP_URL = "http://192.168.3.102/debug/download/07.zip";
-    public static final String TEMP_URL = "http://shouji.360tpcdn.com/160514/98c8f2738d4e1af4362a8f19b78389d6/com.huiweishang.ws_401.apk";
+//    public static final String TEMP_URL = "http://shouji.360tpcdn.com/160514/98c8f2738d4e1af4362a8f19b78389d6/com.huiweishang.ws_401.apk";
     //重定向了
-//    public static final String TEMP_URL = "http://android-apps.25pp.com/fs08/2016/08/18/8/110_834460da7f1ea113740d1ee98e914e78.apk";
-//    public static final String TEMP_URL = "http://hws002.b0.upaiyun.com/teamMoments/108/20160919/f62279af2a660c06fb979b1f98abd36f.JPG";
+    public static final String TEMP_URL = "http://www.wandoujia.com/apps/com.huiweishang.ws/download";
+    public static final String TEMP_URL2 = "http://nc-apk.wdjcdn.com/7/82/aaedb731c174bf407929cbc0a6aec827.apk";
 
     /**
      * 文件名：TortoiseSVN-1.9.0.26652-x64-svn-1.9.0.msi <br/>

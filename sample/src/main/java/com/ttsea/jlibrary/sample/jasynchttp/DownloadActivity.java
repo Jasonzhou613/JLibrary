@@ -59,8 +59,8 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
         Intent intent;
         switch (v.getId()) {
             case R.id.btnAddDownload:
-                //addDownload(etPath.getText().toString());
-                addDownloads();
+                addDownload(etPath.getText().toString());
+                //addDownloads();
                 break;
 
             case R.id.btnDownloadDetail:

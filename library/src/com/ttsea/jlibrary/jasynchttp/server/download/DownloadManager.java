@@ -3,7 +3,7 @@ package com.ttsea.jlibrary.jasynchttp.server.download;
 import android.content.Context;
 
 import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.jasynchttp.db.DownloadOperation;
+import com.ttsea.jlibrary.jasynchttp.db.DownloadDBHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,7 @@ public class DownloadManager {
     }
 
     private void init() {
-        List<Downloader> downloaders = DownloadOperation.getDownloaders(appContext);
+        List<Downloader> downloaders = DownloadDBHelper.getDownloaders(appContext);
         downloaderList = new ArrayList<Downloader>();
         downloaderList.clear();
         downloaderList.addAll(downloaders);

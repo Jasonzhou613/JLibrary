@@ -4,10 +4,10 @@ import android.content.Context;
 import android.os.Message;
 
 import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.utils.SdStatusUtils;
-import com.ttsea.jlibrary.jasynchttp.db.DownloadOperation;
+import com.ttsea.jlibrary.jasynchttp.db.DownloadDBHelper;
 import com.ttsea.jlibrary.jasynchttp.server.http.Http;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
+import com.ttsea.jlibrary.utils.SdStatusUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,9 +63,9 @@ public class Downloader implements TaskHandler {
 
     //该下载器状态，默认为等待下载
     private int status = Downloader.STATUS_PENDING;
-    private long contentLength = 0;
-    private long totalByteSoFar = 0;
-    private long speed = 0;
+    private long contentLength = 0;//文件总长度
+    private long totalByteSoFar = 0;//总共下载了多少
+    private long speed = 0;//下载速度(b/s)
 
     //记录下载开始的时间戳
     private long startTimestamp;
@@ -134,13 +134,6 @@ public class Downloader implements TaskHandler {
 
         setOnDownloadListener(l);
         init();
-
-        List<DownloadFileInfo> infos = DownloadOperation.getDownloadInfos(context, url);
-        if (infos != null && infos.size() > 0) {
-            initFromRecord(infos);
-        } else {
-            initNewRecord();
-        }
 
         JLog.d(TAG, downloadOption.toString());
     }
@@ -224,6 +217,9 @@ public class Downloader implements TaskHandler {
 
     @Override
     public int hashCode() {
+        if (id < 0) {
+            getId();
+        }
         return id;
     }
 
@@ -231,6 +227,13 @@ public class Downloader implements TaskHandler {
     private void init() {
         threads = new ArrayList<DownloadThread>();
         mHandler = new DownloaderHandler();
+
+        List<DownloadFileInfo> infos = DownloadDBHelper.getDownloadInfos(mContext, url);
+        if (infos != null && infos.size() > 0) {
+            initFromRecord(infos);
+        } else {
+            initNewRecord();
+        }
     }
 
     /** 从记录中进行初始化 */
@@ -260,7 +263,7 @@ public class Downloader implements TaskHandler {
             DownloadThread task = new DownloadThread(this, info);
             threads.add(task);
             //将对应的下载线程信息存入数据库
-            DownloadOperation.insertOrUpdate(mContext, task.getDownloadInfo());
+            DownloadDBHelper.insertOrUpdate(mContext, task.getDownloadInfo());
         }
     }
 
@@ -297,7 +300,7 @@ public class Downloader implements TaskHandler {
         }
 
         //如果存在有记录，则先删除
-        DownloadOperation.deleteRecord(mContext, getUrl());
+        DownloadDBHelper.deleteRecord(mContext, getUrl());
         //设置下载器状态
         setStatus(Downloader.STATUS_LINKING);
         mHandler.sendEmptyMessage(ON_DOWNLOAD_LINKING);
@@ -307,7 +310,6 @@ public class Downloader implements TaskHandler {
         DownloadFileInfo downloadInfo = getNewDownloadInfo(url, "-1");
         httpUrlStack = new HttpUrlStack(downloadOption.getHttpOption(), downloadInfo);
         HttpURLConnection conn = null;
-
         try {
             URL url = new URL(getUrl());
             conn = httpUrlStack.openConnection(url);
@@ -425,7 +427,7 @@ public class Downloader implements TaskHandler {
                 DownloadThread task = new DownloadThread(this, info);
                 threads.add(task);
                 //将对应的下载线程信息存入数据库
-                DownloadOperation.insertOrUpdate(mContext, task.getDownloadInfo());
+                DownloadDBHelper.insertOrUpdate(mContext, task.getDownloadInfo());
             }
             startTheads();
 
@@ -594,12 +596,12 @@ public class Downloader implements TaskHandler {
 
     /** 只是清除下载记录，不删除下载好 */
     public void clearRecord() {
-        DownloadOperation.deleteRecord(mContext, getUrl());
+        DownloadDBHelper.deleteRecord(mContext, getUrl());
     }
 
     /** 清除下载记录，并且将下载好的文件也删除 */
     public void clearAllRecord() {
-        DownloadOperation.deleteRecord(mContext, getUrl());
+        DownloadDBHelper.deleteRecord(mContext, getUrl());
         deleteFile();
     }
 
@@ -648,7 +650,7 @@ public class Downloader implements TaskHandler {
         }
 
         JLog.d(TAG, "resume...");
-        List<DownloadFileInfo> infos = DownloadOperation.getDownloadInfos(mContext, url);
+        List<DownloadFileInfo> infos = DownloadDBHelper.getDownloadInfos(mContext, url);
         //如果获取本地下载信息失败，则重新下载
         if (infos == null || infos.size() < 1) {
             JLog.d(TAG, "get download info failed, will reDownload");
@@ -684,7 +686,7 @@ public class Downloader implements TaskHandler {
             DownloadThread task = new DownloadThread(this, info);
             threads.add(task);
             //将对应的下载线程信息存入数据库
-            DownloadOperation.insertOrUpdate(mContext, task.getDownloadInfo());
+            DownloadDBHelper.insertOrUpdate(mContext, task.getDownloadInfo());
         }
 
         setStatus(Downloader.STATUS_PENDING);
@@ -718,7 +720,7 @@ public class Downloader implements TaskHandler {
         isCancelled = true;
         setStatus(Downloader.STATUS_FAILED);
         //清除下载信息
-        DownloadOperation.deleteRecord(mContext, getUrl());
+        DownloadDBHelper.deleteRecord(mContext, getUrl());
 
         Message message = new Message();
         message.what = ON_DOWNLOAD_CANCEL;
@@ -754,7 +756,7 @@ public class Downloader implements TaskHandler {
             info.setReason(reason);
             info.setStatus(status);
             info.setLast_modified_timestamp(String.valueOf(System.currentTimeMillis()));
-            DownloadOperation.insertOrUpdate(mContext, thread.getDownloadInfo());
+            DownloadDBHelper.insertOrUpdate(mContext, thread.getDownloadInfo());
         }
     }
 

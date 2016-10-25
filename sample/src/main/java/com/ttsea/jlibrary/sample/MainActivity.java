@@ -8,9 +8,13 @@ import android.widget.Button;
 import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.common.ExitApplication;
 import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.common.JToast;
 import com.ttsea.jlibrary.sample.jasynchttp.AsyncHttpActivity;
+import com.ttsea.jlibrary.utils.ApkUtils;
 import com.ttsea.jlibrary.utils.AppInformationUtils;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
+import com.ttsea.jlibrary.utils.DigitUtils;
+import com.ttsea.jlibrary.utils.RandomUtils;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
     private final String TAG = "MainActivity";
@@ -109,26 +113,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void test() {
-//         JLog.d(TAG, "isPackageInstalled:" + ApkUtils.isPackageInstalled(mActivity, "com.huiweishang.ws"));
-//         ApkUtils.install(mActivity, new File(""));
-//         ApkUtils.launch(mActivity, "com.huiweishang.ws");
-//
-//        JLog.d(TAG, "getCacheDir:" + CacheDirUtils.getCacheDir(mActivity));
-//        JLog.d(TAG, "getDataCacheDir:" + CacheDirUtils.getDataCacheDir(mActivity));
-//        JLog.d(TAG, "getImageCacheDir:" + CacheDirUtils.getImageCacheDir(mActivity));
-//        JLog.d(TAG, "getImageCacheDir:" + CacheDirUtils.getSdDataDir(mActivity));
-//        JLog.d(TAG, "getTempDir:" + CacheDirUtils.getTempDir(mActivity));
-//
-//        JLog.d(TAG, "getFloat:" + DigitUtils.getFloat(5.153456f, 5));
-//
-//        JLog.d(TAG, "randomString:" + RandomUtils.randomString(5));
-//        JLog.d(TAG, "limitInt:" + RandomUtils.limitInt(5));
-//
-//        JToast.makeTextTop(mActivity, "top", 50);
-//        JToast.makeTextBottom(mActivity, "botom", 50);
-//        JToast.makeTextLeft(mActivity, "left");
-//        JToast.makeTextRight(mActivity, "right");
-//        JToast.makeTextCenter(mActivity, "center");
+        JLog.d(TAG, "isPackageInstalled:" + ApkUtils.isPackageInstalled(mActivity, "com.huiweishang.ws"));
+        //ApkUtils.install(mActivity, new File(""));
+        //ApkUtils.launch(mActivity, "com.huiweishang.ws");
+
+        JLog.d(TAG, "getCacheDir:" + CacheDirUtils.getCacheDir(mActivity));
+        JLog.d(TAG, "getDataCacheDir:" + CacheDirUtils.getDataCacheDir(mActivity));
+        JLog.d(TAG, "getImageCacheDir:" + CacheDirUtils.getImageCacheDir(mActivity));
+        JLog.d(TAG, "getImageCacheDir:" + CacheDirUtils.getSdDataDir(mActivity));
+        JLog.d(TAG, "getTempDir:" + CacheDirUtils.getTempDir(mActivity));
+
+        JLog.d(TAG, "getFloat:" + DigitUtils.getFloat(5.153456f, 5));
+
+        JLog.d(TAG, "randomString:" + RandomUtils.randomString(5));
+        JLog.d(TAG, "limitInt:" + RandomUtils.limitInt(5));
+
+        JToast.makeTextTop(mActivity, "top", 50);
+        JToast.makeTextBottom(mActivity, "botom", 50);
+        JToast.makeTextLeft(mActivity, "left");
+        JToast.makeTextRight(mActivity, "right");
+        JToast.makeTextCenter(mActivity, "center");
     }
 
     private void showAppInfo() {
