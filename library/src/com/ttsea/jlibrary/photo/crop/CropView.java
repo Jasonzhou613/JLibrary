@@ -222,28 +222,28 @@ public class CropView extends View {
         // getDimensionPixelSize
         // 则不管写的是dp还是sp还是px,都会乘以denstiy.
 
-        cropMode = a.getInt(R.styleable.CropView_cropMode, CROP_MODE_RECTANGLE);
+        cropMode = a.getInt(R.styleable.CropView_cv_cropMode, CROP_MODE_RECTANGLE);
 
-        frameLineShowMode = a.getInt(R.styleable.CropView_frameLineShowMode, LINE_SHOW_MODE_SHOW_ALWAYS);
-        frameLineColor = a.getColor(R.styleable.CropView_frameLineColor, DEFAULT_LINE_COLOR);
-        frameLineWidth = a.getDimensionPixelOffset(R.styleable.CropView_frameLineWidth, DEFAULT_FRAME_LINE_WIDTH);
+        frameLineShowMode = a.getInt(R.styleable.CropView_cv_frameLineShowMode, LINE_SHOW_MODE_SHOW_ALWAYS);
+        frameLineColor = a.getColor(R.styleable.CropView_cv_frameLineColor, DEFAULT_LINE_COLOR);
+        frameLineWidth = a.getDimensionPixelOffset(R.styleable.CropView_cv_frameLineWidth, DEFAULT_FRAME_LINE_WIDTH);
 
-        handleLineShowMode = a.getInt(R.styleable.CropView_handleLineShowMode, LINE_SHOW_MODE_SHOW_ALWAYS);
-        handleLineColor = a.getColor(R.styleable.CropView_handleLineColor, DEFAULT_LINE_COLOR);
-        handleLineWidth = a.getDimensionPixelOffset(R.styleable.CropView_handleLineWidth, DEFAULT_HANDLE_LINE_WIDTH);
-        handleLineLength = a.getDimensionPixelOffset(R.styleable.CropView_handleLineLength, DEFAULT_HANDLE_LINE_HEIGHT);
+        handleLineShowMode = a.getInt(R.styleable.CropView_cv_handleLineShowMode, LINE_SHOW_MODE_SHOW_ALWAYS);
+        handleLineColor = a.getColor(R.styleable.CropView_cv_handleLineColor, DEFAULT_LINE_COLOR);
+        handleLineWidth = a.getDimensionPixelOffset(R.styleable.CropView_cv_handleLineWidth, DEFAULT_HANDLE_LINE_WIDTH);
+        handleLineLength = a.getDimensionPixelOffset(R.styleable.CropView_cv_handleLineLength, DEFAULT_HANDLE_LINE_HEIGHT);
 
-        gridLineShowMode = a.getInt(R.styleable.CropView_gridLineShowMode, LINE_SHOW_MODE_SHOW_ON_TOUCH);
-        gridLineColor = a.getColor(R.styleable.CropView_gridLineColor, DEFAULT_LINE_COLOR);
-        gridLineWidth = a.getDimensionPixelOffset(R.styleable.CropView_gridLineWidth, DEFAULT_GUIDE_LINE_WIDTH);
-        gridRowCount = a.getInt(R.styleable.CropView_gridRowCount, DEFAULT_GRID_ROW_COUNT);
-        gridColumnCount = a.getInt(R.styleable.CropView_gridColumnCount, DEFAULT_GRID_COLUMN_COUNT);
+        gridLineShowMode = a.getInt(R.styleable.CropView_cv_gridLineShowMode, LINE_SHOW_MODE_SHOW_ON_TOUCH);
+        gridLineColor = a.getColor(R.styleable.CropView_cv_gridLineColor, DEFAULT_LINE_COLOR);
+        gridLineWidth = a.getDimensionPixelOffset(R.styleable.CropView_cv_gridLineWidth, DEFAULT_GUIDE_LINE_WIDTH);
+        gridRowCount = a.getInt(R.styleable.CropView_cv_gridRowCount, DEFAULT_GRID_ROW_COUNT);
+        gridColumnCount = a.getInt(R.styleable.CropView_cv_gridColumnCount, DEFAULT_GRID_COLUMN_COUNT);
 
-        frameShadowColor = a.getColor(R.styleable.CropView_frameShadowColor, DEFAULT_FRAME_SHADOW_COLOR);
+        frameShadowColor = a.getColor(R.styleable.CropView_cv_frameShadowColor, DEFAULT_FRAME_SHADOW_COLOR);
 
-        canMoveFrame = a.getBoolean(R.styleable.CropView_canMoveFrame, false);
-        canDragFrameConner = a.getBoolean(R.styleable.CropView_canDragFrameConner, false);
-        fixedAspectRatio = a.getBoolean(R.styleable.CropView_fixedAspectRatio, true);
+        canMoveFrame = a.getBoolean(R.styleable.CropView_cv_canMoveFrame, false);
+        canDragFrameConner = a.getBoolean(R.styleable.CropView_cv_canDragFrameConner, false);
+        fixedAspectRatio = a.getBoolean(R.styleable.CropView_cv_fixedAspectRatio, true);
 
         minFrameWidth = handleLineLength * 2 + 5;
         if (minFrameWidth <= 0) {

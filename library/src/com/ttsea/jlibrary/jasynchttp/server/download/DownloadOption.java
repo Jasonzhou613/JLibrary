@@ -7,7 +7,7 @@ import com.ttsea.jlibrary.utils.CacheDirUtils;
 
 /**
  * 下载选项，使用建造者模式 <br/>
- * <p>
+ * <p/>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/5/19 10:16 <br/>
  * <b>author:</b> Jason <br/>
@@ -45,7 +45,7 @@ public class DownloadOption {
         return builder.fileName;
     }
 
-    public SaveFileMode getSaveFileMode() {
+    public int getSaveFileMode() {
         return builder.saveFileMode;
     }
 
@@ -68,7 +68,7 @@ public class DownloadOption {
         //文件名称
         private String fileName;
         //文件保存方式
-        private SaveFileMode saveFileMode;
+        private int saveFileMode = -1;
         //http请求选项
         private HttpOption httpOption;
 
@@ -95,7 +95,7 @@ public class DownloadOption {
             this.fileName = fileName;
         }
 
-        public Builder setSaveFileMode(SaveFileMode saveFileMode) {
+        public Builder setSaveFileMode(int saveFileMode) {
             this.saveFileMode = saveFileMode;
             return this;
         }
@@ -119,7 +119,7 @@ public class DownloadOption {
                 saveFilePath = CacheDirUtils.getSdDataDir(mContext);
             }
 
-            if (saveFileMode == null) {
+            if (saveFileMode < 0) {
                 saveFileMode = SaveFileMode.OVERRIDE;
             }
 

@@ -2,59 +2,59 @@
 <resources>
     <declare-styleable name="CropView">
         <!-- 剪切模式 -->
-        <attr name="cropMode" format="integer">
+        <attr name="cv_cropMode" format="integer">
             <enum name="rectangle" value="1"/>
             <enum name="oval" value="2"/>
         </attr>
 
         <!-- 剪切边框的显示模式 -->
-        <attr name="frameLineShowMode" format="integer">
+        <attr name="cv_frameLineShowMode" format="integer">
             <enum name="not_show" value="1"/>
             <enum name="show_always" value="2"/>
             <enum name="show_on_touch" value="3"/>
         </attr>
         <!-- 剪切边框的颜色 -->
-        <attr name="frameLineColor" format="color"/>
+        <attr name="cv_frameLineColor" format="color"/>
         <!-- 剪切边框的宽度 -->
-        <attr name="frameLineWidth" format="dimension"/>
+        <attr name="cv_frameLineWidth" format="dimension"/>
 
         <!-- 四个角的手柄线显示模式 -->
-        <attr name="handleLineShowMode" format="integer">
+        <attr name="cv_handleLineShowMode" format="integer">
             <enum name="not_show" value="1"/>
             <enum name="show_always" value="2"/>
             <enum name="show_on_touch" value="3"/>
         </attr>
         <!-- 四个角的手柄线的颜色 -->
-        <attr name="handleLineColor" format="color"/>
+        <attr name="cv_handleLineColor" format="color"/>
         <!-- 四个角的手柄线的宽度 -->
-        <attr name="handleLineWidth" format="dimension"/>
+        <attr name="cv_handleLineWidth" format="dimension"/>
         <!-- 四个角的手柄线的高度 -->
 
-        <attr name="handleLineLength" format="dimension"/>
+        <attr name="cv_handleLineLength" format="dimension"/>
         <!-- 网格线的显示模式 -->
-        <attr name="gridLineShowMode" format="integer">
+        <attr name="cv_gridLineShowMode" format="integer">
             <enum name="not_show" value="1"/>
             <enum name="show_always" value="2"/>
             <enum name="show_on_touch" value="3"/>
         </attr>
         <!-- 网格线的颜色 -->
-        <attr name="gridLineColor" format="color"/>
+        <attr name="cv_gridLineColor" format="color"/>
         <!-- 网格线的宽度 -->
-        <attr name="gridLineWidth" format="dimension"/>
+        <attr name="cv_gridLineWidth" format="dimension"/>
         <!-- 网格线的行数 -->
-        <attr name="gridRowCount" format="integer"/>
+        <attr name="cv_gridRowCount" format="integer"/>
         <!-- 网格线的列数 -->
-        <attr name="gridColumnCount" format="integer"/>
+        <attr name="cv_gridColumnCount" format="integer"/>
 
         <!-- 剪切时阴影部分的颜色 -->
-        <attr name="frameShadowColor" format="color"/>
+        <attr name="cv_frameShadowColor" format="color"/>
 
         <!-- 按住剪切框中间，是否可以拖动 -->
-        <attr name="canMoveFrame" format="boolean"/>
+        <attr name="cv_canMoveFrame" format="boolean"/>
         <!-- 按住剪切框四个角，是否可以拖动剪切框的四个角 -->
-        <attr name="canDragFrameConner" format="boolean"/>
+        <attr name="cv_canDragFrameConner" format="boolean"/>
         <!-- 是否需要保持长宽比，只有当canDragFrameConner为true时才生效 -->
-        <attr name="fixedAspectRatio" format="boolean"/>
+        <attr name="cv_fixedAspectRatio" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="TransformImageView">
@@ -98,23 +98,23 @@
 
     <!-- com.ttsea.jlibrary.component.widget.SmoothCheckBox attrs start -->
     <declare-styleable name="SmoothCheckBox">
-        <attr name="strokeWidth" format="dimension"/>
-        <attr name="strokeUncheckedColor" format="color"/>
-        <attr name="solidUncheckedColor" format="color"/>
-        <attr name="strokeCheckedColor" format="color"/>
-        <attr name="solidCheckedColor" format="color"/>
-        <attr name="tickWidth" format="dimension"/>
-        <attr name="tickColor" format="color"/>
-        <attr name="duration" format="integer"/>
-        <attr name="type">
+        <attr name="scb_strokeWidth" format="dimension"/>
+        <attr name="scb_strokeUncheckedColor" format="color"/>
+        <attr name="scb_solidUncheckedColor" format="color"/>
+        <attr name="scb_strokeCheckedColor" format="color"/>
+        <attr name="scb_solidCheckedColor" format="color"/>
+        <attr name="scb_tickWidth" format="dimension"/>
+        <attr name="scb_tickColor" format="color"/>
+        <attr name="scb_duration" format="integer"/>
+        <attr name="scb_type">
             <enum name="rectangle" value="0"/>
             <enum name="oval" value="1"/>
         </attr>
-        <attr name="radius" format="dimension"/>
-        <attr name="shouldAnimate" format="boolean"/>
-        <attr name="checked" format="boolean"/>
+        <attr name="scb_radius" format="dimension"/>
+        <attr name="scb_shouldAnimate" format="boolean"/>
+        <attr name="scb_checked" format="boolean"/>
         <!-- 透明度，取值0~255 -->
-        <attr name="alpha" format="integer"/>
+        <attr name="scb_alpha" format="integer"/>
     </declare-styleable>
     <!-- com.ttsea.jlibrary.component.widget.SmoothCheckBox attrs start -->
 

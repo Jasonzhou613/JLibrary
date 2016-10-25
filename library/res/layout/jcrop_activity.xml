@@ -70,25 +70,25 @@
             android:paddingLeft="0dp"
             android:paddingRight="0dp"
             android:paddingTop="0dp"
-            juility:canMoveFrame="false"
-            juility:cropMode="rectangle"
-            juility:fixedAspectRatio="true"
+            juility:cv_canMoveFrame="false"
+            juility:cv_cropMode="rectangle"
+            juility:cv_fixedAspectRatio="true"
 
-            juility:frameLineColor="#FF00CC00"
-            juility:frameLineShowMode="show_always"
-            juility:frameLineWidth="1.66dp"
-            juility:frameShadowColor="@color/translucent99"
+            juility:cv_frameLineColor="#FF00CC00"
+            juility:cv_frameLineShowMode="show_always"
+            juility:cv_frameLineWidth="1.66dp"
+            juility:cv_frameShadowColor="@color/translucent99"
 
-            juility:gridColumnCount="2"
-            juility:gridLineColor="#FF00CC00"
-            juility:gridLineShowMode="show_on_touch"
-            juility:gridLineWidth="1dp"
-            juility:gridRowCount="2"
+            juility:cv_gridColumnCount="2"
+            juility:cv_gridLineColor="#FF00CC00"
+            juility:cv_gridLineShowMode="show_on_touch"
+            juility:cv_gridLineWidth="1dp"
+            juility:cv_gridRowCount="2"
 
-            juility:handleLineColor="#FF00CC00"
-            juility:handleLineLength="20dp"
-            juility:handleLineShowMode="show_always"
-            juility:handleLineWidth="2dp"/>
+            juility:cv_handleLineColor="#FF00CC00"
+            juility:cv_handleLineLength="20dp"
+            juility:cv_handleLineShowMode="show_always"
+            juility:cv_handleLineWidth="2dp"/>
     </FrameLayout>
 
 </RelativeLayout>

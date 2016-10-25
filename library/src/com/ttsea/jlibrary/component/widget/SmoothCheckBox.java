@@ -99,40 +99,40 @@ public class SmoothCheckBox extends View implements Checkable {
     }
 
     private void initStyleable(TypedArray a) {
-        strokeWidth = a.getDimensionPixelOffset(R.styleable.SmoothCheckBox_strokeWidth, DEFAULT_STROKE_WIDTH);
-        strokeUncheckedColor = a.getColorStateList(R.styleable.SmoothCheckBox_strokeUncheckedColor);
+        strokeWidth = a.getDimensionPixelOffset(R.styleable.SmoothCheckBox_scb_strokeWidth, DEFAULT_STROKE_WIDTH);
+        strokeUncheckedColor = a.getColorStateList(R.styleable.SmoothCheckBox_scb_strokeUncheckedColor);
         if (strokeUncheckedColor == null) {
             strokeUncheckedColor = DEFAULT_STROKE_UNCHECKED_COLOR;
         }
-        strokeCheckedColor = a.getColorStateList(R.styleable.SmoothCheckBox_strokeCheckedColor);
+        strokeCheckedColor = a.getColorStateList(R.styleable.SmoothCheckBox_scb_strokeCheckedColor);
         if (strokeCheckedColor == null) {
             strokeCheckedColor = DEFAULT_STROKE_CHECKED_COLOR;
         }
-        solidUnCheckedColor = a.getColorStateList(R.styleable.SmoothCheckBox_solidUncheckedColor);
+        solidUnCheckedColor = a.getColorStateList(R.styleable.SmoothCheckBox_scb_solidUncheckedColor);
         if (solidUnCheckedColor == null) {
             solidUnCheckedColor = DEFAULT_SOLID_UNCHECKED_COLOR;
         }
-        solidCheckedColor = a.getColorStateList(R.styleable.SmoothCheckBox_solidCheckedColor);
+        solidCheckedColor = a.getColorStateList(R.styleable.SmoothCheckBox_scb_solidCheckedColor);
         if (solidCheckedColor == null) {
             solidCheckedColor = DEFAULT_SOLID_CHECKED_COLOR;
         }
-        tickWidth = a.getDimensionPixelOffset(R.styleable.SmoothCheckBox_tickWidth, DEFAULT_TICK_WIDTH);
-        tickColor = a.getColorStateList(R.styleable.SmoothCheckBox_tickColor);
+        tickWidth = a.getDimensionPixelOffset(R.styleable.SmoothCheckBox_scb_tickWidth, DEFAULT_TICK_WIDTH);
+        tickColor = a.getColorStateList(R.styleable.SmoothCheckBox_scb_tickColor);
         if (tickColor == null) {
             tickColor = DEFAULT_TICK_COLOR;
         }
-        shouldAnimate = a.getBoolean(R.styleable.SmoothCheckBox_shouldAnimate, DEFAULT_SHOULD_ANIMATE);
-        animDuration = a.getInt(R.styleable.SmoothCheckBox_duration, DEFAULT_ANIM_DURATION);
-        type = a.getInt(R.styleable.SmoothCheckBox_type, TYPE_OVAL);
-        mChecked = a.getBoolean(R.styleable.SmoothCheckBox_checked, DEFAULT_CHECKED);
-        alpha = a.getInt(R.styleable.SmoothCheckBox_alpha, DEFAULT_ALPHA);
+        shouldAnimate = a.getBoolean(R.styleable.SmoothCheckBox_scb_shouldAnimate, DEFAULT_SHOULD_ANIMATE);
+        animDuration = a.getInt(R.styleable.SmoothCheckBox_scb_duration, DEFAULT_ANIM_DURATION);
+        type = a.getInt(R.styleable.SmoothCheckBox_scb_type, TYPE_OVAL);
+        mChecked = a.getBoolean(R.styleable.SmoothCheckBox_scb_checked, DEFAULT_CHECKED);
+        alpha = a.getInt(R.styleable.SmoothCheckBox_scb_alpha, DEFAULT_ALPHA);
         if (alpha < 0) {
             alpha = 0;
         } else if (alpha > 255) {
             alpha = 255;
         }
 
-        radius = a.getDimensionPixelOffset(R.styleable.SmoothCheckBox_radius, -1);
+        radius = a.getDimensionPixelOffset(R.styleable.SmoothCheckBox_scb_radius, -1);
         if (radius < 0) {
             radius = 0;
         }

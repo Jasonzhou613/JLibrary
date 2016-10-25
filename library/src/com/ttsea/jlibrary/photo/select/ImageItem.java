@@ -21,12 +21,17 @@ public class ImageItem implements Serializable {
     public ImageItem(String path) {
         this.path = path;
 
-        File file = new File(path);
-        if (file.exists()) {
-            this.name = file.getName();
-            this.time = file.lastModified();
-        } else {
+        if (path == null || "".equals(path)) {
+            this.name = "";
             this.time = 0;
+        } else {
+            File file = new File(path);
+            if (file.exists()) {
+                this.name = file.getName();
+                this.time = file.lastModified();
+            } else {
+                this.time = 0;
+            }
         }
     }
 

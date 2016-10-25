@@ -10,16 +10,16 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="40dp"
-        app:alpha="255"
-        app:checked="false"
-        app:duration="300"
-        app:radius="20dp"
-        app:shouldAnimate="true"
-        app:solidCheckedColor="@color/smooth_solid_checked_color"
-        app:solidUncheckedColor="@color/smooth_solid_unchecked_color"
-        app:strokeCheckedColor="@color/smooth_border_checked_color"
-        app:strokeUncheckedColor="@color/smooth_border_unchecked_color"
-        app:tickColor="@color/white"
-        app:type="oval"/>
+        app:scb_alpha="255"
+        app:scb_checked="false"
+        app:scb_duration="300"
+        app:scb_radius="20dp"
+        app:scb_shouldAnimate="true"
+        app:scb_solidCheckedColor="@color/smooth_solid_checked_color"
+        app:scb_solidUncheckedColor="@color/smooth_solid_unchecked_color"
+        app:scb_strokeCheckedColor="@color/smooth_border_checked_color"
+        app:scb_strokeUncheckedColor="@color/smooth_border_unchecked_color"
+        app:scb_tickColor="@color/white"
+        app:scb_type="oval"/>
 
 </LinearLayout>
