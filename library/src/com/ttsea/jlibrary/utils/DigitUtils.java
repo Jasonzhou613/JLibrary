@@ -1,6 +1,7 @@
 package com.ttsea.jlibrary.utils;
 
-import com.ttsea.jlibrary.common.JLog;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * Created by Jason on 2016/5/15.
@@ -23,24 +24,21 @@ public class DigitUtils {
      *
      * @param originFloat 原数据
      * @param digitCount  要保留的位数
-     * @return floate
+     * @return float
      */
     public static float getFloat(float originFloat, int digitCount) {
-        String format = "#.";
-        float result = 0;
+        return getFloat(originFloat, digitCount, RoundingMode.DOWN);
+    }
 
-        for (int i = 0; i < digitCount; i++) {
-            format = format + "0";
-        }
-
-        try {
-            java.text.DecimalFormat df = new java.text.DecimalFormat(format);
-            result = Float.parseFloat(df.format(originFloat));
-
-        } catch (Exception e) {
-            JLog.e(TAG, "getFloat, Exception e:" + e.toString());
-        }
-        return result;
+    /**
+     * @param originFloat 原数据
+     * @param digitCount  要保留的位数
+     * @param mode        RoundingMode，可以设置为四舍五入
+     * @return float
+     */
+    public static float getFloat(float originFloat, int digitCount, RoundingMode mode) {
+        BigDecimal bg = new BigDecimal(originFloat).setScale(digitCount, mode);
+        return bg.floatValue();
     }
     // *********************************Float end*********************************//
 }

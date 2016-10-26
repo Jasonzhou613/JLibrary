@@ -14,7 +14,7 @@ import java.net.URL;
 
 /**
  * 下载线程，该线程负责下载内容 <br/>
- * <p>
+ * <p/>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/1/4 9:58 <br/>
  * <b>author:</b> Jason <br/>
@@ -86,7 +86,7 @@ class DownloadThread extends Thread {
         if (downloader.isCancelled() || downloader.isPaused()
                 || isQuite || isComplete) {
             JLog.d(TAG, "threadId:" + threadId + ", downloader has cancelled or paused or quited, download status:"
-                    + downloader.getStatus() + ", id：" + downloader.getId());
+                    + downloader.getStatusStr(downloader.getStatus()) + ", downloaderId：" + downloader.getId());
             return;
         }
         JLog.d(TAG, "threadId:" + threadId + ", start download..."
@@ -189,8 +189,8 @@ class DownloadThread extends Thread {
         }
 
         JLog.d(TAG, "threadId:" + threadId + ", byte so far:" + downloadInfo.getBytes_so_far()
-                + ", need download:" + (downloadInfo.getEnd_bytes() - downloadInfo.getStart_bytes()));
-        JLog.d(TAG, "thread:" + threadId + ", download completed:" + isComplete);
+                + ", need download:" + (downloadInfo.getEnd_bytes() - downloadInfo.getStart_bytes())
+                + ", download completed:" + isComplete);
     }
 
 
@@ -200,12 +200,12 @@ class DownloadThread extends Thread {
         switch (responseCode) {
             case 404:
                 msg = "file not found";
-                downloader.cancel(Downloader.ERROR_HTTP_FILE_NOT_FOUND, "responseCode:" + responseCode, false);
+                downloader.cancel(Downloader.ERROR_HTTP_FILE_NOT_FOUND, "responseCode:" + responseCode, true);
                 break;
 
             default:
                 msg = "ERROR_UNHANDLED_HTTP_CODE";
-                downloader.cancel(Downloader.ERROR_UNHANDLED_HTTP_CODE, "responseCode:" + responseCode, false);
+                downloader.cancel(Downloader.ERROR_UNHANDLED_HTTP_CODE, "responseCode:" + responseCode, true);
                 break;
         }
         JLog.e(TAG, "threadId:" + threadId + ", cancel download, responseCode:" + responseCode + ", msg:" + msg);

@@ -21,7 +21,7 @@ import com.ttsea.jlibrary.utils.Utils;
 
 /**
  * //To do <br/>
- * <p>
+ * <p/>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/9/20 11:07 <br/>
  * <b>author:</b> Jason <br/>
@@ -140,7 +140,7 @@ public class DownloadActivity extends BaseActivity implements View.OnClickListen
         DownloadOption option = new DownloadOption.Builder(mActivity).build();
         option.getBuilder()
                 .setSaveFileMode(SaveFileMode.OVERRIDE)
-                .setExpiredTime(1000 * 60 * 1);
+                .setExpiredTime(0);
         downloader = new Downloader(mActivity, downloaderUrl, option);
 
         downloader.setOnDownloadListener(

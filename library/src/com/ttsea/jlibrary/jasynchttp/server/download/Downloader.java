@@ -7,6 +7,7 @@ import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.jasynchttp.db.DownloadDBHelper;
 import com.ttsea.jlibrary.jasynchttp.server.http.Http;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
+import com.ttsea.jlibrary.utils.DigitUtils;
 import com.ttsea.jlibrary.utils.SdStatusUtils;
 
 import java.io.File;
@@ -20,7 +21,7 @@ import java.util.Map;
 
 /**
  * 下载器，包含多个下载线程<br/>
- * <p>
+ * <p/>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/1/6 <br/>
  * <b>author:</b> Jason <br/>
@@ -388,7 +389,7 @@ public class Downloader implements TaskHandler {
             if (isFileExists) {
                 long timeInterval = System.currentTimeMillis() - file.lastModified();
                 if (file.length() == contentLength && timeInterval < downloadOption.getExpiredTime()) {
-                    JLog.d(TAG, "file already downloaded, downloader will stop.");
+                    JLog.d(TAG, "File already downloaded, downloader will stop.");
                     for (int i = 0; i < threads.size(); i++) {
                         DownloadFileInfo info = threads.get(i).getDownloadInfo();
                         info.setBytes_so_far(average);
@@ -804,12 +805,12 @@ public class Downloader implements TaskHandler {
         switch (responseCode) {
             case 404:
                 msg = getStatusStr(Downloader.ERROR_HTTP_FILE_NOT_FOUND);
-                cancel(Downloader.ERROR_HTTP_FILE_NOT_FOUND, "responseCode:" + responseCode, false);
+                cancel(Downloader.ERROR_HTTP_FILE_NOT_FOUND, "responseCode:" + responseCode, true);
                 break;
 
             default:
                 msg = getStatusStr(Downloader.ERROR_UNHANDLED_HTTP_CODE);
-                cancel(Downloader.ERROR_UNHANDLED_HTTP_CODE, "responseCode:" + responseCode, false);
+                cancel(Downloader.ERROR_UNHANDLED_HTTP_CODE, "responseCode:" + responseCode, true);
                 break;
         }
         JLog.e(TAG, "cancel download, responseCode:" + responseCode + ", msg:" + msg);
@@ -945,7 +946,10 @@ public class Downloader implements TaskHandler {
                     }
 
                     mHandler.postDelayed(downloadingRunnable, DEFAULT_UPDATE_UI_PERIOD);
-                    JLog.d(TAG, "on downloading...,contentLength:" + contentLength + ", totalByteSoFar:" + totalByteSoFar + ", speed:" + speed);
+
+                    float percentage = DigitUtils.getFloat(((float) totalByteSoFar / contentLength) * 100, 2);
+                    JLog.d(TAG, "on downloading...,contentLength:" + contentLength + ", totalByteSoFar:" + totalByteSoFar
+                            + ", speed:" + speed + ", percent:" + percentage + "%");
                     break;
 
                 case ON_DOWNLOAD_COMPLETED://下载完成
