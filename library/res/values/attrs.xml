@@ -118,4 +118,16 @@
     </declare-styleable>
     <!-- com.ttsea.jlibrary.component.widget.SmoothCheckBox attrs start -->
 
+    <!-- com.ttsea.jlibrary.component.widget.ToggleButton attrs start -->
+    <declare-styleable name="ToggleButton">
+        <attr name="tbBorderWidth" format="dimension"/>
+        <attr name="tbOffBorderColor" format="reference|color"/>
+        <attr name="tbOffColor" format="reference|color"/>
+        <attr name="tbOnColor" format="reference|color"/>
+        <attr name="tbSpotColor" format="reference|color"/>
+        <attr name="tbAnimate" format="reference|boolean"/>
+        <attr name="tbAsDefaultOn" format="reference|boolean"/>
+    </declare-styleable>
+    <!-- com.ttsea.jlibrary.component.widget.ToggleButton attrs end -->
+
 </resources>

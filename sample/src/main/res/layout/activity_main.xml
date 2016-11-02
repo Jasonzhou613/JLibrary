@@ -53,6 +53,11 @@
             style="@style/btn_style"
             android:text="@string/smooth_check_box"/>
 
+        <Button
+            android:id="@+id/btnToggleButton"
+            style="@style/btn_style"
+            android:text="@string/toggle_button"/>
+
     </LinearLayout>
 
 </ScrollView>

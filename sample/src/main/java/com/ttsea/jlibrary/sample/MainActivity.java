@@ -28,6 +28,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Button btnTimer;
     private Button btnRoundImage;
     private Button btnCheckBox;
+    private Button btnToggleButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         btnTimer = (Button) findViewById(R.id.btnTimer);
         btnRoundImage = (Button) findViewById(R.id.btnRoundImage);
         btnCheckBox = (Button) findViewById(R.id.btnCheckBox);
+        btnToggleButton = (Button) findViewById(R.id.btnToggleButton);
 
         btnTest.setOnClickListener(this);
         btnAppInfo.setOnClickListener(this);
@@ -57,6 +59,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         btnTimer.setOnClickListener(this);
         btnRoundImage.setOnClickListener(this);
         btnCheckBox.setOnClickListener(this);
+        btnToggleButton.setOnClickListener(this);
     }
 
     @Override
@@ -104,6 +107,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             case R.id.btnCheckBox:
                 intent = new Intent(mActivity, SmoothCheckBoxActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.btnToggleButton:
+                intent = new Intent(mActivity, ToggleButtonActivity.class);
                 startActivity(intent);
                 break;
 

@@ -48,6 +48,9 @@
         <activity
             android:name="com.ttsea.jlibrary.sample.SmoothCheckBoxActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ttsea.jlibrary.sample.ToggleButtonActivity"
+            android:screenOrientation="portrait"/>
 
 
         <!--Photo Activitys start -->

@@ -15,6 +15,7 @@
     <string name="my_timer">timer</string>
     <string name="round_image">round image</string>
     <string name="smooth_check_box">SmoothCheckBox</string>
+    <string name="toggle_button">toggle button</string>
 
     <string name="get_data">get data</string>
     <string name="send_email">send email</string>
