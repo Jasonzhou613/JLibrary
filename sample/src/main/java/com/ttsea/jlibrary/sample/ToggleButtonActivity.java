@@ -6,11 +6,17 @@ import android.view.View;
 
 import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.component.widget.JellyToggle.ColorChangeType;
+import com.ttsea.jlibrary.component.widget.JellyToggle.EaseType;
+import com.ttsea.jlibrary.component.widget.JellyToggle.Jelly;
+import com.ttsea.jlibrary.component.widget.JellyToggle.JellyStyle;
+import com.ttsea.jlibrary.component.widget.JellyToggle.JellyToggleButton;
+import com.ttsea.jlibrary.component.widget.JellyToggle.State;
 import com.ttsea.jlibrary.component.widget.ToggleButton;
 
 /**
  * //To do <br/>
- * <p/>
+ * <p>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2016/11/2 15:45 <br/>
  * <b>author:</b> Jason <br/>
@@ -23,6 +29,7 @@ public class ToggleButtonActivity extends BaseActivity implements View.OnClickLi
     private ToggleButton tbtn01;
     private ToggleButton tbtn02;
     private ToggleButton tbtn03;
+    private JellyToggleButton jtbtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +43,22 @@ public class ToggleButtonActivity extends BaseActivity implements View.OnClickLi
         tbtn01 = (ToggleButton) findViewById(R.id.tbtn01);
         tbtn02 = (ToggleButton) findViewById(R.id.tbtn02);
         tbtn03 = (ToggleButton) findViewById(R.id.tbtn03);
+        jtbtn = (JellyToggleButton) findViewById(R.id.jtbtn);
 
         tbtn01.setOnToggleChanged(this);
         tbtn02.setOnToggleChanged(this);
         tbtn03.setOnToggleChanged(this);
+
+//        jtbtn.setMoveToSameStateCallListener(true);
+//        jtbtn.setColorChangeType(ColorChangeType.RGB);
+//        jtbtn.setJelly(Jelly.RANDOM);
+//        jtbtn.setEaseType(EaseType.EaseInCirc);
+        jtbtn.setOnStateChangeListener(new JellyToggleButton.OnStateChangeListener() {
+            @Override
+            public void onStateChange(float process, State state, JellyToggleButton jtb) {
+                JLog.d(TAG, "state:" + state.name());
+            }
+        });
     }
 
     @Override

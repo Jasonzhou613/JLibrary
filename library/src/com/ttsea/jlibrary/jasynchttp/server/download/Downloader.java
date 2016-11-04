@@ -323,12 +323,12 @@ public class Downloader implements TaskHandler {
             }
 
             //url被重定向
-//            if (!url.getHost().equals(conn.getURL().getHost())) {
-//                // we were redirected!
-//                JLog.e(TAG, "we were redirected, redirected url:" + conn.getURL());
+            if (!url.getHost().equals(conn.getURL().getHost())) {
+                // we were redirected!
+                JLog.e(TAG, "we were redirected, redirected url:" + conn.getURL());
 //                cancel(Downloader.ERROR_TOO_MANY_REDIRECTS);
 //                return;
-//            }
+            }
 
             if (responseCode < 200 || responseCode > 299) {
                 handleErrorResponseCode(responseCode);
