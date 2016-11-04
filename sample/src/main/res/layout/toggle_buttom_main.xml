@@ -46,9 +46,10 @@
 
         <com.ttsea.jlibrary.component.widget.JellyToggle.JellyToggleButton
             android:id="@+id/jtbtn"
-            android:layout_width="60dp"
+            android:layout_width="75dp"
             android:layout_height="wrap_content"
             app:jtbBackgroundMeasureRatioValue="1.0"
+            app:jtbBackgroundRadius="12dp"
             app:jtbBezierScaleRatioValue="0.45"
             app:jtbColorChangeType="rgb"
             app:jtbDraggable="true"
@@ -65,7 +66,8 @@
             app:jtbRightTextSize="12sp"
             app:jtbRightThumbColor="@color/red"
             app:jtbStretchDistanceRatioValue="0.2"
-            app:jtbThumbRadius="0dp"
+            app:jtbTextMarginRight="8dp"
+            app:jtbThumbRadius="30dp"
             app:jtbTouchMoveRatioValue="3.0"
             app:paddingEnd="20dp"
             app:paddingStart="20dp"/>
