@@ -1,0 +1,31 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.ttsea.jlibrary.component.pageflow.PageIndicator
+            android:id="@+id/pIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@color/transparent"
+            android:padding="10dp"
+            app:piActiveColor="@color/white"
+            app:piActiveStyle="fill"
+            app:piInActiveColor="@color/silver"
+            app:piInActiveStyle="stroke"
+            app:piIndicatorHeight="4dp"
+            app:piIndicatorSpace="10dp"
+            app:piIndicatorWidth="16dp"
+            app:piOrientation="horizontal"
+            app:piRadius="2dp"
+            app:piStrokeWidth="1dp"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

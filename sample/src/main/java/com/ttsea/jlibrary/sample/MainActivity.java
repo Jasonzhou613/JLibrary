@@ -29,6 +29,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Button btnRoundImage;
     private Button btnCheckBox;
     private Button btnToggleButton;
+    private Button btnPageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         btnRoundImage = (Button) findViewById(R.id.btnRoundImage);
         btnCheckBox = (Button) findViewById(R.id.btnCheckBox);
         btnToggleButton = (Button) findViewById(R.id.btnToggleButton);
+        btnPageView = (Button) findViewById(R.id.btnPageView);
 
         btnTest.setOnClickListener(this);
         btnAppInfo.setOnClickListener(this);
@@ -60,6 +62,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         btnRoundImage.setOnClickListener(this);
         btnCheckBox.setOnClickListener(this);
         btnToggleButton.setOnClickListener(this);
+        btnPageView.setOnClickListener(this);
     }
 
     @Override
@@ -112,6 +115,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             case R.id.btnToggleButton:
                 intent = new Intent(mActivity, ToggleButtonActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.btnPageView:
+                intent = new Intent(mActivity, PageViewActivity.class);
                 startActivity(intent);
                 break;
 

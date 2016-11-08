@@ -51,6 +51,9 @@
         <activity
             android:name="com.ttsea.jlibrary.sample.ToggleButtonActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.ttsea.jlibrary.sample.PageViewActivity"
+            android:screenOrientation="portrait"/>
 
 
         <!--Photo Activitys start -->

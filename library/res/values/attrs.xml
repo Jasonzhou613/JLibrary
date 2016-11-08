@@ -130,6 +130,7 @@
     </declare-styleable>
     <!-- com.ttsea.jlibrary.component.widget.ToggleButton attrs end -->
 
+    <!-- com.ttsea.jlibrary.component.widget.JellyToggle.JellyToggleButton attrs start -->
     <declare-styleable name="JellyToggleButton">
         <attr name="jtbLeftBackgroundColor" format="color|reference"/>
         <attr name="jtbRightBackgroundColor" format="color|reference"/>
@@ -226,5 +227,31 @@
         <attr name="jtbDraggable" format="boolean|reference"/>
 
     </declare-styleable>
+    <!-- com.ttsea.jlibrary.component.widget.JellyToggle.JellyToggleButton attrs start -->
+
+
+    <!-- com.ttsea.jlibrary.component.pageflow.PageIndicator attrs start -->
+    <declare-styleable name="PageIndicator">
+        <attr name="piIndicatorWidth" format="dimension|reference"/>
+        <attr name="piIndicatorHeight" format="dimension|reference"/>
+        <attr name="piRadius" format="dimension|reference"/>
+        <attr name="piStrokeWidth" format="dimension|reference"/>
+        <attr name="piIndicatorSpace" format="dimension|reference"/>
+        <attr name="piActiveColor" format="color|reference"/>
+        <attr name="piInActiveColor" format="color|reference"/>
+        <attr name="piOrientation" format="enum">
+            <enum name="horizontal" value="0"/>
+            <enum name="vertical" value="1"/>
+        </attr>
+        <attr name="piActiveStyle" format="enum">
+            <enum name="stroke" value="0"/>
+            <enum name="fill" value="1"/>
+        </attr>
+        <attr name="piInActiveStyle" format="enum">
+            <enum name="stroke" value="0"/>
+            <enum name="fill" value="1"/>
+        </attr>
+    </declare-styleable>
+    <!-- com.ttsea.jlibrary.component.pageflow.PageIndicator attrs start -->
 
 </resources>

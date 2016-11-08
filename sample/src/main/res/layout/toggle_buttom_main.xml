@@ -48,6 +48,7 @@
             android:id="@+id/jtbtn"
             android:layout_width="75dp"
             android:layout_height="wrap_content"
+            android:layout_margin="16dp"
             app:jtbBackgroundMeasureRatioValue="1.0"
             app:jtbBackgroundRadius="12dp"
             app:jtbBezierScaleRatioValue="0.45"
