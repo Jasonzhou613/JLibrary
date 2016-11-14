@@ -1,10 +1,23 @@
 package com.ttsea.jlibrary.sample;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.ttsea.jlibrary.base.BaseActivity;
+import com.ttsea.jlibrary.base.JBaseAdapter;
+import com.ttsea.jlibrary.common.JImageLoader;
+import com.ttsea.jlibrary.common.JToast;
+import com.ttsea.jlibrary.component.pageflow.PageIndicator;
+import com.ttsea.jlibrary.component.pageflow.PageView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * //To do <br/>
@@ -18,6 +31,24 @@ import com.ttsea.jlibrary.base.BaseActivity;
 public class PageViewActivity extends BaseActivity implements View.OnClickListener {
     private final String TAG = "PageViewActivity";
 
+    private RelativeLayout llyParentView;
+    private PageView pageView;
+    private PageIndicator indicator;
+
+    private List<String> mList;
+    private PageViewAdapter mAdapter;
+
+    private final String[] testImages = new String[]{
+            "http://hws002.b0.upaiyun.com/team/2162187/20160820/859a27c6a61224fdbc140bf7b6f99f4d",
+            "http://hws002.b0.upaiyun.com/team/2162187/20160820/fc90c4c9bb54dae3d63642cf20cbbc12",
+            "http://hws002.b0.upaiyun.com/team/2162187/20160820/8c748752d963790074bfae4302d0a84f",
+            "http://hws002.b0.upaiyun.com/team/2162187/20160820/7f39e67fb78adcbaad955b4466f74fe5",
+            "file:///storage/sdcard0/test-image/ratio/IMG_0572.JPG",
+            "file:///storage/sdcard0/test-image/big-pic/中国政区2500.jpg",
+            "http://hws002.b0.upaiyun.com/team/2162187/20160820/677ef48b95d71957495a745bc6e64263",
+            "http://hws002.b0.upaiyun.com/team/2162187/20160820/fc90c4c9bb54dae3d63642cf20cbbc12"
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,13 +59,29 @@ public class PageViewActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initView() {
-
-
+        llyParentView = (RelativeLayout) findViewById(R.id.llyParentView);
+        pageView = (PageView) findViewById(R.id.pageView);
+        indicator = (PageIndicator) findViewById(R.id.pvIndicator);
     }
 
     private void initData() {
-    }
+        mList = new ArrayList<>();
 
+        for (int i = 0; i < testImages.length; i++) {
+            mList.add(testImages[i]);
+        }
+        mAdapter = new PageViewAdapter(mActivity, mList);
+        pageView.setAdapter(mAdapter);
+        pageView.setViewGroup(llyParentView);
+
+        pageView.setIndicator(indicator);
+        pageView.setOnViewSwitchListener(new PageView.OnViewSwitchListener() {
+            @Override
+            public void onSwitched(View view, int position) {
+                JToast.makeTextCenter(mActivity, "ViewSwitch: " + position);
+            }
+        });
+    }
 
     @Override
     public void onClick(View v) {
@@ -48,5 +95,36 @@ public class PageViewActivity extends BaseActivity implements View.OnClickListen
             default:
                 break;
         }
+    }
+
+    private class PageViewAdapter extends JBaseAdapter<String> {
+
+        PageViewAdapter(Context context, List<String> list) {
+            super(context, list);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder;
+            if (convertView == null || convertView.getTag() == null || (!(convertView.getTag() instanceof ViewHolder))) {
+                holder = new ViewHolder();
+                convertView = mInflater.inflate(R.layout.page_view_item, parent, false);
+                holder.ivImage = (ImageView) convertView.findViewById(R.id.ivImage);
+                holder.tvDes = (TextView) convertView.findViewById(R.id.tvDes);
+                convertView.setTag(String.valueOf(position));
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            holder.tvDes.setText(String.valueOf(position + 1));
+            JImageLoader.getInstance().displayImage(mActivity, mList.get(position), holder.ivImage);
+
+            return convertView;
+        }
+    }
+
+    private static class ViewHolder {
+        ImageView ivImage;
+        TextView tvDes;
     }
 }

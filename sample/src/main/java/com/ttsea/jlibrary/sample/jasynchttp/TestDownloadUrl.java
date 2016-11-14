@@ -14,7 +14,9 @@ class TestDownloadUrl {
     //public static final String TEMP_URL = "http://192.168.3.102/debug/download/07.zip";
 //    public static final String TEMP_URL = "http://shouji.360tpcdn.com/160514/98c8f2738d4e1af4362a8f19b78389d6/com.huiweishang.ws_401.apk";
     //重定向了
-    public static final String TEMP_URL = "http://www.wandoujia.com/apps/com.huiweishang.ws/download";
+    public static final String TEMP_URL = "http://ucdl.25pp.com/fs08/2016/11/11/1/110_47a64f89caac5f7d6bff2c4602f9a338.apk";
+//    public static final String TEMP_URL = "http://server.m.pp.cn/download/apk?appId=6617854&custom=0&ch_src=pp_dev&ch=default";
+//    public static final String TEMP_URL = "http://www.wandoujia.com/apps/com.huiweishang.ws/download";
     public static final String TEMP_URL2 = "http://nc-apk.wdjcdn.com/7/82/aaedb731c174bf407929cbc0a6aec827.apk";
 
     /**

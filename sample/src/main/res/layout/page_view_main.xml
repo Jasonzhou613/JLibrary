@@ -5,27 +5,86 @@
               android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/llyParentView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="200dp">
+
+        <com.ttsea.jlibrary.component.pageflow.PageView
+            android:id="@+id/pageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:pvBufferSize="3"
+            app:pvCanLoop="true"
+            app:pvLoopCount="-1"/>
 
         <com.ttsea.jlibrary.component.pageflow.PageIndicator
-            android:id="@+id/pIndicator"
+            android:id="@+id/pvIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@color/transparent"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="@color/translucent22"
             android:padding="10dp"
             app:piActiveColor="@color/white"
             app:piActiveStyle="fill"
             app:piInActiveColor="@color/silver"
             app:piInActiveStyle="stroke"
-            app:piIndicatorHeight="4dp"
+            app:piIndicatorHeight="6dp"
             app:piIndicatorSpace="10dp"
             app:piIndicatorWidth="16dp"
             app:piOrientation="horizontal"
-            app:piRadius="2dp"
+            app:piRadius="3dp"
             app:piStrokeWidth="1dp"/>
 
     </RelativeLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+
+            <Button
+                style="@style/btn_style"
+                android:layout_marginTop="30dp"/>
+
+            <Button
+                style="@style/btn_style"
+                android:layout_marginTop="30dp"/>
+
+            <Button
+                style="@style/btn_style"
+                android:layout_marginTop="30dp"/>
+
+            <Button
+                style="@style/btn_style"
+                android:layout_marginTop="30dp"/>
+
+            <Button
+                style="@style/btn_style"
+                android:layout_marginTop="30dp"/>
+
+            <Button
+                style="@style/btn_style"
+                android:layout_marginTop="30dp"/>
+
+            <Button
+                style="@style/btn_style"
+                android:layout_marginTop="30dp"/>
+
+            <Button
+                style="@style/btn_style"
+                android:layout_marginTop="30dp"/>
+
+            <Button
+                style="@style/btn_style"
+                android:layout_marginTop="30dp"/>
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

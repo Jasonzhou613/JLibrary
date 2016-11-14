@@ -15,7 +15,7 @@ import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.common.JLog;
 
 
-public class PageIndicator extends View implements Indicator {
+public class PageIndicator extends Indicator {
     private final String TAG = "PageIndicator";
 
     public static final int STYLE_STROKE = 0;
@@ -55,14 +55,18 @@ public class PageIndicator extends View implements Indicator {
     private Paint mPaintInActive;
     private PageView pageView;
     private RectF rectF;
-    private int mCount = 3;
+    private int mCount = 2;
 
     public PageIndicator(Context context) {
         this(context, null);
     }
 
     public PageIndicator(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
+    }
+
+    public PageIndicator(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
         mContext = context;
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.PageIndicator);
@@ -237,8 +241,6 @@ public class PageIndicator extends View implements Indicator {
 
     @Override
     public void onScrolled(int h, int v, int oldh, int oldv) {
-//        setVisibility(View.VISIBLE);
-//        resetTimer();
 //        indicatorWidth = pageView.getWidth();
 //        if (pageView.getViewsCount() * indicatorWidth != 0) {
 //            currentScroll = h % (pageView.getViewsCount() * indicatorWidth);
@@ -376,6 +378,10 @@ public class PageIndicator extends View implements Indicator {
             mCount = pageView.getCount();
         }
         return mCount;
+    }
+
+    public void setCount(int count) {
+        this.mCount = count;
     }
 
     public void setPageView(PageView pageView) {

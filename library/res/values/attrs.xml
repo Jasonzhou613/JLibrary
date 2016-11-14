@@ -252,6 +252,16 @@
             <enum name="fill" value="1"/>
         </attr>
     </declare-styleable>
-    <!-- com.ttsea.jlibrary.component.pageflow.PageIndicator attrs start -->
+    <!-- com.ttsea.jlibrary.component.pageflow.PageIndicator attrs end -->
+
+    <!-- com.ttsea.jlibrary.component.pageflow.PageView attrs start -->
+    <declare-styleable name="PageView">
+        <attr name="pvCanLoop" format="boolean"/>
+        <attr name="pvLoopCount" format="integer"/>
+        <attr name="pvBufferSize" format="integer"/>
+        <attr name="pvAutoPlay" format="boolean"/>
+        <attr name="pvPlayInterval" format="integer|reference"/>
+    </declare-styleable>
+    <!-- com.ttsea.jlibrary.component.pageflow.PageView attrs end -->
 
 </resources>
