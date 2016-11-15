@@ -568,6 +568,14 @@ public class PageView extends AdapterView<Adapter> {
     }
 
     @Override
+    protected void onScrollChanged(int h, int v, int oldh, int oldv) {
+        super.onScrollChanged(h, v, oldh, oldv);
+        if (mIndicator != null) {
+            mIndicator.onScrolled(h, v, oldh, oldv);
+        }
+    }
+
+    @Override
     public Adapter getAdapter() {
         return mAdapter;
     }
@@ -636,14 +644,6 @@ public class PageView extends AdapterView<Adapter> {
         return index;
     }
 
-    private int getCurrentAdapterIndex() {
-        int index = (getLeftMostItemIndex() + bufferSize) % getCount();
-        if (index < 0) {
-            index = getCount() + index;
-        }
-        return index;
-    }
-
     // 用于测试，需要adapter配合，将view的Tag设置为position
     private void printlnViewsId() {
 //        String ids = "";
@@ -656,6 +656,14 @@ public class PageView extends AdapterView<Adapter> {
 //                + ", mRightMostItemIndex:" + getRightMostItemIndex()
 //                + ", mCurrentAdapterIndex:" + getCurrentAdapterIndex()
 //                + ", scrollX:" + getScrollX());
+    }
+
+    public int getCurrentAdapterIndex() {
+        int index = (getLeftMostItemIndex() + bufferSize) % getCount();
+        if (index < 0) {
+            index = getCount() + index;
+        }
+        return index;
     }
 
     @Override

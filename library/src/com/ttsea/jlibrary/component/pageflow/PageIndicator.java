@@ -27,9 +27,9 @@ public class PageIndicator extends Indicator {
     private final int DEFAULT_HEIGHT = 12;
     private final int DEFAULT_RADIUS = 6;
     private final int DEFAULT_STROKE_WIDTH = 2;
-    private final int DEFAULT_INDICATOR_SPACE = 2 * DEFAULT_WIDTH;
+    private final int DEFAULT_INDICATOR_SPACE = (3 * DEFAULT_WIDTH) / 2;
     private final int DEFAULT_ACTIVE_COLOR = 0xFFFFFFFF;
-    private final int DEFAULT_INACTIVE_COLOR = 0xFFC0C0C0;
+    private final int DEFAULT_INACTIVE_COLOR = 0xFF808080;
 
     /** 两个单个指示器宽度 */
     private int indicatorWidth = DEFAULT_WIDTH;
@@ -54,8 +54,10 @@ public class PageIndicator extends Indicator {
     private Paint mPaintActive;
     private Paint mPaintInActive;
     private PageView pageView;
-    private RectF rectF;
+    private RectF inActiveRectF;
+    private RectF activeRectF;
     private int mCount = 2;
+    private float mCurrentScroll = 0;
 
     public PageIndicator(Context context) {
         this(context, null);
@@ -109,7 +111,8 @@ public class PageIndicator extends Indicator {
     private void init() {
         mPaintActive = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaintInActive = new Paint(Paint.ANTI_ALIAS_FLAG);
-        rectF = new RectF();
+        inActiveRectF = new RectF();
+        activeRectF = new RectF();
         updatePaints();
     }
 
@@ -208,7 +211,8 @@ public class PageIndicator extends Indicator {
 
         int leftPadding = getPaddingLeft();
         int topPadding = getPaddingTop();
-        rectF.setEmpty();
+        inActiveRectF.setEmpty();
+        activeRectF.setEmpty();
 
         if (orientation == ORIENTATION_VERTICAL) {
             for (int i = 0; i < getCount(); i++) {
@@ -216,40 +220,50 @@ public class PageIndicator extends Indicator {
                 float t = (float) topPadding + (i * (indicatorHeight + indicatorSpace));
                 float r = l + indicatorWidth;
                 float b = t + indicatorHeight;
-                rectF.set(l, t, r, b);
+                inActiveRectF.set(l, t, r, b);
 
-                canvas.drawRoundRect(rectF, radius, radius, mPaintInActive);
+                canvas.drawRoundRect(inActiveRectF, radius, radius, mPaintInActive);
             }
+            activeRectF.set(leftPadding, topPadding + mCurrentScroll, leftPadding + indicatorWidth, topPadding + mCurrentScroll + indicatorHeight);
+            canvas.drawRoundRect(activeRectF, radius, radius, mPaintActive);
+
         } else {
             for (int i = 0; i < getCount(); i++) {
                 float l = (float) leftPadding + i * (indicatorWidth + indicatorSpace);
                 float t = (float) topPadding;
                 float r = l + indicatorWidth;
                 float b = t + indicatorHeight;
-                rectF.set(l, t, r, b);
+                inActiveRectF.set(l, t, r, b);
 
-                canvas.drawRoundRect(rectF, radius, radius, mPaintInActive);
+                canvas.drawRoundRect(inActiveRectF, radius, radius, mPaintInActive);
             }
+            activeRectF.set(leftPadding + mCurrentScroll, topPadding, leftPadding + mCurrentScroll + indicatorWidth, topPadding + indicatorHeight);
+            canvas.drawRoundRect(activeRectF, radius, radius, mPaintActive);
         }
     }
-
 
     @Override
     public void onSwitched(View view, int position) {
     }
 
-
     @Override
     public void onScrolled(int h, int v, int oldh, int oldv) {
-//        indicatorWidth = pageView.getWidth();
-//        if (pageView.getViewsCount() * indicatorWidth != 0) {
-//            currentScroll = h % (pageView.getViewsCount() * indicatorWidth);
-//        } else {
-//            currentScroll = h;
-//        }
+        if (pageView != null && pageView.getWidth() != 0 && orientation == ORIENTATION_HORIZONTAL) {
+
+            float scrollPercentage = ((float) (pageView.getScrollX() % pageView.getWidth())) / pageView.getWidth();
+            float offset = (indicatorSpace + indicatorWidth) * scrollPercentage;
+            mCurrentScroll = pageView.getCurrentAdapterIndex() * (indicatorSpace + indicatorWidth) + offset;
+            JLog.d(TAG, "adapterIndex:" + pageView.getCurrentAdapterIndex() + ", offset:" + offset + ", mCurrentScroll:" + mCurrentScroll);
+
+        } else if (pageView != null && pageView.getWidth() != 0 && orientation == ORIENTATION_VERTICAL) {
+            float scrollPercentage = ((float) (pageView.getScrollX() % pageView.getWidth())) / pageView.getWidth();
+            float offset = (indicatorSpace + indicatorHeight) * scrollPercentage;
+            mCurrentScroll = pageView.getCurrentAdapterIndex() * (indicatorSpace + indicatorHeight) + offset;
+            JLog.d(TAG, "adapterIndex:" + pageView.getCurrentAdapterIndex() + ", offset:" + offset + ", mCurrentScroll:" + mCurrentScroll);
+        }
+
         invalidate();
     }
-
 
     public int getIndicatorWidth() {
         return indicatorWidth;
