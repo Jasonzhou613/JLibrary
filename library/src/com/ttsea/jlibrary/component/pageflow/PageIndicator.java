@@ -248,20 +248,15 @@ public class PageIndicator extends Indicator {
 
     @Override
     public void onScrolled(int h, int v, int oldh, int oldv) {
-        if (pageView != null && pageView.getWidth() != 0 && orientation == ORIENTATION_HORIZONTAL) {
-
-            float scrollPercentage = ((float) (pageView.getScrollX() % pageView.getWidth())) / pageView.getWidth();
-            float offset = (indicatorSpace + indicatorWidth) * scrollPercentage;
-            mCurrentScroll = pageView.getCurrentAdapterIndex() * (indicatorSpace + indicatorWidth) + offset;
-            JLog.d(TAG, "adapterIndex:" + pageView.getCurrentAdapterIndex() + ", offset:" + offset + ", mCurrentScroll:" + mCurrentScroll);
-
-        } else if (pageView != null && pageView.getWidth() != 0 && orientation == ORIENTATION_VERTICAL) {
-            float scrollPercentage = ((float) (pageView.getScrollX() % pageView.getWidth())) / pageView.getWidth();
-            float offset = (indicatorSpace + indicatorHeight) * scrollPercentage;
-            mCurrentScroll = pageView.getCurrentAdapterIndex() * (indicatorSpace + indicatorHeight) + offset;
-            JLog.d(TAG, "adapterIndex:" + pageView.getCurrentAdapterIndex() + ", offset:" + offset + ", mCurrentScroll:" + mCurrentScroll);
+        JLog.d(TAG, "h:" + h + ", oldh:" + oldh);
+        if (pageView == null || pageView.getWidth() == 0) {
+            return;
         }
-
+        if (pageView.getViewsCount() * pageView.getWidth() != 0) {
+            mCurrentScroll = h % (pageView.getViewsCount() * pageView.getWidth());
+        } else {
+            mCurrentScroll = h;
+        }
         invalidate();
     }
 

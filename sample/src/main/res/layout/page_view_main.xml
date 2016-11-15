@@ -13,7 +13,7 @@
             android:id="@+id/pageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:pvAutoPlay="true"
+            app:pvAutoPlay="false"
             app:pvBufferSize="3"
             app:pvCanLoop="true"
             app:pvLoopCount="-1"

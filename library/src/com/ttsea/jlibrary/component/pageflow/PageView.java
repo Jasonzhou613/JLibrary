@@ -81,6 +81,7 @@ public class PageView extends AdapterView<Adapter> {
     private int mCurrentViewIndex = 0;
     private int mRightMostItemIndex = 0;
     private int mLeftMostItemIndex = 0;
+    private int mCurrentAdapterIndex = 0;
     /** 当前已循环过的次数 */
     private int mCurrentLoopCount = 0;
     private int mMaximumVelocity;
@@ -93,7 +94,7 @@ public class PageView extends AdapterView<Adapter> {
      * The current scroll state. One of
      * {@link AbsListView.OnScrollListener#SCROLL_STATE_TOUCH_SCROLL}
      * or {@link AbsListView.OnScrollListener#SCROLL_STATE_IDLE}
-     * or {@link AbsListView.OnScrollListener#SCROLL_STATE_IDLE}
+     * or {@link AbsListView.OnScrollListener#SCROLL_STATE_FLING}
      */
     private int mScrollState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
     private float mLastMotionX;
@@ -396,6 +397,7 @@ public class PageView extends AdapterView<Adapter> {
 
         if (whichScreen > mCurrentViewIndex) {
             mLastScrollDirection = 1;
+            mCurrentAdapterIndex++;
             //轮播一圈
             if (getCurrentAdapterIndex() == (getCount() - 1)
                     && mCurrentLoopCount < Integer.MAX_VALUE) {
@@ -404,6 +406,7 @@ public class PageView extends AdapterView<Adapter> {
             }
         } else if (whichScreen < mCurrentViewIndex) {
             mLastScrollDirection = -1;
+            mCurrentAdapterIndex--;
         } else {
             mLastScrollDirection = 0;
         }
@@ -571,7 +574,19 @@ public class PageView extends AdapterView<Adapter> {
     protected void onScrollChanged(int h, int v, int oldh, int oldv) {
         super.onScrollChanged(h, v, oldh, oldv);
         if (mIndicator != null) {
-            mIndicator.onScrolled(h, v, oldh, oldv);
+            int hPerceived = h + (mCurrentAdapterIndex - mCurrentViewIndex) * getWidth();
+
+            if (mCurrentAdapterIndex % bufferSize == bufferSize - 1 && mCurrentAdapterIndex > mCurrentViewIndex) {
+                oldh = 0;
+                hPerceived = 0;
+            }
+
+            if (mCurrentAdapterIndex % bufferSize == 0 && mCurrentAdapterIndex < mCurrentViewIndex)
+                hPerceived = h + (bufferSize - 1 - bufferSize) * getWidth();
+
+
+            mIndicator.onScrolled(hPerceived, v, oldh, oldv);
+
         }
     }
 
@@ -646,23 +661,24 @@ public class PageView extends AdapterView<Adapter> {
 
     // 用于测试，需要adapter配合，将view的Tag设置为position
     private void printlnViewsId() {
-//        String ids = "";
-//        for (int i = 0; i < mLoadedViews.size(); i++) {
-//            View view = mLoadedViews.get(i);
-//            ids = ids + ", " + String.valueOf(view.getTag());
-//        }
-//        JLog.d(TAG, "view ids:" + ids + ", mCurrentViewIndex:" + mCurrentViewIndex
-//                + ", mLeftMostItemIndex:" + getLeftMostItemIndex()
-//                + ", mRightMostItemIndex:" + getRightMostItemIndex()
-//                + ", mCurrentAdapterIndex:" + getCurrentAdapterIndex()
-//                + ", scrollX:" + getScrollX());
+        String ids = "";
+        for (int i = 0; i < mLoadedViews.size(); i++) {
+            View view = mLoadedViews.get(i);
+            ids = ids + ", " + String.valueOf(view.getTag());
+        }
+        JLog.d(TAG, "view ids:" + ids + ", mCurrentViewIndex:" + mCurrentViewIndex
+                + ", mLeftMostItemIndex:" + getLeftMostItemIndex()
+                + ", mRightMostItemIndex:" + getRightMostItemIndex()
+                + ", mCurrentAdapterIndex:" + getCurrentAdapterIndex()
+                + ", scrollX:" + getScrollX());
     }
 
     public int getCurrentAdapterIndex() {
-        int index = (getLeftMostItemIndex() + bufferSize) % getCount();
+        int index = mCurrentAdapterIndex % getCount();
         if (index < 0) {
             index = getCount() + index;
         }
+        mCurrentAdapterIndex = index;
         return index;
     }
 
