@@ -8,8 +8,8 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 
 import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.common.JLog;
@@ -57,6 +57,7 @@ public class PageIndicator extends Indicator {
     private RectF inActiveRectF;
     private RectF activeRectF;
     private int mCount = 2;
+    private int mCurrentIndicatorIndex = 0;
     private float mCurrentScroll = 0;
 
     public PageIndicator(Context context) {
@@ -168,7 +169,6 @@ public class PageIndicator extends Indicator {
                 result = Math.min(result, specSize);
             }
         }
-        Log.d(TAG, "width:" + result);
         return result;
     }
 
@@ -201,7 +201,6 @@ public class PageIndicator extends Indicator {
                 result = Math.min(result, specSize);
             }
         }
-        Log.d(TAG, "height:" + result);
         return result;
     }
 
@@ -244,19 +243,37 @@ public class PageIndicator extends Indicator {
 
     @Override
     public void onSwitched(View view, int position) {
+        mCurrentIndicatorIndex = position;
+        JLog.d(TAG, "mCurrentIndicatorIndex:" + mCurrentIndicatorIndex);
     }
 
     @Override
     public void onScrolled(int h, int v, int oldh, int oldv) {
-        JLog.d(TAG, "h:" + h + ", oldh:" + oldh);
         if (pageView == null || pageView.getWidth() == 0) {
             return;
         }
-        if (pageView.getViewsCount() * pageView.getWidth() != 0) {
-            mCurrentScroll = h % (pageView.getViewsCount() * pageView.getWidth());
-        } else {
-            mCurrentScroll = h;
+
+        int dx = oldh - h;
+        float scrollPercentage = 0.0f;
+        float offset = 0.0f;
+
+        if (orientation == ORIENTATION_HORIZONTAL) {
+            if (pageView.getScrollState() == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                scrollPercentage = ((float) dx) / pageView.getWidth();
+                offset = (indicatorSpace + indicatorWidth) * scrollPercentage;
+                mCurrentScroll = mCurrentIndicatorIndex * (indicatorSpace + indicatorWidth) + offset;
+            } else {
+
+                scrollPercentage = ((float) dx) / pageView.getWidth();
+                offset = (indicatorSpace + indicatorWidth) * scrollPercentage;
+                mCurrentScroll = mCurrentIndicatorIndex * (indicatorSpace + indicatorWidth) + offset;
+            }
+            JLog.d(TAG, "adapterIndex:" + pageView.getCurrentAdapterIndex() + ", offset:" + offset + ", mCurrentScroll:" + mCurrentScroll);
+
+        } else if (orientation == ORIENTATION_VERTICAL) {
+
         }
+
         invalidate();
     }
 

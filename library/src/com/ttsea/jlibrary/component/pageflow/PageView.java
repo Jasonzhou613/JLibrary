@@ -37,12 +37,6 @@ import com.ttsea.jlibrary.common.JLog;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-
-/**
- * viewflow
- * <p/>
- * Andy Update By 2014-3-18
- **/
 public class PageView extends AdapterView<Adapter> {
     private final String TAG = "PageView";
     private final String METHOD = "method";
@@ -230,6 +224,7 @@ public class PageView extends AdapterView<Adapter> {
         if (getChildCount() == 0) {
             return false;
         }
+
         if (mVelocityTracker == null) {
             mVelocityTracker = VelocityTracker.obtain();
         }
@@ -574,19 +569,7 @@ public class PageView extends AdapterView<Adapter> {
     protected void onScrollChanged(int h, int v, int oldh, int oldv) {
         super.onScrollChanged(h, v, oldh, oldv);
         if (mIndicator != null) {
-            int hPerceived = h + (mCurrentAdapterIndex - mCurrentViewIndex) * getWidth();
-
-            if (mCurrentAdapterIndex % bufferSize == bufferSize - 1 && mCurrentAdapterIndex > mCurrentViewIndex) {
-                oldh = 0;
-                hPerceived = 0;
-            }
-
-            if (mCurrentAdapterIndex % bufferSize == 0 && mCurrentAdapterIndex < mCurrentViewIndex)
-                hPerceived = h + (bufferSize - 1 - bufferSize) * getWidth();
-
-
-            mIndicator.onScrolled(hPerceived, v, oldh, oldv);
-
+            mIndicator.onScrolled(h, v, oldh, oldv);
         }
     }
 
@@ -614,7 +597,7 @@ public class PageView extends AdapterView<Adapter> {
             mIndicator.setVisibility(View.VISIBLE);
         }
         mAdapter.registerDataSetObserver(mDataSetObserver);
-        resetFocus(position);
+        setSelection(position);
     }
 
     @Override
@@ -624,7 +607,6 @@ public class PageView extends AdapterView<Adapter> {
         }
         return mLoadedViews.get(mCurrentViewIndex);
     }
-
 
     @Override
     public void setSelection(int position) {
@@ -661,16 +643,16 @@ public class PageView extends AdapterView<Adapter> {
 
     // 用于测试，需要adapter配合，将view的Tag设置为position
     private void printlnViewsId() {
-        String ids = "";
-        for (int i = 0; i < mLoadedViews.size(); i++) {
-            View view = mLoadedViews.get(i);
-            ids = ids + ", " + String.valueOf(view.getTag());
-        }
-        JLog.d(TAG, "view ids:" + ids + ", mCurrentViewIndex:" + mCurrentViewIndex
-                + ", mLeftMostItemIndex:" + getLeftMostItemIndex()
-                + ", mRightMostItemIndex:" + getRightMostItemIndex()
-                + ", mCurrentAdapterIndex:" + getCurrentAdapterIndex()
-                + ", scrollX:" + getScrollX());
+//        String ids = "";
+//        for (int i = 0; i < mLoadedViews.size(); i++) {
+//            View view = mLoadedViews.get(i);
+//            ids = ids + ", " + String.valueOf(view.getTag());
+//        }
+//        JLog.d(TAG, "view ids:" + ids + ", mCurrentViewIndex:" + mCurrentViewIndex
+//                + ", mLeftMostItemIndex:" + getLeftMostItemIndex()
+//                + ", mRightMostItemIndex:" + getRightMostItemIndex()
+//                + ", mCurrentAdapterIndex:" + getCurrentAdapterIndex()
+//                + ", scrollX:" + getScrollX());
     }
 
     public int getCurrentAdapterIndex() {
@@ -767,6 +749,10 @@ public class PageView extends AdapterView<Adapter> {
             indicator.setPageView(this);
         }
         this.mIndicator = indicator;
+    }
+
+    public int getScrollState() {
+        return mScrollState;
     }
 
     public OnViewSwitchListener getOnViewSwitchListener() {

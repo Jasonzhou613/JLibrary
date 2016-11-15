@@ -71,8 +71,6 @@ public class PageViewActivity extends BaseActivity implements View.OnClickListen
         for (int i = 0; i < testImages.length; i++) {
             mList.add(testImages[i]);
         }
-        mAdapter = new PageViewAdapter(mActivity, mList);
-        pageView.setAdapter(mAdapter);
         pageView.setViewGroup(llyParentView);
 
         pageView.setIndicator(indicator);
@@ -83,6 +81,8 @@ public class PageViewActivity extends BaseActivity implements View.OnClickListen
                 JLog.d(TAG, "viewSwitch: " + (position + 1));
             }
         });
+        mAdapter = new PageViewAdapter(mActivity, mList);
+        pageView.setAdapter(mAdapter);
     }
 
     @Override
