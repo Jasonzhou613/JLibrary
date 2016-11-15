@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
 import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -48,6 +49,7 @@ public class PageView extends AdapterView<Adapter> {
 
     private final boolean DEFAULT_CAN_LOOP = true;
     private final boolean DEFAULT_AUTO_PLAY = true;
+    private final int NEXT_PAGE = 0x001;
     private final int DEFAULT_LOOP_COUNT = -1;
     private final int DEFAULT_BUFFER_SIZE = 2;
     private final int DEFAULT_PLAY_INTERVAL = 3000;
@@ -64,7 +66,7 @@ public class PageView extends AdapterView<Adapter> {
     /** 是否自动播放 */
     private boolean autoPlay = DEFAULT_AUTO_PLAY;
     /** 自动播放间隔 ms */
-    private int playInterval = DEFAULT_PLAY_INTERVAL;
+    private int playIntervalMs = DEFAULT_PLAY_INTERVAL;
 
     private LinkedList<View> mLoadedViews;
     private Adapter mAdapter;
@@ -96,6 +98,23 @@ public class PageView extends AdapterView<Adapter> {
     private int mScrollState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
     private float mLastMotionX;
 
+    private Runnable nextRunnable = new Runnable() {
+        @Override
+        public void run() {
+            boolean isLast = getCurrentAdapterIndex() == (getCount() - 1);
+            //不允许轮播
+            if (!canLoop && isLast) {
+                return;
+            }
+            //运行轮播，但是已经达到了设置的轮播次数
+            if (canLoop && (loopCount > 0 && mCurrentLoopCount >= loopCount) && isLast) {
+                return;
+            }
+
+            mHandler.sendEmptyMessage(NEXT_PAGE);
+        }
+    };
+
     public PageView(Context context) {
         this(context, null);
     }
@@ -123,7 +142,7 @@ public class PageView extends AdapterView<Adapter> {
         canLoop = a.getBoolean(R.styleable.PageView_pvCanLoop, DEFAULT_CAN_LOOP);
         loopCount = a.getInt(R.styleable.PageView_pvLoopCount, DEFAULT_LOOP_COUNT);
         autoPlay = a.getBoolean(R.styleable.PageView_pvAutoPlay, DEFAULT_AUTO_PLAY);
-        playInterval = a.getInt(R.styleable.PageView_pvPlayInterval, DEFAULT_PLAY_INTERVAL);
+        playIntervalMs = a.getInt(R.styleable.PageView_pvPlayIntervalMs, DEFAULT_PLAY_INTERVAL);
         int bufferSize = a.getInt(R.styleable.PageView_pvBufferSize, DEFAULT_BUFFER_SIZE);
         setBufferSize(bufferSize);
 
@@ -131,19 +150,38 @@ public class PageView extends AdapterView<Adapter> {
                 + ",\n loopCount:" + loopCount
                 + ",\n bufferSize:" + bufferSize
                 + ",\n autoPlay:" + autoPlay
-                + ",\n playInterval:" + playInterval
+                + ",\n playIntervalMs:" + playIntervalMs
         );
     }
 
     private void init() {
-        mHandler = new Handler();
         mLoadedViews = new LinkedList<View>();
         mScroller = new Scroller(getContext());
         mDataSetObserver = new AdapterDataSetObserver();
 
-        final ViewConfiguration configuration = ViewConfiguration.get(getContext());
+        ViewConfiguration configuration = ViewConfiguration.get(getContext());
         mTouchSlop = configuration.getScaledTouchSlop();
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
+
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case NEXT_PAGE:
+                        if (autoPlay) {
+                            if (!mScroller.isFinished()) {
+                                mScroller.abortAnimation();
+                            }
+                            snapToScreen(mCurrentViewIndex + 1);
+                            mHandler.postDelayed(nextRunnable, playIntervalMs);
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        };
     }
 
     @Override
@@ -242,6 +280,7 @@ public class PageView extends AdapterView<Adapter> {
                 if (!mScroller.isFinished()) {
                     mScroller.abortAnimation();
                 }
+                stopAutoPlayIfNeed();
                 // Remember where the motion event started
                 mLastMotionX = ev.getX();
                 return true;
@@ -255,7 +294,7 @@ public class PageView extends AdapterView<Adapter> {
                 }
 
                 if (mScrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                    // 如果不允许循环
+                    // 如果不允许轮播
                     if (!canLoop) {
                         if (deltaX > 0 && getCurrentAdapterIndex() == (getCount() - 1)) {//往右,并且已经是最后一个
                             JLog.d(TAG, "not allow repeat...");
@@ -266,7 +305,7 @@ public class PageView extends AdapterView<Adapter> {
                             return false;
                         }
                     }
-                    //允许循环，但是循环次数已经达到设置值
+                    //允许轮播，但是轮播次数已经达到设置值
                     if (canLoop && (loopCount > 0 && mCurrentLoopCount >= loopCount)) {
                         if (deltaX > 0 && getCurrentAdapterIndex() == (getCount() - 1)) {//往右,并且已经是最后一个
                             JLog.d(TAG, "allow repeat, but mCurrentLoopCount >= loopCount，mCurrentLoopCount:" + mCurrentLoopCount);
@@ -286,6 +325,7 @@ public class PageView extends AdapterView<Adapter> {
                 break;
 
             case MotionEvent.ACTION_UP:
+                startAutoPlayIfNeed();
                 if (mScrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL
                         || (getScrollX() % getWidth() != 0)) {
                     mScrollState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
@@ -298,7 +338,7 @@ public class PageView extends AdapterView<Adapter> {
                         mVelocityTracker = null;
                     }
 
-                    // 如果不允许循环
+                    // 如果不允许轮播
                     if (!canLoop) {
                         if (velocityX < -SNAP_VELOCITY && getCurrentAdapterIndex() == (getCount() - 1)) {//往右,并且已经是最后一个
                             JLog.d(TAG, "not allow repeat...");
@@ -309,7 +349,7 @@ public class PageView extends AdapterView<Adapter> {
                             return false;
                         }
                     }
-                    //允许循环，但是循环次数已经达到设置值
+                    //允许轮播，但是轮播次数已经达到设置值
                     if (canLoop && (loopCount > 0 && mCurrentLoopCount >= loopCount)) {
                         if (velocityX < -SNAP_VELOCITY && getCurrentAdapterIndex() == (getCount() - 1)) {//往右,并且已经是最后一个
                             JLog.d(TAG, "allow repeat, but mCurrentLoopCount >= loopCount，mCurrentLoopCount:" + mCurrentLoopCount);
@@ -356,7 +396,7 @@ public class PageView extends AdapterView<Adapter> {
 
         if (whichScreen > mCurrentViewIndex) {
             mLastScrollDirection = 1;
-            //循环一圈
+            //轮播一圈
             if (getCurrentAdapterIndex() == (getCount() - 1)
                     && mCurrentLoopCount < Integer.MAX_VALUE) {
                 mCurrentLoopCount++;
@@ -493,6 +533,8 @@ public class PageView extends AdapterView<Adapter> {
         }
 
         requestLayout();
+        stopAutoPlayIfNeed();
+        startAutoPlayIfNeed();
         printlnViewsId();
     }
 
@@ -509,6 +551,20 @@ public class PageView extends AdapterView<Adapter> {
             addViewInLayout(child, (addToEnd ? -1 : 0), p, true);
         }
         return child;
+    }
+
+    private void startAutoPlayIfNeed() {
+        if (autoPlay && mHandler != null) {
+            mHandler.postDelayed(nextRunnable, playIntervalMs);
+        }
+    }
+
+    private void stopAutoPlayIfNeed() {
+        if (mHandler == null) {
+            return;
+        }
+        mHandler.removeCallbacks(nextRunnable);
+        mHandler.removeMessages(NEXT_PAGE);
     }
 
     @Override
@@ -624,7 +680,7 @@ public class PageView extends AdapterView<Adapter> {
     }
 
     /**
-     * 设置是否可以循环
+     * 设置是否可以轮播
      *
      * @param canLoop boolean
      */
@@ -637,7 +693,7 @@ public class PageView extends AdapterView<Adapter> {
     }
 
     /**
-     * 设置可循环次数，小于0为无限循环，该项只有在{@link #canLoop}为true时才生效
+     * 设置可轮播次数，小于0为无限轮播，该项只有在{@link #canLoop}为true时才生效
      *
      * @param loopCount
      */
@@ -673,13 +729,13 @@ public class PageView extends AdapterView<Adapter> {
         this.autoPlay = autoPlay;
     }
 
-    public int getPlayInterval() {
-        return playInterval;
+    public int getPlayIntervalMs() {
+        return playIntervalMs;
     }
 
-    /** 设置自动播放时间间隔，单位：毫秒 */
-    public void setPlayInterval(int playIntervalMs) {
-        this.playInterval = playIntervalMs;
+    /** 设置自动播放时间间隔，建议设置3秒以上，单位：毫秒 */
+    public void setPlayIntervalMs(int playIntervalMs) {
+        this.playIntervalMs = playIntervalMs;
     }
 
     public void setIndicator(Indicator indicator) {

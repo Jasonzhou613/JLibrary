@@ -260,7 +260,7 @@
         <attr name="pvLoopCount" format="integer"/>
         <attr name="pvBufferSize" format="integer"/>
         <attr name="pvAutoPlay" format="boolean"/>
-        <attr name="pvPlayInterval" format="integer|reference"/>
+        <attr name="pvPlayIntervalMs" format="integer|reference"/>
     </declare-styleable>
     <!-- com.ttsea.jlibrary.component.pageflow.PageView attrs end -->
 
