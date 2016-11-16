@@ -223,6 +223,8 @@ public class PageIndicator extends Indicator {
         inActiveRectF.setEmpty();
         activeRectF.setEmpty();
 
+        mCurrentScroll = Math.max(0, Math.min(mCurrentScroll, (getCount() - 1) * getIndicatorDistance()));
+
         if (orientation == ORIENTATION_VERTICAL) {
             for (int i = 0; i < getCount(); i++) {
                 float l = (float) leftPadding;
@@ -275,7 +277,6 @@ public class PageIndicator extends Indicator {
                 float movePer = (mDownX - x) / pageView.getWidth();
                 float offset = getIndicatorDistance() * movePer;
                 mCurrentScroll = mCurrentIndicatorIndex * (getIndicatorDistance()) + offset;
-                mCurrentScroll = Math.max(0, Math.min(mCurrentScroll, (getCount() - 1) * getIndicatorDistance()));
                 invalidate();
                 break;
 

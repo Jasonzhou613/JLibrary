@@ -439,6 +439,7 @@ public class PageView extends AdapterView<Adapter> {
             } else {
                 mIndicator.resetIndex(duration);
             }
+            mIndicator.postInvalidate();
         }
         invalidate();
     }
