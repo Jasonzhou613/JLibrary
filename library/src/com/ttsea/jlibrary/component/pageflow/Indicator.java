@@ -1,17 +1,11 @@
 
 package com.ttsea.jlibrary.component.pageflow;
 
-
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
-/**
- * An interface which defines the contract between a ViewFlow and a
- * Indicator.<br/>
- * A Indicator is responsible to show an visual indicator on the total views
- * number and the current visible view.<br/>
- */
 public abstract class Indicator extends View implements PageView.OnViewSwitchListener {
 
     public Indicator(Context context) {
@@ -27,7 +21,7 @@ public abstract class Indicator extends View implements PageView.OnViewSwitchLis
     }
 
     /**
-     * Set the current ViewFlow. This method is called by the ViewFlow when the
+     * Set the current PageView. This method is called by the ViewFlow when the
      * Indicator is attached to it.
      *
      * @param view
@@ -35,13 +29,29 @@ public abstract class Indicator extends View implements PageView.OnViewSwitchLis
     abstract void setPageView(PageView view);
 
     /**
-     * The scroll position has been changed. A Indicator may implement this
-     * method to reflect the current position
+     * The current PageView motion event
      *
-     * @param h
-     * @param v
-     * @param oldh
-     * @param oldv
+     * @param event
      */
-    abstract void onScrolled(int h, int v, int oldh, int oldv);
+    abstract boolean onPageViewTouchEvent(MotionEvent event);
+
+    /**
+     * 移动到指定点
+     */
+    abstract void scrollToIndex(int position, int duration);
+
+    /**
+     * 移动到下一个点
+     */
+    abstract void scrollNextIndex(int duration);
+
+    /**
+     * 移动到上一个点
+     */
+    abstract void scrollPreIndex(int duration);
+
+    /**
+     * 回到原有的点上
+     */
+    abstract void resetIndex(int duration);
 }

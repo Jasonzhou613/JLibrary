@@ -8,8 +8,9 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AbsListView;
+import android.widget.Scroller;
 
 import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.common.JLog;
@@ -17,11 +18,14 @@ import com.ttsea.jlibrary.common.JLog;
 
 public class PageIndicator extends Indicator {
     private final String TAG = "PageIndicator";
+    private final String METHOD = "method";
 
     public static final int STYLE_STROKE = 0;
     public static final int STYLE_FILL = 1;
     public static final int ORIENTATION_HORIZONTAL = 0;
     public static final int ORIENTATION_VERTICAL = 1;
+    /** 这个值必须与{@link PageView#SNAP_VELOCITY}一样 */
+    private final int SNAP_VELOCITY = 1000;
 
     private final int DEFAULT_WIDTH = 12;
     private final int DEFAULT_HEIGHT = 12;
@@ -59,6 +63,9 @@ public class PageIndicator extends Indicator {
     private int mCount = 2;
     private int mCurrentIndicatorIndex = 0;
     private float mCurrentScroll = 0;
+    private float mDownX = 0;
+
+    private Scroller mScroller;
 
     public PageIndicator(Context context) {
         this(context, null);
@@ -114,6 +121,8 @@ public class PageIndicator extends Indicator {
         mPaintInActive = new Paint(Paint.ANTI_ALIAS_FLAG);
         inActiveRectF = new RectF();
         activeRectF = new RectF();
+        mScroller = new Scroller(getContext());
+
         updatePaints();
     }
 
@@ -245,36 +254,67 @@ public class PageIndicator extends Indicator {
     public void onSwitched(View view, int position) {
         mCurrentIndicatorIndex = position;
         JLog.d(TAG, "mCurrentIndicatorIndex:" + mCurrentIndicatorIndex);
+        JLog.d(METHOD, "onSwitched...");
     }
 
     @Override
-    public void onScrolled(int h, int v, int oldh, int oldv) {
+    public boolean onPageViewTouchEvent(MotionEvent ev) {
         if (pageView == null || pageView.getWidth() == 0) {
-            return;
+            return false;
         }
 
-        int dx = oldh - h;
-        float scrollPercentage = 0.0f;
-        float offset = 0.0f;
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mDownX = ev.getX();
+                break;
 
-        if (orientation == ORIENTATION_HORIZONTAL) {
-            if (pageView.getScrollState() == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                scrollPercentage = ((float) dx) / pageView.getWidth();
-                offset = (indicatorSpace + indicatorWidth) * scrollPercentage;
+            case MotionEvent.ACTION_MOVE:
+                float x = ev.getX();
+                float movePer = (mDownX - x) / pageView.getWidth();
+                float offset = (indicatorSpace + indicatorWidth) * movePer;
                 mCurrentScroll = mCurrentIndicatorIndex * (indicatorSpace + indicatorWidth) + offset;
-            } else {
+                invalidate();
+                break;
 
-                scrollPercentage = ((float) dx) / pageView.getWidth();
-                offset = (indicatorSpace + indicatorWidth) * scrollPercentage;
-                mCurrentScroll = mCurrentIndicatorIndex * (indicatorSpace + indicatorWidth) + offset;
-            }
-            JLog.d(TAG, "adapterIndex:" + pageView.getCurrentAdapterIndex() + ", offset:" + offset + ", mCurrentScroll:" + mCurrentScroll);
-
-        } else if (orientation == ORIENTATION_VERTICAL) {
-
+            case MotionEvent.ACTION_UP:
+                break;
         }
+        return true;
+    }
 
-        invalidate();
+    @Override
+    public void scrollToIndex(int position, int duration) {
+        JLog.d(METHOD, "scrollToIndex...");
+        position = position % getCount();
+        if (position < 0) {
+            position = getCount() + position;
+        }
+        int dx = (int) (((indicatorWidth + indicatorSpace) * position) - mCurrentScroll);
+        mScroller.startScroll((int) mCurrentScroll, 0, dx, 0, duration);
+    }
+
+    @Override
+    public void scrollNextIndex(int duration) {
+        scrollToIndex(mCurrentIndicatorIndex + 1, duration);
+    }
+
+    @Override
+    public void scrollPreIndex(int duration) {
+        scrollToIndex(mCurrentIndicatorIndex - 1, duration);
+    }
+
+    @Override
+    public void resetIndex(int duration) {
+        scrollToIndex(mCurrentIndicatorIndex, duration);
+    }
+
+    @Override
+    public void computeScroll() {
+        JLog.d(METHOD, "scrollToIndex...");
+        if (mScroller.computeScrollOffset()) {
+            mCurrentScroll = mScroller.getCurrX();
+            invalidate();
+        }
     }
 
     public int getIndicatorWidth() {

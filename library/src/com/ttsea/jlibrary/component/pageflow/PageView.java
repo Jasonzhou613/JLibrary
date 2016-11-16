@@ -266,6 +266,9 @@ public class PageView extends AdapterView<Adapter> {
         if (getChildCount() == 0) {
             return false;
         }
+        if (mIndicator != null) {
+            mIndicator.onPageViewTouchEvent(ev);
+        }
         if (mVelocityTracker == null) {
             mVelocityTracker = VelocityTracker.obtain();
         }
@@ -416,8 +419,17 @@ public class PageView extends AdapterView<Adapter> {
 
         int newX = mCurrentViewIndex * getWidth();
         int delta = newX - getScrollX();
-        mScroller.startScroll(getScrollX(), getScrollY(), delta, 0, Math.abs(delta) * 2);
-
+        int duration = Math.abs(delta) * 2;
+        mScroller.startScroll(getScrollX(), getScrollY(), delta, 0, duration);
+        if (mIndicator != null) {
+            if (mLastScrollDirection > 0) {
+                mIndicator.scrollNextIndex(duration);
+            } else if (mLastScrollDirection < 0) {
+                mIndicator.scrollPreIndex(duration);
+            } else {
+                mIndicator.resetIndex(duration);
+            }
+        }
         invalidate();
     }
 
@@ -481,9 +493,6 @@ public class PageView extends AdapterView<Adapter> {
 
         mLastScrollDirection = 0;
         mNextScreen = INVALID_SCREEN;
-        requestLayout();
-        postInvalidate();
-        printlnViewsId();
 
         if (mIndicator != null) {
             mIndicator.onSwitched(mLoadedViews.get(mCurrentViewIndex), getCurrentAdapterIndex());
@@ -491,6 +500,10 @@ public class PageView extends AdapterView<Adapter> {
         if (onViewSwitchListener != null) {
             onViewSwitchListener.onSwitched(mLoadedViews.get(mCurrentViewIndex), getCurrentAdapterIndex());
         }
+
+        requestLayout();
+        postInvalidate();
+        printlnViewsId();
     }
 
     private void resetFocus(int adapterIndex) {
@@ -563,14 +576,6 @@ public class PageView extends AdapterView<Adapter> {
         }
         mHandler.removeCallbacks(nextRunnable);
         mHandler.removeMessages(NEXT_PAGE);
-    }
-
-    @Override
-    protected void onScrollChanged(int h, int v, int oldh, int oldv) {
-        super.onScrollChanged(h, v, oldh, oldv);
-        if (mIndicator != null) {
-            mIndicator.onScrolled(h, v, oldh, oldv);
-        }
     }
 
     @Override
