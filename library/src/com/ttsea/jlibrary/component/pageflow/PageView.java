@@ -92,6 +92,7 @@ public class PageView extends AdapterView<Adapter> {
      */
     private int mScrollState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
     private float mLastMotionX;
+    private long mDownTimeMillis;
 
     private Runnable nextRunnable = new Runnable() {
         @Override
@@ -282,6 +283,7 @@ public class PageView extends AdapterView<Adapter> {
                 stopAutoPlayIfNeed();
                 // Remember where the motion event started
                 mLastMotionX = ev.getX();
+                mDownTimeMillis = System.currentTimeMillis();
                 return true;
 
             case MotionEvent.ACTION_MOVE:
@@ -372,7 +374,15 @@ public class PageView extends AdapterView<Adapter> {
 
                     JLog.d(TAG, "onTouchEvent, up..., velocityX:" + velocityX + ", scrollX:" + getScrollX());
                     return true;
+                } else {
+                    long timeInterval = System.currentTimeMillis() - mDownTimeMillis;
+                    JLog.d("jason", "timeInterval:" + timeInterval);
+                    if (5 < timeInterval && timeInterval < 200) {
+                        View view = mLoadedViews.get(mCurrentViewIndex);
+                        performItemClick(view, getCurrentAdapterIndex(), view.getId());
+                    }
                 }
+                mDownTimeMillis = 0;
                 break;
         }
         return super.onTouchEvent(ev);

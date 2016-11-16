@@ -89,7 +89,7 @@ public class PageViewActivity extends BaseActivity implements View.OnClickListen
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PageViewAdapter adapter = (PageViewAdapter) parent.getAdapter();
                 String url = adapter.getItem(position);
-                JLog.d(TAG, "position:" + position + ", url:" + url);
+                JLog.d("jason", "position:" + (position + 1) + ", url:" + url);
             }
         });
     }
