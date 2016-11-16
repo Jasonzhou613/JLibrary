@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -83,6 +84,14 @@ public class PageViewActivity extends BaseActivity implements View.OnClickListen
         });
         mAdapter = new PageViewAdapter(mActivity, mList);
         pageView.setAdapter(mAdapter);
+        pageView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                PageViewAdapter adapter = (PageViewAdapter) parent.getAdapter();
+                String url = adapter.getItem(position);
+                JLog.d(TAG, "position:" + position + ", url:" + url);
+            }
+        });
     }
 
     @Override

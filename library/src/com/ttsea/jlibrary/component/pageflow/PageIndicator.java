@@ -64,6 +64,7 @@ public class PageIndicator extends Indicator {
     private int mCurrentIndicatorIndex = 0;
     private float mCurrentScroll = 0;
     private float mDownX = 0;
+    private float mLastX = 0;
 
     private Scroller mScroller;
 
@@ -266,17 +267,20 @@ public class PageIndicator extends Indicator {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mDownX = ev.getX();
+                mLastX = ev.getX();
                 break;
 
             case MotionEvent.ACTION_MOVE:
                 float x = ev.getX();
                 float movePer = (mDownX - x) / pageView.getWidth();
-                float offset = (indicatorSpace + indicatorWidth) * movePer;
-                mCurrentScroll = mCurrentIndicatorIndex * (indicatorSpace + indicatorWidth) + offset;
+                float offset = getIndicatorDistance() * movePer;
+                mCurrentScroll = mCurrentIndicatorIndex * (getIndicatorDistance()) + offset;
+                mCurrentScroll = Math.max(0, Math.min(mCurrentScroll, (getCount() - 1) * getIndicatorDistance()));
                 invalidate();
                 break;
 
             case MotionEvent.ACTION_UP:
+                invalidate();
                 break;
         }
         return true;
@@ -289,7 +293,7 @@ public class PageIndicator extends Indicator {
         if (position < 0) {
             position = getCount() + position;
         }
-        int dx = (int) (((indicatorWidth + indicatorSpace) * position) - mCurrentScroll);
+        int dx = (int) ((getIndicatorDistance() * position) - mCurrentScroll);
         mScroller.startScroll((int) mCurrentScroll, 0, dx, 0, duration);
     }
 
@@ -313,7 +317,22 @@ public class PageIndicator extends Indicator {
         JLog.d(METHOD, "scrollToIndex...");
         if (mScroller.computeScrollOffset()) {
             mCurrentScroll = mScroller.getCurrX();
+
+            int distance = getIndicatorDistance();
+            float extra = distance - mCurrentScroll % distance;
+            if (extra < 2) {
+                mCurrentScroll = mCurrentScroll + extra;
+            }
+
             invalidate();
+        }
+    }
+
+    private int getIndicatorDistance() {
+        if (orientation == ORIENTATION_HORIZONTAL) {
+            return getIndicatorWidth() + getIndicatorSpace();
+        } else {
+            return getIndicatorHeight() + getIndicatorSpace();
         }
     }
 
@@ -357,7 +376,7 @@ public class PageIndicator extends Indicator {
         postInvalidate();
     }
 
-    public float getIndicatorSpace() {
+    public int getIndicatorSpace() {
         return indicatorSpace;
     }
 

@@ -66,11 +66,11 @@ public class PageView extends AdapterView<Adapter> {
     private Adapter mAdapter;
     private Handler mHandler;
     private VelocityTracker mVelocityTracker;
-    private OnViewSwitchListener onViewSwitchListener;
     private Scroller mScroller;
     private ViewGroup viewGroup;
     private Indicator mIndicator;
     private AdapterDataSetObserver mDataSetObserver;
+    private OnViewSwitchListener onViewSwitchListener;
 
     private int mCurrentViewIndex = 0;
     private int mRightMostItemIndex = 0;
@@ -767,6 +767,11 @@ public class PageView extends AdapterView<Adapter> {
     public void setOnViewSwitchListener(OnViewSwitchListener l) {
         this.onViewSwitchListener = l;
     }
+
+//    @Override
+//    public void setOnItemClickListener(OnItemClickListener l) {
+//        this.onItemClickListener = l;
+//    }
 
     class AdapterDataSetObserver extends DataSetObserver {
 
