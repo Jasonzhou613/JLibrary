@@ -13,6 +13,10 @@ import com.ttsea.jlibrary.component.dialog.MyAlertDialog;
 import com.ttsea.jlibrary.component.dialog.MyDialog;
 import com.ttsea.jlibrary.component.dialog.MyProgressDialog;
 import com.ttsea.jlibrary.debug.ViewServer;
+import com.ttsea.jlibrary.interfaces.OnActivityLifeChangedListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Activity基类，这里只对UI进行处理 <br/>
@@ -28,6 +32,7 @@ public class BaseActivity extends Activity {
     private MyProgressDialog progressDialog;
     private MyDialog myDialog;
     private Toast mToast;
+    private List<OnActivityLifeChangedListener> onActivityLifeChangedListenerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,22 @@ public class BaseActivity extends Activity {
         init();
     }
 
+    private void init() {
+        onActivityLifeChangedListenerList = new ArrayList<OnActivityLifeChangedListener>();
+        myDialog = new MyDialog(mActivity, R.style.my_dialog_theme, null, 120, 120);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        for (int i = 0; i < onActivityLifeChangedListenerList.size(); i++) {
+            OnActivityLifeChangedListener l = onActivityLifeChangedListenerList.get(i);
+            if (l != null) {
+                l.onStart();
+            }
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -50,7 +71,36 @@ public class BaseActivity extends Activity {
         if (JLog.isDebugMode()) {
             ViewServer.get(mActivity).setFocusedWindow(this);
         }
+        for (int i = 0; i < onActivityLifeChangedListenerList.size(); i++) {
+            OnActivityLifeChangedListener l = onActivityLifeChangedListenerList.get(i);
+            if (l != null) {
+                l.onResume();
+            }
+        }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        for (int i = 0; i < onActivityLifeChangedListenerList.size(); i++) {
+            OnActivityLifeChangedListener l = onActivityLifeChangedListenerList.get(i);
+            if (l != null) {
+                l.onPause();
+            }
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        for (int i = 0; i < onActivityLifeChangedListenerList.size(); i++) {
+            OnActivityLifeChangedListener l = onActivityLifeChangedListenerList.get(i);
+            if (l != null) {
+                l.onStop();
+            }
+        }
+    }
+
 
     @Override
     protected void onDestroy() {
@@ -58,11 +108,14 @@ public class BaseActivity extends Activity {
         if (JLog.isDebugMode()) {
             ViewServer.get(mActivity).removeWindow(this);
         }
-        super.onDestroy();
-    }
+        while (!onActivityLifeChangedListenerList.isEmpty()) {
+            OnActivityLifeChangedListener l = onActivityLifeChangedListenerList.remove(0);
+            if (l != null) {
+                l.onDestroy();
+            }
+        }
 
-    private void init() {
-        myDialog = new MyDialog(mActivity, R.style.my_dialog_theme, null, 120, 120);
+        super.onDestroy();
     }
 
     /** 显示加载框 */
@@ -235,6 +288,18 @@ public class BaseActivity extends Activity {
     public void finish(int resultCode, Intent data) {
         mActivity.setResult(resultCode, data);
         mActivity.finish();
+    }
+
+    /** 添加Activity生命周期监听器 */
+    public void addActivityLifeCycleListener(OnActivityLifeChangedListener l) {
+        if (!onActivityLifeChangedListenerList.contains(l)) {
+            onActivityLifeChangedListenerList.add(l);
+        }
+    }
+
+    /** 移除指定的Activity生命周期监听器 */
+    public void removeActivityLifeCycleListener(OnActivityLifeChangedListener l) {
+        onActivityLifeChangedListenerList.remove(l);
     }
 
     /** 显示正常的View */

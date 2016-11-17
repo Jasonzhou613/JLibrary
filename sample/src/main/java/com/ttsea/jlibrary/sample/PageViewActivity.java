@@ -14,7 +14,6 @@ import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.base.JBaseAdapter;
 import com.ttsea.jlibrary.common.JImageLoader;
 import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.common.JToast;
 import com.ttsea.jlibrary.component.pageflow.PageIndicator;
 import com.ttsea.jlibrary.component.pageflow.PageView;
 
@@ -92,22 +91,7 @@ public class PageViewActivity extends BaseActivity implements View.OnClickListen
                 JLog.d("jason", "position:" + (position + 1) + ", url:" + url);
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (pageView != null) {
-            pageView.onResume();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (pageView != null) {
-            pageView.onDestroy();
-        }
-        super.onDestroy();
+        addActivityLifeCycleListener(pageView.getOnActivityLifeChangedListener());
     }
 
     @Override

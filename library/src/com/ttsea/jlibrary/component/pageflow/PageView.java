@@ -32,7 +32,9 @@ import android.widget.AdapterView;
 import android.widget.Scroller;
 
 import com.ttsea.jlibrary.R;
+import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.interfaces.OnActivityLifeChangedListener;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -40,8 +42,9 @@ import java.util.LinkedList;
 /**
  * 自动轮播视图，通过{@link #setAdapter(Adapter)}来绑定数据<br/>
  * 通过{@link #setOnItemClickListener(OnItemClickListener)}来绑定点击事件<br/>
- * <b>注：</b>在activity退出的时候我们需要调用{@link #onDestroy()}来停止自动轮播，
- * 在activity onResume的时候调用{@link #onResume()}来重新启动自动轮播
+ * <b>注：</b>在activity退出的时候我们需要停止轮播，在activity onResume的时候我们需要重启轮播，这里有两种方法<br/>
+ * 1. 在activity退出的时候调用{@link #onDestroy()}来停止自动轮播，在activity onResume的时候调用{@link #onResume()}来重新启动轮播<br/>
+ * 2. 或者直接在{@link OnActivityLifeChangedListener}类中完成，在调用{@link BaseActivity#addActivityLifeCycleListener(OnActivityLifeChangedListener)}
  */
 public class PageView extends AdapterView<Adapter> {
     private final String TAG = "PageView";
@@ -77,6 +80,7 @@ public class PageView extends AdapterView<Adapter> {
     private Indicator mIndicator;
     private AdapterDataSetObserver mDataSetObserver;
     private OnViewSwitchListener onViewSwitchListener;
+    private OnActivityLifeChangedListener onActivityLifeChangedListener;
 
     private int mCurrentViewIndex = 0;
     private int mRightMostItemIndex = 0;
@@ -182,6 +186,34 @@ public class PageView extends AdapterView<Adapter> {
                     default:
                         break;
                 }
+            }
+        };
+
+        onActivityLifeChangedListener = new OnActivityLifeChangedListener() {
+            @Override
+            public void onCreate() {
+            }
+
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onResume() {
+                PageView.this.onResume();
+            }
+
+            @Override
+            public void onPause() {
+            }
+
+            @Override
+            public void onStop() {
+            }
+
+            @Override
+            public void onDestroy() {
+                PageView.this.onDestroy();
             }
         };
     }
@@ -796,7 +828,11 @@ public class PageView extends AdapterView<Adapter> {
         this.onViewSwitchListener = l;
     }
 
-//    @Override
+    public OnActivityLifeChangedListener getOnActivityLifeChangedListener() {
+        return onActivityLifeChangedListener;
+    }
+
+    //    @Override
 //    public void setOnItemClickListener(OnItemClickListener l) {
 //        this.onItemClickListener = l;
 //    }
