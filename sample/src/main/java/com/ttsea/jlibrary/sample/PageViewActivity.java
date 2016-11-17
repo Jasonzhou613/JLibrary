@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -35,6 +37,9 @@ public class PageViewActivity extends BaseActivity implements View.OnClickListen
     private RelativeLayout llyParentView;
     private PageView pageView;
     private PageIndicator indicator;
+    private EditText etPosition;
+    private Button btnAddOne;
+    private Button btnRemoveOne;
 
     private List<String> mList;
     private PageViewAdapter mAdapter;
@@ -63,6 +68,12 @@ public class PageViewActivity extends BaseActivity implements View.OnClickListen
         llyParentView = (RelativeLayout) findViewById(R.id.llyParentView);
         pageView = (PageView) findViewById(R.id.pageView);
         indicator = (PageIndicator) findViewById(R.id.pvIndicator);
+        etPosition = (EditText) findViewById(R.id.etPosition);
+        btnAddOne = (Button) findViewById(R.id.btnAddOne);
+        btnRemoveOne = (Button) findViewById(R.id.btnRemoveOne);
+
+        btnAddOne.setOnClickListener(this);
+        btnRemoveOne.setOnClickListener(this);
     }
 
     private void initData() {
@@ -88,10 +99,33 @@ public class PageViewActivity extends BaseActivity implements View.OnClickListen
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PageViewAdapter adapter = (PageViewAdapter) parent.getAdapter();
                 String url = adapter.getItem(position);
-                JLog.d("jason", "position:" + (position + 1) + ", url:" + url);
+                JLog.d(TAG, "position:" + (position + 1) + ", url:" + url);
             }
         });
         addActivityLifeCycleListener(pageView.getOnActivityLifeChangedListener());
+    }
+
+    private void addOne() {
+        String url = "file:///storage/sdcard0/test-image/big-pic/中国政区2500.jpg";
+        int position = mList.size();
+        try {
+            position = Integer.parseInt(etPosition.getEditableText().toString());
+        } catch (Exception e) {
+            position = mList.size();
+        }
+        mList.add(position, url);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    private void removeOne() {
+        int position = 0;
+        try {
+            position = Integer.parseInt(etPosition.getEditableText().toString());
+        } catch (Exception e) {
+            position = 0;
+        }
+        mList.remove(position);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -100,7 +134,12 @@ public class PageViewActivity extends BaseActivity implements View.OnClickListen
         Bundle bundle;
         switch (v.getId()) {
 
-            case R.id.btnSelect:
+            case R.id.btnAddOne:
+                addOne();
+                break;
+
+            case R.id.btnRemoveOne:
+                removeOne();
                 break;
 
             default:

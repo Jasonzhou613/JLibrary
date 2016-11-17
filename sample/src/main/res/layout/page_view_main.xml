@@ -2,6 +2,7 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:gravity="center_horizontal"
               android:orientation="vertical">
 
     <RelativeLayout
@@ -14,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:pvAutoPlay="true"
-            app:pvBufferSize="3"
+            app:pvBufferSize="2"
             app:pvCanLoop="true"
             app:pvLoopCount="-1"
             app:pvPlayIntervalMs="3000"/>
@@ -40,53 +41,39 @@
 
     </RelativeLayout>
 
-    <ScrollView
+    <EditText
+        android:id="@+id/etPosition"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:hint="position"
+        android:inputType="numberDecimal"
+        android:textSize="12sp"/>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+        <Button
+            android:id="@+id/btnAddOne"
+            style="@style/btn_style"
+            android:layout_width="0dp"
+            android:layout_weight="1.0"
+            android:text="add one"/>
 
+        <View
+            android:layout_width="16dp"
+            android:layout_height="5dp"/>
 
-            <Button
-                style="@style/btn_style"
-                android:layout_marginTop="30dp"/>
+        <Button
+            android:id="@+id/btnRemoveOne"
+            style="@style/btn_style"
+            android:layout_width="0dp"
+            android:layout_weight="1.0"
+            android:text="remove one"/>
+    </LinearLayout>
 
-            <Button
-                style="@style/btn_style"
-                android:layout_marginTop="30dp"/>
-
-            <Button
-                style="@style/btn_style"
-                android:layout_marginTop="30dp"/>
-
-            <Button
-                style="@style/btn_style"
-                android:layout_marginTop="30dp"/>
-
-            <Button
-                style="@style/btn_style"
-                android:layout_marginTop="30dp"/>
-
-            <Button
-                style="@style/btn_style"
-                android:layout_marginTop="30dp"/>
-
-            <Button
-                style="@style/btn_style"
-                android:layout_marginTop="30dp"/>
-
-            <Button
-                style="@style/btn_style"
-                android:layout_marginTop="30dp"/>
-
-            <Button
-                style="@style/btn_style"
-                android:layout_marginTop="30dp"/>
-
-        </LinearLayout>
-    </ScrollView>
 </LinearLayout>

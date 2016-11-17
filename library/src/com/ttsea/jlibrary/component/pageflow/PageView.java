@@ -205,6 +205,7 @@ public class PageView extends AdapterView<Adapter> {
 
             @Override
             public void onPause() {
+                PageView.this.onPause();
             }
 
             @Override
@@ -414,7 +415,7 @@ public class PageView extends AdapterView<Adapter> {
                     return true;
                 } else {
                     long timeInterval = System.currentTimeMillis() - mDownTimeMillis;
-                    JLog.d("jason", "timeInterval:" + timeInterval);
+                    JLog.d(TAG, "timeInterval:" + timeInterval);
                     if (5 < timeInterval && timeInterval < 200) {
                         View view = mLoadedViews.get(mCurrentViewIndex);
                         performItemClick(view, getCurrentAdapterIndex(), view.getId());
@@ -555,7 +556,7 @@ public class PageView extends AdapterView<Adapter> {
         printlnViewsId();
     }
 
-    private void resetFocus(int adapterIndex) {
+    private void resetFocus() {
         JLog.d(METHOD, "resetFocus...");
         mCurrentViewIndex = 0;
         mRightMostItemIndex = 0;
@@ -566,8 +567,7 @@ public class PageView extends AdapterView<Adapter> {
         mScrollState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 
         //确保index不越界
-        adapterIndex = Math.max(adapterIndex, 0);
-        adapterIndex = Math.min(adapterIndex, getCount() - 1);
+        mCurrentAdapterIndex = Math.min(Math.max(0, mCurrentAdapterIndex), getCount() - 1);
 
         ArrayList<View> recycleViews = new ArrayList<View>();
         View recycleView;
@@ -576,12 +576,12 @@ public class PageView extends AdapterView<Adapter> {
             detachViewFromParent(recycleView);
         }
 
-        View currentView = makeAndAddView(adapterIndex, true, (recycleViews.isEmpty() ? null : recycleViews.remove(0)));
+        View currentView = makeAndAddView(mCurrentAdapterIndex, true, (recycleViews.isEmpty() ? null : recycleViews.remove(0)));
         mLoadedViews.addLast(currentView);
 
         for (int offset = 1; bufferSize - offset >= 0; offset++) {
-            mLeftMostItemIndex = (adapterIndex - offset) % getCount();
-            mRightMostItemIndex = (adapterIndex + offset) % getCount();
+            mLeftMostItemIndex = (mCurrentAdapterIndex - offset) % getCount();
+            mRightMostItemIndex = (mCurrentAdapterIndex + offset) % getCount();
             mLoadedViews.addFirst(makeAndAddView(getLeftMostItemIndex(), false, (recycleViews.isEmpty() ? null : recycleViews.remove(0))));
             mLoadedViews.addLast(makeAndAddView(getRightMostItemIndex(), true, (recycleViews.isEmpty() ? null : recycleViews.remove(0))));
         }
@@ -592,8 +592,13 @@ public class PageView extends AdapterView<Adapter> {
             removeDetachedView(view, false);
         }
 
+        if (getCount() < 2 && mIndicator != null) {
+            mIndicator.setVisibility(View.INVISIBLE);
+        } else if (mIndicator != null) {
+            mIndicator.setVisibility(View.VISIBLE);
+        }
+
         requestLayout();
-        stopAutoPlayIfNeed();
         startAutoPlayIfNeed();
         printlnViewsId();
     }
@@ -633,7 +638,12 @@ public class PageView extends AdapterView<Adapter> {
         startAutoPlayIfNeed();
     }
 
-    /** 一般在Activity onDestroy，以便停止自动轮播 */
+    /** 一般在Activity onPause，暂停自动轮播 */
+    public void onPause() {
+        stopAutoPlayIfNeed();
+    }
+
+    /** 一般在Activity onDestroy，停止自动轮播 */
     public void onDestroy() {
         stopAutoPlayIfNeed();
     }
@@ -656,18 +666,14 @@ public class PageView extends AdapterView<Adapter> {
         if (mAdapter == null) {
             return;
         }
-        if (getCount() < 2 && mIndicator != null) {
-            mIndicator.setVisibility(View.INVISIBLE);
-        } else if (mIndicator != null) {
-            mIndicator.setVisibility(View.VISIBLE);
-        }
         mAdapter.registerDataSetObserver(mDataSetObserver);
         setSelection(position);
     }
 
     @Override
     public View getSelectedView() {
-        if (mLoadedViews == null || mLoadedViews.size() < 1) {
+        if (mLoadedViews == null || mLoadedViews.size() < 1
+                || mCurrentViewIndex < 0 || mCurrentViewIndex > (mLoadedViews.size() - 1)) {
             return null;
         }
         return mLoadedViews.get(mCurrentViewIndex);
@@ -679,7 +685,11 @@ public class PageView extends AdapterView<Adapter> {
         if (mAdapter == null) {
             return;
         }
-        resetFocus(position);
+        //确保index不越界
+        position = Math.min(Math.max(position, 0), getCount() - 1);
+        mCurrentAdapterIndex = position;
+        resetFocus();
+
         if (mIndicator != null) {
             mIndicator.onSwitched(mLoadedViews.get(mCurrentViewIndex), position);
         }
@@ -786,6 +796,7 @@ public class PageView extends AdapterView<Adapter> {
             throw new IllegalArgumentException("bufferSize should be greater than 0.");
         }
         if (bufferSize < 1) {
+            JLog.d(TAG, "bufferSize is less than 1, so will reset bufferSize as 1.");
             bufferSize = 1;
         }
         this.bufferSize = bufferSize;
@@ -841,13 +852,7 @@ public class PageView extends AdapterView<Adapter> {
 
         @Override
         public void onChanged() {
-            int index = (mLeftMostItemIndex + bufferSize) % getCount();
-            if (index < 0) {
-                index = getCount() + index;
-            }
-            index = Math.max(index, 0);
-            index = Math.min(index, getCount() - 1);
-            resetFocus(index);
+            resetFocus();
         }
 
         @Override
