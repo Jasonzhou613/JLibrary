@@ -134,7 +134,7 @@ public class JLog {
         JLog.d(TAG, "Start save content, content=" + content);
         String date = DateUtils.getCurrentTime("yyyy-MM-dd_HH_mm_ss");
         String debugFiledir = SdStatusUtils.getExternalStorageAbsoluteDir() + "/"
-                + CacheDirUtils.CACHE_DIR_DEBUG;
+                + CacheDirUtils.ROOT_CACHE_DIR_DEBUG;
         String filePath = debugFiledir + "/" + date + "_" + fileName;
         try {
             File file = new File(filePath);
@@ -150,7 +150,6 @@ public class JLog {
             JLog.d(TAG, "End save content. The file name is: " + filePath);
 
         } catch (Exception e) {
-            // TODO: handle exception
             JLog.e(TAG, "Save content error, Exception:" + e.getMessage());
             e.printStackTrace();
         }

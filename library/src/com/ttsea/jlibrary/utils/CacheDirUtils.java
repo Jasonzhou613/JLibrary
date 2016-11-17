@@ -20,25 +20,25 @@ public class CacheDirUtils {
     /**
      * release版本所有的缓存数据都存在该目录下，如: /data/data/[packagename]/cache
      */
-    public static String CACHE_DIR;
+    private static String CACHE_DIR;
     /**
      * 调试模式下，所有的缓存数据都存在该目录下
      */
-    public static final String CACHE_DIR_DEBUG = "JLibraryDebug";
+    public static final String ROOT_CACHE_DIR_DEBUG = "JLibraryDebug";
     /**
-     * 所有的图片缓存都存在该目录，在调试模式中，该目录存在于{@link #CACHE_DIR_DEBUG}中；
+     * 所有的图片缓存都存在该目录，在调试模式中，该目录存在于{@link #ROOT_CACHE_DIR_DEBUG}中；
      * 正式情况存在于{@link #CACHE_DIR}中
      */
     public static final String CACHE_IMAGE_DIR = "images";
     /**
-     * 所有的数据缓存都存在该目录，在调试模式中 该目录存在于{@link #CACHE_DIR_DEBUG}中，
+     * 所有的数据缓存都存在该目录，在调试模式中 该目录存在于{@link #ROOT_CACHE_DIR_DEBUG}中，
      * 正式情况存在于{@link #CACHE_DIR}中
      */
     public static final String CACHE_DATA_DIR = "datas";
     /**
      * 需要存在SD卡里的数据目录
      */
-    private static final String SD_DATA_DIR = "JLibrary";
+    public static final String ROOT_SD_DATA_DIR = "JLibrary";
     /**
      * 临时目录
      */
@@ -46,7 +46,7 @@ public class CacheDirUtils {
 
     /**
      * 获取缓存的根目录，返回的是绝对地址<br/>
-     * 在调试模式的时候返回的是SD卡的{@link #CACHE_DIR_DEBUG}目录
+     * 在调试模式的时候返回的是SD卡的{@link #ROOT_CACHE_DIR_DEBUG}目录
      *
      * @param context 上下文
      * @return String
@@ -55,7 +55,7 @@ public class CacheDirUtils {
         if (JLog.isDebugMode()) {
             String exSDdir = SdStatusUtils.getExternalStorageAbsoluteDir();
             if (exSDdir != null) {
-                CACHE_DIR = exSDdir + File.separator + CACHE_DIR_DEBUG;
+                CACHE_DIR = exSDdir + File.separator + ROOT_CACHE_DIR_DEBUG;
                 createDirIfNeed(CACHE_DIR);
                 return CACHE_DIR;
             }
@@ -70,7 +70,7 @@ public class CacheDirUtils {
 
     /**
      * 获取图片的缓存目录，返回的是绝对地址<br/>
-     * 在调试模式的时候返回的是SD卡的{@link #CACHE_DIR_DEBUG}目录下的CACHE_IMAGE_DIR
+     * 在调试模式的时候返回的是SD卡的{@link #ROOT_CACHE_DIR_DEBUG}目录下的CACHE_IMAGE_DIR
      *
      * @param context 上下文
      * @return String
@@ -83,7 +83,7 @@ public class CacheDirUtils {
 
     /**
      * 获取数据缓存的目录，返回的是绝对地址<br/>
-     * 在调试模式的时候返回的是SD卡的{@link #CACHE_DIR_DEBUG}目录下的CACHE_DATA_DIR
+     * 在调试模式的时候返回的是SD卡的{@link #ROOT_CACHE_DIR_DEBUG}目录下的CACHE_DATA_DIR
      *
      * @param context 上下文
      * @return String
@@ -106,7 +106,7 @@ public class CacheDirUtils {
             return getCacheDir(context);
         }
 
-        String sdDataDir = exSDdir + File.separator + SD_DATA_DIR;
+        String sdDataDir = exSDdir + File.separator + ROOT_SD_DATA_DIR;
         createDirIfNeed(sdDataDir);
 
         return sdDataDir;
