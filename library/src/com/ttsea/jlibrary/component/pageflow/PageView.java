@@ -37,6 +37,12 @@ import com.ttsea.jlibrary.common.JLog;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * 自动轮播视图，通过{@link #setAdapter(Adapter)}来绑定数据<br/>
+ * 通过{@link #setOnItemClickListener(OnItemClickListener)}来绑定点击事件<br/>
+ * <b>注：</b>在activity退出的时候我们需要调用{@link #onDestroy()}来停止自动轮播，
+ * 在activity onResume的时候调用{@link #onResume()}来重新启动自动轮播
+ */
 public class PageView extends AdapterView<Adapter> {
     private final String TAG = "PageView";
     private final String METHOD = "method";
@@ -576,6 +582,7 @@ public class PageView extends AdapterView<Adapter> {
     }
 
     private void startAutoPlayIfNeed() {
+        stopAutoPlayIfNeed();
         if (autoPlay && mHandler != null) {
             mHandler.postDelayed(nextRunnable, playIntervalMs);
         }
@@ -587,6 +594,16 @@ public class PageView extends AdapterView<Adapter> {
         }
         mHandler.removeCallbacks(nextRunnable);
         mHandler.removeMessages(NEXT_PAGE);
+    }
+
+    /** 一般在Activity onResume中调用，重新启动轮播 */
+    public void onResume() {
+        startAutoPlayIfNeed();
+    }
+
+    /** 一般在Activity onDestroy，以便停止自动轮播 */
+    public void onDestroy() {
+        stopAutoPlayIfNeed();
     }
 
     @Override

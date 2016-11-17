@@ -95,6 +95,22 @@ public class PageViewActivity extends BaseActivity implements View.OnClickListen
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (pageView != null) {
+            pageView.onResume();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (pageView != null) {
+            pageView.onDestroy();
+        }
+        super.onDestroy();
+    }
+
+    @Override
     public void onClick(View v) {
         Intent intent;
         Bundle bundle;
