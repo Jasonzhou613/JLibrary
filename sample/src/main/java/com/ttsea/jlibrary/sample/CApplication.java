@@ -10,6 +10,9 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
+import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
 
 import java.io.File;
@@ -28,8 +31,8 @@ public class CApplication extends Application {
             e.printStackTrace();
         }
         // 解决AsyncTask.onPostExecute不执行问题, end
-        // !>......异常处理................>
-
+        JLog.disableLogging();
+        initGlobalConfig();
         initImagerLoader(this);
     }
 
@@ -60,5 +63,19 @@ public class CApplication extends Application {
                 .build();
 
         ImageLoader.getInstance().init(config); // 初始化
+    }
+
+    private void initGlobalConfig() {
+        if (JLog.isDebugMode()) {
+            mRefWatcher = LeakCanary.install(this);
+        } else {
+
+        }
+    }
+
+    private static RefWatcher mRefWatcher;
+
+    public static RefWatcher getRefWatcher(Context context) {
+        return mRefWatcher;
     }
 }
