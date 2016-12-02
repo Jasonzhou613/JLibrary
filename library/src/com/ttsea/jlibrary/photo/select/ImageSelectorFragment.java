@@ -1,8 +1,10 @@
 package com.ttsea.jlibrary.photo.select;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -12,8 +14,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.KeyEvent;
@@ -48,6 +52,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
     private final int LOADER_TYPE_CATEGORY = 1;
     private final int REQUEST_CODE_TAKE_CAMERA = 0x111;
     private final int REQUEST_CODE_PREVIEW = 0x112;
+    private final int REQUEST_CODE_CHECK_STORAGE_PERMISSION = 0x10;
 
     private Activity mActivity;
 
@@ -70,6 +75,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
     private ImageConfig imageConfig;
     private File tempFile;
 
+    private int currentLoaderType = LOADER_TYPE_ALL;
     private int gridWidth, gridHeight;
 
     @Override
@@ -86,7 +92,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getActivity().getSupportLoaderManager().initLoader(LOADER_TYPE_ALL, null, mLoaderCallback);
+        loadImages(LOADER_TYPE_ALL);
     }
 
     @Override
@@ -191,6 +197,21 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
         });
     }
 
+    /**
+     * 载入图片
+     *
+     * @param loaderType see {@link #LOADER_TYPE_ALL} and {@link #LOADER_TYPE_CATEGORY}
+     */
+    private void loadImages(int loaderType) {
+        currentLoaderType = loaderType;
+        //当android为6.0以上版本并且targetSdkVersion>=23时，需要用户再次确认权限，否则即使添加过权限也会报错
+        if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_CHECK_STORAGE_PERMISSION);
+        } else {
+            getActivity().getSupportLoaderManager().initLoader(loaderType, null, mLoaderCallback);
+        }
+    }
+
     private void refreshPreviewTVStatus() {
         String txt = (getStringById(R.string.image_preview)) + "(" + selectedList.size() + ")";
         tvPreview.setEnabled(true);
@@ -273,7 +294,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
                     public void run() {
                         folderPopupWindow.dismiss();
                         if (index == 0) {
-                            getActivity().getSupportLoaderManager().restartLoader(LOADER_TYPE_ALL, null, mLoaderCallback);
+                            loadImages(LOADER_TYPE_ALL);
                             btnCategory.setText(R.string.image_all_folder);
                             if (imageConfig.isShowCamera()) {
                                 imageAdapter.setShowCamera(true);
@@ -494,6 +515,17 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
             refreshPreviewTVStatus();
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CODE_CHECK_STORAGE_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                loadImages(currentLoaderType);
+                return;
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private LoaderManager.LoaderCallbacks<Cursor> mLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
