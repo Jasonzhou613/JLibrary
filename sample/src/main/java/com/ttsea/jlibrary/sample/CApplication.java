@@ -31,7 +31,7 @@ public class CApplication extends Application {
             e.printStackTrace();
         }
         // 解决AsyncTask.onPostExecute不执行问题, end
-        JLog.disableLogging();
+
         initGlobalConfig();
         initImagerLoader(this);
     }
