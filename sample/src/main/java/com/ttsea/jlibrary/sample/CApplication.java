@@ -12,12 +12,13 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+import com.ttsea.jlibrary.base.JBaseApplication;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
 
 import java.io.File;
 
-public class CApplication extends Application {
+public class CApplication extends JBaseApplication {
     private final String TAG = "CApplication";
 
     @Override

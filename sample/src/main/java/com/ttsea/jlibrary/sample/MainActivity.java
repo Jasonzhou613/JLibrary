@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.ttsea.jlibrary.common.ExitApplication;
+import com.ttsea.jlibrary.base.JBaseApplication;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.common.JToast;
 import com.ttsea.jlibrary.sample.base.BaseActivity;
@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
 
             case R.id.btnExit:
-                ExitApplication.getInstance().exitApplication();
+                JBaseApplication.exitApplication(mActivity);
                 break;
 
             case R.id.btnComponent:

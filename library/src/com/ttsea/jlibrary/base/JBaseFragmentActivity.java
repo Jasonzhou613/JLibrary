@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import com.ttsea.jlibrary.R;
-import com.ttsea.jlibrary.common.ExitApplication;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.component.dialog.MyAlertDialog;
 import com.ttsea.jlibrary.component.dialog.MyDialog;
@@ -35,7 +34,7 @@ public class JBaseFragmentActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         mActivity = this;
 
-        ExitApplication.getInstance().addActivity(mActivity);
+        JBaseApplication.addActivity(mActivity);
         //调试模式下，使其能够使用hierarchyview
         if (JLog.isDebugMode()) {
             ViewServer.get(mActivity).addWindow(this);
@@ -59,6 +58,7 @@ public class JBaseFragmentActivity extends FragmentActivity {
         if (JLog.isDebugMode()) {
             ViewServer.get(mActivity).removeWindow(this);
         }
+        JBaseApplication.removeActivity(mActivity);
         super.onDestroy();
     }
 

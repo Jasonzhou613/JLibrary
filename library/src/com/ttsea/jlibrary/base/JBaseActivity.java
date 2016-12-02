@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.ttsea.jlibrary.R;
-import com.ttsea.jlibrary.common.ExitApplication;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.component.dialog.MyAlertDialog;
 import com.ttsea.jlibrary.component.dialog.MyDialog;
@@ -39,7 +38,7 @@ public class JBaseActivity extends Activity {
         super.onCreate(savedInstanceState);
         mActivity = this;
 
-        ExitApplication.getInstance().addActivity(mActivity);
+        JBaseApplication.addActivity(mActivity);
         //调试模式下，使其能够使用hierarchyview
         if (JLog.isDebugMode()) {
             ViewServer.get(mActivity).addWindow(this);
@@ -101,7 +100,6 @@ public class JBaseActivity extends Activity {
         }
     }
 
-
     @Override
     protected void onDestroy() {
         //调试模式下，使其能够使用hierarchyview
@@ -114,7 +112,7 @@ public class JBaseActivity extends Activity {
                 l.onDestroy();
             }
         }
-
+        JBaseApplication.removeActivity(mActivity);
         super.onDestroy();
     }
 
