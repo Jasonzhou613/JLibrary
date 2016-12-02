@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ttsea.jlibrary.R;
-import com.ttsea.jlibrary.base.BaseFragmentActivity;
+import com.ttsea.jlibrary.base.JBaseFragmentActivity;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.photo.crop.CropActivity;
 import com.ttsea.jlibrary.photo.crop.CropConstants;
@@ -23,7 +23,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageSelectorActivity extends BaseFragmentActivity implements View.OnClickListener,
+public class ImageSelectorActivity extends JBaseFragmentActivity implements View.OnClickListener,
         ImageSelectorFragment.OnImageSelectListener {
     private final String TAG = "Select.ImageSelectorActivity";
 

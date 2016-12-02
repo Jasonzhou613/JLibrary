@@ -4,15 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.component.widget.JellyToggle.ColorChangeType;
-import com.ttsea.jlibrary.component.widget.JellyToggle.EaseType;
-import com.ttsea.jlibrary.component.widget.JellyToggle.Jelly;
-import com.ttsea.jlibrary.component.widget.JellyToggle.JellyStyle;
 import com.ttsea.jlibrary.component.widget.JellyToggle.JellyToggleButton;
 import com.ttsea.jlibrary.component.widget.JellyToggle.State;
 import com.ttsea.jlibrary.component.widget.ToggleButton;
+import com.ttsea.jlibrary.sample.base.BaseActivity;
 
 /**
  * //To do <br/>

@@ -12,12 +12,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.base.JBaseAdapter;
 import com.ttsea.jlibrary.common.JImageLoader;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.component.pageflow.PageIndicator;
 import com.ttsea.jlibrary.component.pageflow.PageView;
+import com.ttsea.jlibrary.sample.base.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;

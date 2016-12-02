@@ -10,12 +10,12 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.component.dialog.MyAlertDialog;
 import com.ttsea.jlibrary.interfaces.OnItemViewClickListener;
 import com.ttsea.jlibrary.jasynchttp.server.download.DownloadManager;
 import com.ttsea.jlibrary.jasynchttp.server.download.Downloader;
 import com.ttsea.jlibrary.sample.R;
+import com.ttsea.jlibrary.sample.base.BaseActivity;
 
 import java.util.List;
 

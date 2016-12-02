@@ -27,7 +27,7 @@ import java.util.List;
  * <b>version:</b> 1.0 <br/>
  * <b>last modified date:</b> 2016/4/11 20:13
  */
-public class BaseActivity extends Activity {
+public class JBaseActivity extends Activity {
     public Activity mActivity;
     private MyProgressDialog progressDialog;
     private MyDialog myDialog;

@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ttsea.jlibrary.R;
-import com.ttsea.jlibrary.base.BaseActivity;
+import com.ttsea.jlibrary.base.JBaseActivity;
 import com.ttsea.jlibrary.common.JImageLoader;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.component.dialog.TransparentDialog;
@@ -45,7 +45,7 @@ import java.util.List;
  * <b>version:</b> 1.0 <br/>
  * <b>last modified date:</b> 2015.10.23
  */
-public class GalleryActivity extends BaseActivity implements OnClickListener,
+public class GalleryActivity extends JBaseActivity implements OnClickListener,
         OnPageChangeListener, ImageSaveListener {
     private final String TAG = "Gallery.GalleryActivity";
 

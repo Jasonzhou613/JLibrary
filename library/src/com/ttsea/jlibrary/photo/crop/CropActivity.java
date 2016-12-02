@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.ttsea.jlibrary.R;
-import com.ttsea.jlibrary.base.BaseActivity;
+import com.ttsea.jlibrary.base.JBaseActivity;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.utils.BitmapUtils;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
@@ -32,7 +32,7 @@ import java.io.IOException;
  * <b>version:</b> 1.0 <br/>
  * <b>last modified date:</b> 2016/2/18 10:42
  */
-public class CropActivity extends BaseActivity implements View.OnClickListener {
+public class CropActivity extends JBaseActivity implements View.OnClickListener {
     private final String TAG = "Crop.CropActivity";
 
     private CropView cropView;

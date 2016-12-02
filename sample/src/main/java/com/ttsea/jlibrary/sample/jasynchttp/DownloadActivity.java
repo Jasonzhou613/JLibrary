@@ -8,7 +8,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.jasynchttp.server.download.DownloadManager;
 import com.ttsea.jlibrary.jasynchttp.server.download.DownloadOption;
@@ -16,6 +15,7 @@ import com.ttsea.jlibrary.jasynchttp.server.download.Downloader;
 import com.ttsea.jlibrary.jasynchttp.server.download.OnDownloadListener;
 import com.ttsea.jlibrary.jasynchttp.server.download.SaveFileMode;
 import com.ttsea.jlibrary.sample.R;
+import com.ttsea.jlibrary.sample.base.BaseActivity;
 import com.ttsea.jlibrary.utils.DigitUtils;
 import com.ttsea.jlibrary.utils.Utils;
 

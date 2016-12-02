@@ -7,9 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.common.MyTimer;
+import com.ttsea.jlibrary.sample.base.BaseActivity;
 
 /**
  * 计时器 <br/>

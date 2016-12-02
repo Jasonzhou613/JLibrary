@@ -10,10 +10,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.custom.CStringRequest;
 import com.android.volley.custom.CVolleySingleton;
-import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.jasynchttp.mail.SendEmail;
 import com.ttsea.jlibrary.sample.R;
+import com.ttsea.jlibrary.sample.base.BaseActivity;
 
 import java.util.HashMap;
 import java.util.Map;

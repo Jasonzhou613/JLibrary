@@ -12,13 +12,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.base.JBaseAdapter;
 import com.ttsea.jlibrary.common.JImageLoader;
 import com.ttsea.jlibrary.component.widget.roundImage.RoundedImageView;
 import com.ttsea.jlibrary.photo.select.ImageConfig;
 import com.ttsea.jlibrary.photo.select.ImageItem;
 import com.ttsea.jlibrary.photo.select.ImageSelector;
+import com.ttsea.jlibrary.sample.base.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -3,14 +3,13 @@ package com.ttsea.jlibrary.sample;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
-import com.ttsea.jlibrary.base.BaseActivity;
 import com.ttsea.jlibrary.common.JToast;
 import com.ttsea.jlibrary.component.dialog.MyAlertDialog;
 import com.ttsea.jlibrary.component.dialog.TransparentDialog;
+import com.ttsea.jlibrary.sample.base.BaseActivity;
 
 /**
  * //To do <br/>
@@ -19,7 +18,7 @@ import com.ttsea.jlibrary.component.dialog.TransparentDialog;
  * <b>date:</b> 2016/7/11 18:10 <br/>
  * <b>author:</b> Jason <br/>
  * <b>version:</b> 1.0 <br/>
- * <b>last modified date:</b> 2016/7/11 18:10
+ * <b>last modified date:</b> 2016/7/11 18:0
  */
 public class ComponentActivity extends BaseActivity implements View.OnClickListener {
     private final String TAG = "ComponentActivity";

@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ttsea.jlibrary.R;
-import com.ttsea.jlibrary.base.BaseActivity;
+import com.ttsea.jlibrary.base.JBaseActivity;
 import com.ttsea.jlibrary.common.JImageLoader;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.common.JToast;
@@ -30,7 +30,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImagePreviewActivity extends BaseActivity implements View.OnClickListener,
+public class ImagePreviewActivity extends JBaseActivity implements View.OnClickListener,
         ViewPager.OnPageChangeListener {
     private final String TAG = "Select.ImagePreviewActivity";
 
