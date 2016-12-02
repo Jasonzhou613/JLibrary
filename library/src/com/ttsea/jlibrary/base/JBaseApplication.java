@@ -3,6 +3,8 @@ package com.ttsea.jlibrary.base;
 import android.app.Activity;
 import android.app.Application;
 
+import com.ttsea.jlibrary.common.JLog;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,7 +25,7 @@ import java.util.List;
  * <b>last modified date:</b> 2016.02.17
  */
 public class JBaseApplication extends Application {
-    private final String TAG = "Base.JBaseApplication";
+    private static final String TAG = "Base.JBaseApplication";
     private List<Activity> mActivityList = new LinkedList<Activity>();
 
     @Override
@@ -34,24 +36,31 @@ public class JBaseApplication extends Application {
     /** 添加Activity到ActivityList中 */
     public static void addActivity(Activity activity) {
         if (activity != null && activity.getApplication() instanceof JBaseApplication) {
-            ((JBaseApplication) activity.getApplication()).mActivityList.add(activity);
+            List<Activity> activities = ((JBaseApplication) activity.getApplication()).mActivityList;
+            if (!activities.contains(activity)) {
+                activities.add(activity);
+            }
+            JLog.d(TAG, "size:" + activities.size());
         }
     }
 
     /** 从ActivityList中移除Activity */
     public static void removeActivity(Activity activity) {
         if (activity != null && activity.getApplication() instanceof JBaseApplication) {
-            ((JBaseApplication) activity.getApplication()).mActivityList.remove(activity);
+            List<Activity> activities = ((JBaseApplication) activity.getApplication()).mActivityList;
+            activities.remove(activity);
+            JLog.d(TAG, "size:" + activities.size());
         }
     }
 
     /** 遍历ActivityList中所有的Activity并finish，退出整个程序 */
     public static void exitApplication(Activity activity) {
-        if (activity.getApplication() instanceof JBaseApplication) {
+        if (activity != null && activity.getApplication() instanceof JBaseApplication) {
             List<Activity> activities = ((JBaseApplication) activity.getApplication()).mActivityList;
             for (Activity a : activities) {
                 a.finish();
             }
+            JLog.d(TAG, "Application exit...");
             System.exit(0);
         }
     }
