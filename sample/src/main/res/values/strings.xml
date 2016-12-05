@@ -21,4 +21,6 @@
     <string name="get_data">get data</string>
     <string name="send_email">send email</string>
 
+    <string name="__leak_canary_display_activity_label">JLibrary-Leaks</string>
+
 </resources>
