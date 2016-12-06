@@ -133,22 +133,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         //ApkUtils.install(mActivity, new File(""));
         //ApkUtils.launch(mActivity, "com.huiweishang.ws");
 
-        JLog.d(TAG, "getCacheDir:" + CacheDirUtils.getCacheDir(mActivity));
-        JLog.d(TAG, "getDataCacheDir:" + CacheDirUtils.getDataCacheDir(mActivity));
-        JLog.d(TAG, "getImageCacheDir:" + CacheDirUtils.getImageCacheDir(mActivity));
-        JLog.d(TAG, "getImageCacheDir:" + CacheDirUtils.getSdDataDir(mActivity));
-        JLog.d(TAG, "getTempDir:" + CacheDirUtils.getTempDir(mActivity));
+//        JLog.d(TAG, "getCacheDir:" + CacheDirUtils.getCacheDir(mActivity));
+//        JLog.d(TAG, "getDataCacheDir:" + CacheDirUtils.getDataCacheDir(mActivity));
+//        JLog.d(TAG, "getImageCacheDir:" + CacheDirUtils.getImageCacheDir(mActivity));
+//        JLog.d(TAG, "getImageCacheDir:" + CacheDirUtils.getSdDataDir(mActivity));
+//        JLog.d(TAG, "getTempDir:" + CacheDirUtils.getTempDir(mActivity));
+//
+//        JLog.d(TAG, "getFloat:" + DigitUtils.getFloat(5.153456f, 5));
+//
+//        JLog.d(TAG, "randomString:" + RandomUtils.randomString(5));
+//        JLog.d(TAG, "limitInt:" + RandomUtils.limitInt(5));
+//
+//        JToast.makeTextTop(mActivity, "top", 50);
+//        JToast.makeTextBottom(mActivity, "botom", 50);
+//        JToast.makeTextLeft(mActivity, "left");
+//        JToast.makeTextRight(mActivity, "right");
+//        JToast.makeTextCenter(mActivity, "center");
 
-        JLog.d(TAG, "getFloat:" + DigitUtils.getFloat(5.153456f, 5));
-
-        JLog.d(TAG, "randomString:" + RandomUtils.randomString(5));
-        JLog.d(TAG, "limitInt:" + RandomUtils.limitInt(5));
-
-        JToast.makeTextTop(mActivity, "top", 50);
-        JToast.makeTextBottom(mActivity, "botom", 50);
-        JToast.makeTextLeft(mActivity, "left");
-        JToast.makeTextRight(mActivity, "right");
-        JToast.makeTextCenter(mActivity, "center");
+        JLog.d(TAG, "rootDebugCache:" + getStringById(R.string._j_root_cache_dir_debug));
+        JLog.d(TAG, "rootData:" + getStringById(R.string._j_root_sd_data_dir));
+        JLog.d(TAG, "cacheDir" + CacheDirUtils.getCacheDir(mActivity));
     }
 
     private void showAppInfo() {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
 import com.ttsea.jlibrary.utils.DateUtils;
 import com.ttsea.jlibrary.utils.SdStatusUtils;
@@ -26,12 +27,17 @@ import java.io.OutputStream;
  */
 public class JLog {
     private static final String TAG = "JLog";
+
     private static boolean DEBUG = true;
     /**
-     * 输出日志等级，当DEBUG为fals的时候会根据设置的等级来输出日志<br/>
+     * 输出日志等级，当DEBUG为false的时候会根据设置的等级来输出日志<br/>
      * 从高到低为ERROR, WARN, INFO, DEBUG, VERBOSE
      */
     private static final int LOG_DEGREE = Log.ERROR;
+
+    public static void initIfNeed(Context context) {
+        DEBUG = context.getResources().getBoolean(R.bool._j_debug_model);
+    }
 
     /**
      * Enables logger (if {@link #disableLogging()} was called before)
@@ -124,17 +130,18 @@ public class JLog {
      * 将content中的内容保存至外置SD卡的指定文件夹中，保存名如：2015-07-21_21_55_01_log<br/>
      * 需要读写SD卡的权限: android.permission.WRITE_EXTERNAL_STORAGE
      *
-     * @param content
-     * @param fileName
+     * @param context  上下文
+     * @param content  保存的内容
+     * @param fileName 保存的文件名
      */
-    public static void saveString(String content, String fileName) {
+    public static void saveString(Context context, String content, String fileName) {
         if (!DEBUG) {
             return;
         }
         JLog.d(TAG, "Start save content, content=" + content);
         String date = DateUtils.getCurrentTime("yyyy-MM-dd_HH_mm_ss");
         String debugFiledir = SdStatusUtils.getExternalStorageAbsoluteDir() + "/"
-                + CacheDirUtils.ROOT_CACHE_DIR_DEBUG;
+                + context.getResources().getString(R.string._j_root_cache_dir_debug);
         String filePath = debugFiledir + "/" + date + "_" + fileName;
         try {
             File file = new File(filePath);
@@ -160,7 +167,6 @@ public class JLog {
      *
      * @param scrFilePath 源文件(包括路径)
      * @param desDirPath  要拷贝到的目录
-     * @author Jason
      */
     public static void copyFile(String scrFilePath, String desDirPath) {
         if (!DEBUG) {

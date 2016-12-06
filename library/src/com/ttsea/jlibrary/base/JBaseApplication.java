@@ -31,6 +31,8 @@ public class JBaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        JLibrary.init(getApplicationContext());
     }
 
     /** 添加Activity到ActivityList中 */

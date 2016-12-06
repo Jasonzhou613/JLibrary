@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 是否是调试模式-->
+    <bool name="_j_debug_model">true</bool>
+
+    <!-- 调试模式下，所有的缓存数据都存在该目录下 -->
+    <string name="_j_root_cache_dir_debug">JLibraryDebug</string>
+
+    <!-- 所有的图片缓存都存在该目录，在调试模式中，该目录存在于ROOT_CACHE_DIR_DEBUG中，如：JLibraryDebug/images；
+      正式情况存在于CACHE_DIR 中，如：/data/data/[packagename]/cache/images -->
+    <string name="_j_cache_image_dir">images</string>
+
+    <!-- 所有的数据缓存都存在该目录，在调试模式中 该目录存在于ROOT_CACHE_DIR_DEBUG中，如：JLibraryDebug/datas
+     正式情况存在于CACHE_DIR中，如：/data/data/[packagename]/cache/datas -->
+    <string name="_j_cache_data_dir">datas</string>
+
+    <!-- 用户主动保存在SD卡里的数据的根目录 -->
+    <string name="_j_root_sd_data_dir">JLibrary</string>
+
+    <!-- 临时目录 -->
+    <string name="_j_tmp_dir">tmp</string>
+
+</resources>
