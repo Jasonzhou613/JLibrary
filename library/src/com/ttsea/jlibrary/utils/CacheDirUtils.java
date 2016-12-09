@@ -46,12 +46,17 @@ public class CacheDirUtils {
                 || ROOT_SD_DATA_DIR == null
                 || TEMP_DIR == null) {
 
-            JLog.d(TAG, "init dirs...");
             ROOT_CACHE_DIR_DEBUG = getStringById(context, R.string._j_root_cache_dir_debug);
             CACHE_IMAGE_DIR = getStringById(context, R.string._j_cache_image_dir);
             CACHE_DATA_DIR = getStringById(context, R.string._j_cache_data_dir);
             ROOT_SD_DATA_DIR = getStringById(context, R.string._j_root_sd_data_dir);
             TEMP_DIR = getStringById(context, R.string._j_tmp_dir);
+            JLog.d(TAG, "init dirs: " + "ROOT_CACHE_DIR_DEBUG" + ROOT_CACHE_DIR_DEBUG +
+                    "\n " + "CACHE_IMAGE_DIR" + CACHE_IMAGE_DIR +
+                    "\n " + "CACHE_DATA_DIR" + CACHE_DATA_DIR +
+                    "\n " + "ROOT_SD_DATA_DIR" + ROOT_SD_DATA_DIR +
+                    "\n " + "TEMP_DIR" + TEMP_DIR +
+                    "");
         }
     }
 
