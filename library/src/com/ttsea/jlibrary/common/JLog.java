@@ -44,6 +44,7 @@ public class JLog {
 
     public static void initIfNeed(Context context) {
         DEBUG = context.getResources().getBoolean(R.bool._j_debug_model);
+        Log.d(TAG, "DEBUG:" + DEBUG);
     }
 
     /**
