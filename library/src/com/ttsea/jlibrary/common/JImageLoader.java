@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -36,7 +37,15 @@ public class JImageLoader {
     }
 
     public void displayImage(Context context, String path, ImageView imageView) {
-        com.nostra13.universalimageloader.core.ImageLoader.getInstance().displayImage(path, imageView);
+        // com.nostra13.universalimageloader.core.ImageLoader.getInstance().displayImage(path, imageView);
+        Glide.with(context)
+                .load(path)
+                //.asBitmap()
+                .thumbnail(0.2f)
+                .centerCrop()
+                .placeholder(R.color.whiteSmoke)
+                .error(R.drawable.photo_loading_error)
+                .into(imageView);
     }
 
 
@@ -85,21 +94,50 @@ public class JImageLoader {
                         }
                     }
                 });
+
+//        Glide.with(context)
+//                .load(path)
+//                //.asBitmap()
+//                .thumbnail(0.2f)
+//                .listener(new RequestListener<String, GlideDrawable>() {
+//                    @Override
+//                    public boolean onException(Exception e, String s, Target<GlideDrawable> target, boolean b) {
+//                        if (listener != null) {
+//                            listener.onLoadingFailed(s, target., e.getMessage());
+//                        }
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onResourceReady(GlideDrawable glideDrawable, String s, Target<GlideDrawable> target, boolean b, boolean b1) {
+//                        if (listener != null) {
+//                            listener.onLoadingComplete(s, target, null);
+//                        }
+//                        return false;
+//                    }
+//                })
+//                .centerCrop()
+//                .placeholder(R.color.whiteSmoke)
+//                .error(R.drawable.photo_loading_error)
+//                .into(imageView);
     }
 
     public void pause(Context context) {
         JLog.d(TAG, "JImageLoader pause...");
         ImageLoader.getInstance().pause();
+        Glide.with(context).pauseRequests();
     }
 
     public void resume(Context context) {
         JLog.d(TAG, "JImageLoader resume...");
         ImageLoader.getInstance().resume();
+        Glide.with(context).resumeRequests();
     }
 
     public void destroy(Context context) {
         JLog.d(TAG, "JImageLoader destroy...");
         ImageLoader.getInstance().destroy();
+        Glide.with(context).onDestroy();
     }
 
     public interface ImageLoadingListener {

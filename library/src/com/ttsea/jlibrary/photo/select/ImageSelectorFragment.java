@@ -149,11 +149,11 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState == SCROLL_STATE_IDLE) {
                     tvDate.setVisibility(View.GONE);
-                    JImageLoader.getInstance().resume(mActivity);
+                    //JImageLoader.getInstance().resume(mActivity);
                 } else if (scrollState == SCROLL_STATE_FLING
                         || scrollState == SCROLL_STATE_TOUCH_SCROLL) {
                     tvDate.setVisibility(View.VISIBLE);
-                    JImageLoader.getInstance().pause(mActivity);
+                    //JImageLoader.getInstance().pause(mActivity);
                 }
             }
 
