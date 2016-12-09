@@ -40,7 +40,7 @@ public class JImageLoader {
         // com.nostra13.universalimageloader.core.ImageLoader.getInstance().displayImage(path, imageView);
         Glide.with(context)
                 .load(path)
-                //.asBitmap()
+                .asBitmap()
                 .thumbnail(0.2f)
                 .centerCrop()
                 .placeholder(R.color.whiteSmoke)
