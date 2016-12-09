@@ -17,8 +17,8 @@ import com.ttsea.jlibrary.utils.CacheDirUtils;
 public class JLibrary {
 
     public static void init(Context appContext) {
-        CacheDirUtils.initIfNeed(appContext);
         JLog.initIfNeed(appContext);
+        CacheDirUtils.initIfNeed(appContext);
     }
 
 }

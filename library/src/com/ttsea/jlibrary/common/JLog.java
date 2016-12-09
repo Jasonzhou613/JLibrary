@@ -35,15 +35,15 @@ public class JLog {
      */
     private static final int LOG_DEGREE = Log.ERROR;
 
-    public static void initIfNeed(Context context) {
-        DEBUG = context.getResources().getBoolean(R.bool._j_debug_model);
-    }
-
     /**
      * Enables logger (if {@link #disableLogging()} was called before)
      */
     public static void enableLogging() {
         DEBUG = true;
+    }
+
+    public static void initIfNeed(Context context) {
+        DEBUG = context.getResources().getBoolean(R.bool._j_debug_model);
     }
 
     /**
