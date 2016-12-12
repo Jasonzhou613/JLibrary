@@ -28,7 +28,7 @@ public class JImageLoader {
 
     private static JImageLoader loader;
 
-    private JImageLoader() {
+    protected JImageLoader() {
     }
 
     public static JImageLoader getInstance() {
