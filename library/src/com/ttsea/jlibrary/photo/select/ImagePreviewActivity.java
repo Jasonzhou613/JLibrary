@@ -2,7 +2,6 @@ package com.ttsea.jlibrary.photo.select;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -46,8 +45,8 @@ public class ImagePreviewActivity extends JBaseActivity implements View.OnClickL
     private ViewPagerFixed viwePager;
     private MyPageAdapter adapter;
 
-    /** 获取前一个activity传过来的图片list */
-    private List<ImageItem> imageList;
+    /** 使用静态常量来传输list，避免list太大导致传输失败 */
+    private static List<ImageItem> imageList;
     /** 获取前一个activity传过来的position */
     private int currentPosition;
     /** 能选择的最大数目 */
@@ -61,7 +60,8 @@ public class ImagePreviewActivity extends JBaseActivity implements View.OnClickL
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        imageList = (List<ImageItem>) bundle.getSerializable(ImageSelector.KEY_SELECTED_LIST);
+        //imageList = (List<ImageItem>) bundle.getSerializable(ImageSelector.KEY_SELECTED_LIST);
+        imageList = getImageList();
         currentPosition = bundle.getInt(ImageSelector.KEY_SELECTED_POSITION, 0);
         maxSize = bundle.getInt(ImageSelector.KEY_MAX_SIZE, 0);
 
@@ -111,6 +111,12 @@ public class ImagePreviewActivity extends JBaseActivity implements View.OnClickL
         }
 
         refreshTvIndex();
+    }
+
+    @Override
+    protected void onDestroy() {
+        destroyImageList();
+        super.onDestroy();
     }
 
     private void setLoadingViewVisibility(View childView, int visibility) {
@@ -270,6 +276,30 @@ public class ImagePreviewActivity extends JBaseActivity implements View.OnClickL
     public void onPageSelected(int arg0) {
         currentPosition = arg0;
         refreshTvIndex();
+    }
+
+    public static void destroyImageList() {
+        if (imageList != null)
+            imageList.clear();
+        imageList = null;
+    }
+
+    /** 使用静态常量来传输list，避免list太大导致传输失败 */
+    public static void setImageList(List<ImageItem> items) {
+        if (imageList == null) {
+            imageList = new ArrayList<>();
+        }
+        imageList.clear();
+        if (items != null) {
+            imageList.addAll(items);
+        }
+    }
+
+    public static List<ImageItem> getImageList() {
+        if (imageList == null) {
+            imageList = new ArrayList<>();
+        }
+        return imageList;
     }
 
     private class MyPageAdapter extends PagerAdapter {

@@ -9,6 +9,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -373,9 +374,12 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
 
     /** 进行预览 */
     private void previewList(List<ImageItem> list, int position) {
+        //使用静态常量传输数据，避免list太大，导致bundle无法传输
+        ImagePreviewActivity.setImageList(list);
+
         Intent intent = new Intent(mActivity, ImagePreviewActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) list);
+        //bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) list);
         bundle.putInt(ImageSelector.KEY_SELECTED_POSITION, position);
         bundle.putInt(ImageSelector.KEY_MAX_SIZE, imageConfig.getMaxSize());
         intent.putExtras(bundle);

@@ -6,6 +6,8 @@ import com.ttsea.jlibrary.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * //To do <br/>
@@ -19,7 +21,7 @@ import java.io.IOException;
 class ImageUtils {
     private static final String TAG = "Select.ImageUtils";
 
-    public static String formatPhotoDate(String filePath) {
+    static String formatPhotoDate(String filePath) {
         File file = new File(filePath);
 
         if (file.exists()) {
@@ -29,7 +31,7 @@ class ImageUtils {
         return "1970-01-01";
     }
 
-    public static File createTmpFile(String filePath, String suffix) {
+    static File createTmpFile(String filePath, String suffix) {
         if (Utils.isEmpty(suffix)) {
             suffix = ".jpg";
         }
