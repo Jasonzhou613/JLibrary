@@ -53,7 +53,6 @@ public class JImageLoader {
         );
     }
 
-
     public void displayImage(Context context, String path, ImageView imageView, float thumbnail,
                              int placeholderResId, int errorResId, boolean skipMemoryCache, DiskCacheStrategy strategy,
                              Priority priority, RequestListener<String, GlideDrawable> listener) {
@@ -156,7 +155,7 @@ public class JImageLoader {
                 //.asBitmap()
                 .thumbnail(0.2f)
                 .listener(RequestListener)
-                .placeholder(R.color.translucent22)
+                //.placeholder(R.color.red)
                 .error(R.drawable.photo_loading_error)
                 .into(imageView);
     }

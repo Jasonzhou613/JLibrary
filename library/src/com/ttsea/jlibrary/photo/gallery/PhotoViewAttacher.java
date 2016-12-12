@@ -24,6 +24,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.utils.Utils;
 
@@ -251,6 +252,12 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
         if (drawable instanceof BitmapDrawable) {
             bitmap = ((BitmapDrawable) drawable).getBitmap();
         } else if (drawable instanceof NinePatchDrawable) {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(),
+                    drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            drawable.draw(canvas);
+        } else if (drawable != null) {
             bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(),
                     drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
             Canvas canvas = new Canvas(bitmap);
