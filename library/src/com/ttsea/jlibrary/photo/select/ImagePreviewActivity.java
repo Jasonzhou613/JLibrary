@@ -3,6 +3,7 @@ package com.ttsea.jlibrary.photo.select;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -209,11 +210,12 @@ public class ImagePreviewActivity extends JBaseActivity implements View.OnClickL
 
             @Override
             public void onLoadingFailed(String s, View view, String failReason) {
+                JLog.e(TAG, "onLoadingFailed, reason:" + failReason);
                 setLoadingViewVisibility(view, View.GONE);
             }
 
             @Override
-            public void onLoadingComplete(String s, View view, Bitmap bitmap) {
+            public void onLoadingComplete(String s, View view, Drawable drawable) {
                 setLoadingViewVisibility(view, View.GONE);
             }
 
