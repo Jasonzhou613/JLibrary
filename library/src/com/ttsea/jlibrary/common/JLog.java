@@ -17,7 +17,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * 用来打印想要输出的数据，将DEBUG设为false后会更具{@link #LOG_DEGREE}来输错日志 <br/>
+ * 用来打印想要输出的数据，将DEBUG设为false后会更具{@link #LOG_TAG}来输错日志 <br/>
  * <p/>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2013-11-18 <br/>
@@ -31,20 +31,23 @@ public class JLog {
     private static boolean DEBUG = true;
     /**
      * 输出日志等级，当DEBUG为false的时候会根据设置的等级来输出日志<br/>
-     * 从高到低为ERROR, WARN, INFO, DEBUG, VERBOSE
+     * 从高到低为ASSERT, ERROR, WARN, INFO, DEBUG, VERBOSE<br/>
+     * 使用setprop [LOG_TAG] [value]来控制输出log等级
      */
-    private static final int LOG_DEGREE = Log.ERROR;
+    private static String LOG_TAG = "jlibrary.log.DEGREE";
+
+    public static void initIfNeed(Context context) {
+        DEBUG = context.getResources().getBoolean(R.bool._j_debug_model);
+        LOG_TAG = context.getResources().getString(R.string._j_debug_log_tag);
+
+        Log.d(TAG, "DEBUG:" + DEBUG);
+    }
 
     /**
      * Enables logger (if {@link #disableLogging()} was called before)
      */
     public static void enableLogging() {
         DEBUG = true;
-    }
-
-    public static void initIfNeed(Context context) {
-        DEBUG = context.getResources().getBoolean(R.bool._j_debug_model);
-        Log.d(TAG, "DEBUG:" + DEBUG);
     }
 
     /**
@@ -63,35 +66,35 @@ public class JLog {
     }
 
     public static void v(String tag, String msg) {
-        if (DEBUG || LOG_DEGREE <= Log.VERBOSE) {
+        if (DEBUG || Log.isLoggable(LOG_TAG, Log.VERBOSE)) {
             msg = combineLogMsg(msg);
             Log.i(tag, "" + msg);
         }
     }
 
     public static void d(String tag, String msg) {
-        if (DEBUG || LOG_DEGREE <= Log.DEBUG) {
+        if (DEBUG || Log.isLoggable(LOG_TAG, Log.DEBUG)) {
             msg = combineLogMsg(msg);
             Log.d(tag, "" + msg);
         }
     }
 
     public static void i(String tag, String msg) {
-        if (DEBUG || LOG_DEGREE <= Log.INFO) {
+        if (DEBUG || Log.isLoggable(LOG_TAG, Log.INFO)) {
             msg = combineLogMsg(msg);
             Log.i(tag, "" + msg);
         }
     }
 
     public static void w(String tag, String msg) {
-        if (DEBUG || LOG_DEGREE <= Log.WARN) {
+        if (DEBUG || Log.isLoggable(LOG_TAG, Log.WARN)) {
             msg = combineLogMsg(msg);
             Log.w(tag, "" + msg);
         }
     }
 
     public static void e(String tag, String msg) {
-        if (DEBUG || LOG_DEGREE <= Log.ERROR) {
+        if (DEBUG || Log.isLoggable(LOG_TAG, Log.ERROR)) {
             msg = combineLogMsg(msg);
             Log.e(tag, "" + msg);
         }
@@ -136,7 +139,7 @@ public class JLog {
      * @param fileName 保存的文件名
      */
     public static void saveString(Context context, String content, String fileName) {
-        if (!DEBUG) {
+        if (!DEBUG && !Log.isLoggable(LOG_TAG, Log.DEBUG)) {
             return;
         }
         JLog.d(TAG, "Start save content, content=" + content);
@@ -170,7 +173,7 @@ public class JLog {
      * @param desDirPath  要拷贝到的目录
      */
     public static void copyFile(String scrFilePath, String desDirPath) {
-        if (!DEBUG) {
+        if (!DEBUG && !Log.isLoggable(LOG_TAG, Log.DEBUG)) {
             return;
         }
         File srcFile = new File(scrFilePath);
@@ -226,7 +229,7 @@ public class JLog {
     }
 
     public static void copyDB2SD(Context context, String dbName) {
-        if (!DEBUG) {
+        if (!DEBUG && !Log.isLoggable(LOG_TAG, Log.DEBUG)) {
             return;
         }
         File dbFile = context.getDatabasePath(dbName);
@@ -235,7 +238,7 @@ public class JLog {
     }
 
     public static void printCursor(Cursor c) {
-        if (!DEBUG || c == null) {
+        if ((!DEBUG && !Log.isLoggable(LOG_TAG, Log.DEBUG)) || c == null) {
             return;
         }
 

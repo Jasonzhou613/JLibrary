@@ -3,6 +3,7 @@
 
     <!-- 是否是调试模式-->
     <bool name="_j_debug_model">true</bool>
+    <string name="_j_debug_log_tag">jlibrary.log.DEGREE</string>
 
     <!-- 调试模式下，所有的缓存数据都存在该目录下 -->
     <string name="_j_root_cache_dir_debug">JLibraryDebug</string>
