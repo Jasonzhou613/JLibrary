@@ -95,7 +95,7 @@ public class AsyncHttpActivity extends BaseActivity implements View.OnClickListe
                     finallyparams = params;
                 }
                 finallyparams.put("platform", "android");
-
+                JLog.d(TAG, "params:" + finallyparams);
                 return finallyparams;
             }
         };

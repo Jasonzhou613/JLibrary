@@ -38,11 +38,6 @@ import java.io.File;
 public class CVolley extends Volley {
 
     /**
-     * Default on-disk cache directory.
-     */
-    private static String DEFAULT_CACHE_DIR;
-
-    /**
      * Creates a default instance of the worker pool and calls {@link RequestQueue#start()} on it.
      *
      * @param context A {@link Context} to use for creating the cache dir.
@@ -51,9 +46,9 @@ public class CVolley extends Volley {
      */
     public static RequestQueue newRequestQueue(Context context, HttpStack stack, int poolsize) {
 
-        DEFAULT_CACHE_DIR = context.getResources().getString(R.string._j_cache_data_dir);
+        String cacheDataDir = context.getResources().getString(R.string._j_cache_data_dir);
         String dir = CacheDirUtils.getCacheDir(context);
-        File cacheDir = new File(dir, DEFAULT_CACHE_DIR);
+        File cacheDir = new File(dir, cacheDataDir);
 
         String userAgent = "volley/0";
         try {

@@ -10,30 +10,24 @@ import com.android.volley.RequestQueue;
 public class CVolleySingleton {
 
     private static CVolleySingleton mInstance;
-    private static Context mContext;
     private RequestQueue mRequestQueue;
 
-
     private CVolleySingleton(Context context) {
-        mRequestQueue = getRequestQueue();
+        if (mRequestQueue == null) {
+            mRequestQueue = CVolley.newRequestQueue(context.getApplicationContext(), 4);
+        }
     }
 
     public static CVolleySingleton getInstance(Context context) {
-        mContext = context.getApplicationContext();
         if (mInstance == null) {
             synchronized (CVolleySingleton.class) {
-                if (null == mInstance) {
-                    mInstance = new CVolleySingleton(mContext);
-                }
+                mInstance = new CVolleySingleton(context.getApplicationContext());
             }
         }
         return mInstance;
     }
 
     public RequestQueue getRequestQueue() {
-        if (mRequestQueue == null) {
-            mRequestQueue = CVolley.newRequestQueue(mContext, 4);
-        }
         return mRequestQueue;
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <bool name="_j_debug_model">false</bool>
+    <bool name="_j_debug_model">true</bool>
     <string name="_j_debug_log_tag">jsample.log.DEGREE</string>
     <string name="_j_root_cache_dir_debug">JSampleDebug</string>
     <string name="_j_cache_image_dir">images</string>
