@@ -17,7 +17,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * 用来打印想要输出的数据，将DEBUG设为false后会更具{@link #LOG_TAG}来输错日志 <br/>
+ * 用来打印想要输出的数据，将DEBUG设为false后会根据{@link #LOG_TAG}来输错日志 <br/>
  * <p/>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2013-11-18 <br/>
