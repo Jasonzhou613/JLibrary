@@ -11,7 +11,7 @@ import com.ttsea.jlibrary.utils.CacheDirUtils;
 /**
  * 自定义Glide缓存大小和目录 <br/>
  * 在AndroidManifest.xml中配置meta-data：如下<br/>
- * android:name="com.ttsea.jlibrary.sample.CustomCachingGlideModule"
+ * android:name="com.ttsea.jlibrary.common.CustomCachingGlideModule"
  * android:value="GlideModule"
  * <p>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
