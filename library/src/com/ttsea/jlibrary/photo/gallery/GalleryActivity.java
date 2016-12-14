@@ -146,7 +146,7 @@ public class GalleryActivity extends JBaseActivity implements OnClickListener,
         refreshTvIndex();
     }
 
-    private void setLoadingViewVisibility(View childView, int visibility) {
+    protected void setLoadingViewVisibility(View childView, int visibility) {
         View parent;
         if (childView == null) {
             return;
@@ -164,7 +164,7 @@ public class GalleryActivity extends JBaseActivity implements OnClickListener,
         }
     }
 
-    private void onOkBtnClicked() {
+    protected void onOkBtnClicked() {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putSerializable(GalleryConstants.KEY_SELECTED_LIST, (Serializable) selectedList);
@@ -174,7 +174,7 @@ public class GalleryActivity extends JBaseActivity implements OnClickListener,
         finish();
     }
 
-    private void onDeleteBtnClicked() {
+    protected void onDeleteBtnClicked() {
         selectedList.remove(currentPosition);
 
         if (currentPosition >= selectedList.size() && selectedList.size() != 0) {
@@ -191,7 +191,7 @@ public class GalleryActivity extends JBaseActivity implements OnClickListener,
         }
     }
 
-    public void refreshTvIndex() {
+    protected void refreshTvIndex() {
         if (selectedList.size() <= 1) {
             tvTitleBarName.setVisibility(View.INVISIBLE);
         } else {
@@ -200,7 +200,7 @@ public class GalleryActivity extends JBaseActivity implements OnClickListener,
         tvTitleBarName.setText((currentPosition + 1) + "/" + selectedList.size());
     }
 
-    private void displayImage(ImageItem item, ImageView imageView) {
+    protected void displayImage(ImageItem item, ImageView imageView) {
         JImageLoader.ImageLoadingListener listener = new JImageLoader.ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String s, View view) {
@@ -233,7 +233,7 @@ public class GalleryActivity extends JBaseActivity implements OnClickListener,
         }
     }
 
-    private void rotateImage(float degree) {
+    protected void rotateImage(float degree) {
         View itemView = views.get(currentPosition);
         View pvImage = itemView.findViewById(R.id.pvImage);
         if (pvImage instanceof PhotoView) {
@@ -241,7 +241,7 @@ public class GalleryActivity extends JBaseActivity implements OnClickListener,
         }
     }
 
-    private void saveImage() {
+    protected void saveImage() {
         if (isSaveImageing) {
             showToast(R.string.image_save_imageing);
             return;
