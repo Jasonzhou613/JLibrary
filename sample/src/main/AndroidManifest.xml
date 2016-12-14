@@ -86,6 +86,10 @@
         </activity>
         <!--Photo Activitys end -->
 
+        <meta-data
+            android:name="com.ttsea.jlibrary.common.CustomCachingGlideModule"
+            android:value="GlideModule"/>
+
     </application>
 
 </manifest>
