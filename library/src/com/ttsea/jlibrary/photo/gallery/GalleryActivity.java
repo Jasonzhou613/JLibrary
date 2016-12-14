@@ -354,6 +354,13 @@ public class GalleryActivity extends JBaseActivity implements OnClickListener,
             itemView.setTag(item.getPath());
             displayImage(item, pvImage);
 
+            pvImage.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                @Override
+                public void onViewTap(View view, float x, float y) {
+                    onOkBtnClicked();
+                }
+            });
+
             container.addView(itemView, 0);
 
             return itemView;
