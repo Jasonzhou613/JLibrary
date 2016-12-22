@@ -108,7 +108,7 @@ class ImageAdapter extends BaseAdapter {
             setOnClickListener(holder.ivCheck, position);
 
             if (mItemSize > 0 && item != null) {
-                JImageLoader.getInstance().displayImage(context, "file://" + item.getPath(), holder.ivImage);
+                JImageLoader.getInstance().displayImageAsBitmap(context, "file://" + item.getPath(), holder.ivImage);
             }
         }
 

@@ -1,6 +1,7 @@
 package com.ttsea.jlibrary.common;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
@@ -53,6 +54,21 @@ public class JImageLoader {
         );
     }
 
+    public void displayImageAsBitmap(Context context, String path, ImageView imageView) {
+        // com.nostra13.universalimageloader.core.ImageLoader.getInstance().displayImage(path, imageView);
+        displayImageAsBitmap(context,
+                path,
+                imageView,
+                1f,
+                R.color.whiteSmoke,
+                R.drawable.photo_loading_error,
+                false,
+                DiskCacheStrategy.ALL,
+                Priority.NORMAL,
+                null
+        );
+    }
+
     public void displayImage(Context context, String path, ImageView imageView, float thumbnail,
                              int placeholderResId, int errorResId, boolean skipMemoryCache, DiskCacheStrategy strategy,
                              Priority priority, RequestListener<String, GlideDrawable> listener) {
@@ -77,6 +93,29 @@ public class JImageLoader {
                 .into(imageView);
     }
 
+    public void displayImageAsBitmap(Context context, String path, ImageView imageView, float thumbnail,
+                                     int placeholderResId, int errorResId, boolean skipMemoryCache, DiskCacheStrategy strategy,
+                                     Priority priority, RequestListener<String, Bitmap> listener) {
+        Glide.with(context)
+                .load(path)
+                //.load(new String[]{})//显示数组，适用于先显示缩略图，再显示全图
+                .asBitmap()
+                .thumbnail(thumbnail)//一开始大小
+                //.fitCenter()
+                .centerCrop()
+                .placeholder(placeholderResId)//默认显示
+                .error(errorResId)//错误显示
+                //.crossFade()//淡入淡出效果
+                //.dontAnimate()//无淡入淡出效果
+                //.override(200, 150)//重新设置宽和高
+                .skipMemoryCache(skipMemoryCache)//是否跳过内存缓存
+                .diskCacheStrategy(strategy)//本地磁盘缓存规则
+                .priority(priority)//显示优先级
+                .animate(R.anim.jglide_animate)//动画
+                .listener(listener)
+                //.transform( new RotateTransformation( context, 45f ))
+                .into(imageView);
+    }
 
     /** 适用图片浏览 */
     public void displayImageForGallery(final Context context, final String path, final ImageView imageView, final ImageLoadingListener listener) {

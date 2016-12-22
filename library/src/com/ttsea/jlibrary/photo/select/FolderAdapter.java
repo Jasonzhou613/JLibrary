@@ -82,7 +82,7 @@ class FolderAdapter extends BaseAdapter {
 
             if (folderList.size() > 0) {
                 Folder folder = folderList.get(0);
-                JImageLoader.getInstance().displayImage(mContext, "file://" + folder.getCover().getPath(), holder.ivCover);
+                JImageLoader.getInstance().displayImageAsBitmap(mContext, "file://" + folder.getCover().getPath(), holder.ivCover);
             }
         } else {
 
@@ -90,7 +90,7 @@ class FolderAdapter extends BaseAdapter {
             holder.tvFolderName.setText(folder.getName());
             holder.tvCount.setText("" + folder.getImages().size() + (mContext.getResources().getText(R.string.image_sheet)));
 
-            JImageLoader.getInstance().displayImage(mContext, "file://" + folder.getCover().getPath(), holder.ivCover);
+            JImageLoader.getInstance().displayImageAsBitmap(mContext, "file://" + folder.getCover().getPath(), holder.ivCover);
         }
 
         if (lastSelected == position) {
