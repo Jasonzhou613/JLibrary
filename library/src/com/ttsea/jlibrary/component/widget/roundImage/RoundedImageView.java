@@ -22,7 +22,7 @@ import android.widget.ImageView;
 import com.ttsea.jlibrary.R;
 
 /**
- * 圆角图片,该控件建议不要用Glide加载图片
+ * 圆角图片,该控件使用Glide加载图片时，建议以bitmap加载，如：asBitmap()
  */
 @SuppressWarnings("UnusedDeclaration")
 public class RoundedImageView extends ImageView {
