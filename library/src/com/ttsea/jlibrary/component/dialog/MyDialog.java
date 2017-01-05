@@ -91,7 +91,7 @@ public class MyDialog extends Dialog {
             if (mContext != null) {
                 loadingHintText.setTextColor(mContext.getResources().getColor(R.color.white));
             }
-        } else {
+        } else if (loadingHintText != null) {
             loadingHintText.setVisibility(View.GONE);
         }
         super.show();

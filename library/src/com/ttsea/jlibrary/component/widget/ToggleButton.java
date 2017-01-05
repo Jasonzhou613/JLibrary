@@ -117,7 +117,9 @@ public class ToggleButton extends View {
         borderColor = offBorderColor;
 
         if (isDefaultOn) {
-            toggleOn();
+            setToggleOn();
+        } else {
+            setToggleOff();
         }
     }
 
@@ -298,6 +300,10 @@ public class ToggleButton extends View {
 
     public void setAnimate(boolean animate) {
         this.defaultAnimate = animate;
+    }
+
+    public boolean isToggleOn() {
+        return toggleOn;
     }
 
     public interface OnToggleChanged {
