@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import com.ttsea.jlibrary.R;
@@ -13,6 +14,7 @@ import com.ttsea.jlibrary.component.dialog.MyDialog;
 import com.ttsea.jlibrary.component.dialog.MyProgressDialog;
 import com.ttsea.jlibrary.debug.ViewServer;
 import com.ttsea.jlibrary.interfaces.OnActivityLifeChangedListener;
+import com.ttsea.jlibrary.interfaces.OnSingleClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,8 @@ import java.util.List;
  */
 public class JBaseActivity extends Activity {
     public Activity mActivity;
+    public OnSingleClickListener mOnSingleClickListener;
+
     private MyProgressDialog progressDialog;
     private MyDialog myDialog;
     private Toast mToast;
@@ -50,6 +54,12 @@ public class JBaseActivity extends Activity {
     private void init() {
         onActivityLifeChangedListenerList = new ArrayList<OnActivityLifeChangedListener>();
         myDialog = new MyDialog(mActivity, R.style.my_dialog_theme, null, 120, 120);
+        mOnSingleClickListener = new OnSingleClickListener() {
+            @Override
+            public void onSingleClick(View v) {
+                JBaseActivity.this.onSingleClick(v);
+            }
+        };
     }
 
     @Override
@@ -286,6 +296,10 @@ public class JBaseActivity extends Activity {
     public void finish(int resultCode, Intent data) {
         mActivity.setResult(resultCode, data);
         mActivity.finish();
+    }
+
+    protected void onSingleClick(View v) {
+
     }
 
     /** 添加Activity生命周期监听器 */
