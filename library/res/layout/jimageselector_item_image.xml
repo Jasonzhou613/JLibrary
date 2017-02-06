@@ -17,13 +17,23 @@
         android:background="@color/translucent44"
         android:visibility="gone"/>
 
-    <ImageView
-        android:id="@+id/ivCheck"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+    <FrameLayout
+        android:id="@+id/flyCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="top|right"
-        android:contentDescription="@null"
-        android:scaleType="center"
-        android:src="@drawable/imageselector_select_uncheck"/>
+        android:paddingBottom="20dp"
+        android:paddingLeft="20dp">
+
+        <ImageView
+            android:id="@+id/ivCheck"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="top|right"
+            android:contentDescription="@null"
+            android:scaleType="center"
+            android:src="@drawable/imageselector_select_uncheck"/>
+
+    </FrameLayout>
 
 </FrameLayout>

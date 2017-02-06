@@ -467,7 +467,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onItemViewClick(View v, int position) {
-        if (v.getId() == R.id.ivCheck) {//选择和取消选择图片
+        if (v.getId() == R.id.flyCheck) {//选择和取消选择图片
             selectImageFromGrid(position);
         }
     }

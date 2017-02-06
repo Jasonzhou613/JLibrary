@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 
@@ -105,7 +106,7 @@ class ImageAdapter extends BaseAdapter {
                 holder.ivCheck.setVisibility(View.GONE);
             }
 
-            setOnClickListener(holder.ivCheck, position);
+            setOnClickListener(holder.flyCheck, position);
 
             if (mItemSize > 0 && item != null) {
                 JImageLoader.getInstance().displayImageAsBitmap(context, "file://" + item.getPath(), holder.ivImage);
@@ -196,11 +197,13 @@ class ImageAdapter extends BaseAdapter {
     private static class ViewHolder {
         ImageView ivImage;
         ImageView ivCheck;
+        FrameLayout flyCheck;
         View photoMask;
 
         ViewHolder(View itemView) {
             ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
             ivCheck = (ImageView) itemView.findViewById(R.id.ivCheck);
+            flyCheck = (FrameLayout) itemView.findViewById(R.id.flyCheck);
             photoMask = itemView.findViewById(R.id.photoMask);
             itemView.setTag(this);
         }
