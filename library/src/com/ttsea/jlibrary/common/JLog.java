@@ -18,6 +18,8 @@ import java.io.OutputStream;
 
 /**
  * 用来打印想要输出的数据，将DEBUG设为false后会根据{@link #LOG_TAG}来输错日志 <br/>
+ * 从高到低为ASSERT, ERROR, WARN, INFO, DEBUG, VERBOSE<br/>
+ * 使用adb shell setprop log.tag.{@link #LOG_TAG}来控制输出log等级
  * <p/>
  * <b>more:</b> 更多请参考<a href="http://www.ttsea.com" title="小周博客">www.ttsea.com</a> <br/>
  * <b>date:</b> 2013-11-18 <br/>
@@ -32,7 +34,6 @@ public class JLog {
     /**
      * 输出日志等级，当DEBUG为false的时候会根据设置的等级来输出日志<br/>
      * 从高到低为ASSERT, ERROR, WARN, INFO, DEBUG, VERBOSE<br/>
-     * 使用setprop [LOG_TAG] [value]来控制输出log等级
      */
     private static String LOG_TAG = "jlibrary.log.DEGREE";
 
