@@ -110,7 +110,7 @@ public class ComponentActivity extends BaseActivity implements View.OnClickListe
             public void onDismiss(DialogInterface dialog) {
                 JToast.makeTextCenter(mActivity, "dialog dismiss");
             }
-        }, true, true);
+        }, null, true, true);
     }
 
     private void showTransparentDialog() {

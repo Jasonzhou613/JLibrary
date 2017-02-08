@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
 import android.widget.Toast;
 
 import com.ttsea.jlibrary.R;
@@ -13,6 +14,11 @@ import com.ttsea.jlibrary.component.dialog.MyAlertDialog;
 import com.ttsea.jlibrary.component.dialog.MyDialog;
 import com.ttsea.jlibrary.component.dialog.MyProgressDialog;
 import com.ttsea.jlibrary.debug.ViewServer;
+import com.ttsea.jlibrary.interfaces.OnActivityLifeChangedListener;
+import com.ttsea.jlibrary.interfaces.OnSingleClickListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Activity基类，这里只对UI进行处理 <br/>
@@ -25,9 +31,12 @@ import com.ttsea.jlibrary.debug.ViewServer;
  */
 public class JBaseFragmentActivity extends FragmentActivity {
     public Activity mActivity;
+    public OnSingleClickListener mOnSingleClickListener;
+
     private MyProgressDialog progressDialog;
     private MyDialog myDialog;
     private Toast mToast;
+    private List<OnActivityLifeChangedListener> onActivityLifeChangedListenerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +52,62 @@ public class JBaseFragmentActivity extends FragmentActivity {
         init();
     }
 
+    private void init() {
+        onActivityLifeChangedListenerList = new ArrayList<OnActivityLifeChangedListener>();
+        myDialog = new MyDialog(mActivity, R.style.my_dialog_theme, null, 120, 120);
+        mOnSingleClickListener = new OnSingleClickListener() {
+            @Override
+            public void onSingleClick(View v) {
+                JBaseFragmentActivity.this.onSingleClick(v);
+            }
+        };
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        for (int i = 0; i < onActivityLifeChangedListenerList.size(); i++) {
+            OnActivityLifeChangedListener l = onActivityLifeChangedListenerList.get(i);
+            if (l != null) {
+                l.onStart();
+            }
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         //调试模式下，使其能够使用hierarchyview
         if (JLog.isDebugMode()) {
             ViewServer.get(mActivity).setFocusedWindow(this);
+        }
+        for (int i = 0; i < onActivityLifeChangedListenerList.size(); i++) {
+            OnActivityLifeChangedListener l = onActivityLifeChangedListenerList.get(i);
+            if (l != null) {
+                l.onResume();
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        for (int i = 0; i < onActivityLifeChangedListenerList.size(); i++) {
+            OnActivityLifeChangedListener l = onActivityLifeChangedListenerList.get(i);
+            if (l != null) {
+                l.onPause();
+            }
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        for (int i = 0; i < onActivityLifeChangedListenerList.size(); i++) {
+            OnActivityLifeChangedListener l = onActivityLifeChangedListenerList.get(i);
+            if (l != null) {
+                l.onStop();
+            }
         }
     }
 
@@ -58,12 +117,14 @@ public class JBaseFragmentActivity extends FragmentActivity {
         if (JLog.isDebugMode()) {
             ViewServer.get(mActivity).removeWindow(this);
         }
+        while (!onActivityLifeChangedListenerList.isEmpty()) {
+            OnActivityLifeChangedListener l = onActivityLifeChangedListenerList.remove(0);
+            if (l != null) {
+                l.onDestroy();
+            }
+        }
         JBaseApplication.removeActivity(mActivity);
         super.onDestroy();
-    }
-
-    private void init() {
-        myDialog = new MyDialog(mActivity, R.style.my_dialog_theme, null, 120, 120);
     }
 
     /** 显示加载框 */
@@ -93,20 +154,32 @@ public class JBaseFragmentActivity extends FragmentActivity {
 
     /** 显示dialog */
     public void showDialog(String msg, boolean canceledOnTouchOutside) {
-        showDialog(msg, canceledOnTouchOutside, true);
+        showDialog(msg, null, null, canceledOnTouchOutside, true);
     }
 
     /** 显示dialog */
     public void showDialog(String msg, boolean canceledOnTouchOutside, boolean cancelable) {
-        showDialog(msg, null, canceledOnTouchOutside, cancelable);
+        showDialog(msg, null, null, canceledOnTouchOutside, cancelable);
     }
 
     /** 显示dialog */
-    public void showDialog(String msg, DialogInterface.OnDismissListener listener, boolean canceledOnTouchOutside, boolean cancelable) {
+    public void showDialog(String msg, DialogInterface.OnDismissListener dismissListener) {
+        showDialog(msg, dismissListener, null, false, true);
+    }
+
+    /** 显示dialog */
+    public void showDialog(String msg, DialogInterface.OnKeyListener onKeyListener) {
+        showDialog(msg, null, onKeyListener, false, true);
+    }
+
+    /** 显示dialog */
+    public void showDialog(String msg, DialogInterface.OnDismissListener dismissListener, DialogInterface.OnKeyListener keyListener,
+                           boolean canceledOnTouchOutside, boolean cancelable) {
         if (myDialog == null || myDialog.isShowing()) {
             return;
         }
-        myDialog.setOnDismissListener(listener);
+        myDialog.setOnDismissListener(dismissListener);
+        myDialog.setOnKeyListener(keyListener);
         myDialog.setCanceledOnTouchOutside(canceledOnTouchOutside);
         myDialog.setCancelable(cancelable);
         myDialog.show(msg);
@@ -236,6 +309,22 @@ public class JBaseFragmentActivity extends FragmentActivity {
     public void finish(int resultCode, Intent data) {
         mActivity.setResult(resultCode, data);
         mActivity.finish();
+    }
+
+    protected void onSingleClick(View v) {
+
+    }
+
+    /** 添加Activity生命周期监听器 */
+    public void addActivityLifeCycleListener(OnActivityLifeChangedListener l) {
+        if (!onActivityLifeChangedListenerList.contains(l)) {
+            onActivityLifeChangedListenerList.add(l);
+        }
+    }
+
+    /** 移除指定的Activity生命周期监听器 */
+    public void removeActivityLifeCycleListener(OnActivityLifeChangedListener l) {
+        onActivityLifeChangedListenerList.remove(l);
     }
 
     /** 显示正常的View */

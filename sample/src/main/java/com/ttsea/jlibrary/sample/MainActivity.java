@@ -7,14 +7,11 @@ import android.widget.Button;
 
 import com.ttsea.jlibrary.base.JBaseApplication;
 import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.common.JToast;
 import com.ttsea.jlibrary.sample.base.BaseActivity;
 import com.ttsea.jlibrary.sample.jasynchttp.AsyncHttpActivity;
 import com.ttsea.jlibrary.utils.ApkUtils;
 import com.ttsea.jlibrary.utils.AppInformationUtils;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
-import com.ttsea.jlibrary.utils.DigitUtils;
-import com.ttsea.jlibrary.utils.RandomUtils;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
     private final String TAG = "MainActivity";
@@ -30,6 +27,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private Button btnCheckBox;
     private Button btnToggleButton;
     private Button btnPageView;
+    private Button btnNetWorkConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +49,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         btnCheckBox = (Button) findViewById(R.id.btnCheckBox);
         btnToggleButton = (Button) findViewById(R.id.btnToggleButton);
         btnPageView = (Button) findViewById(R.id.btnPageView);
+        btnNetWorkConnection = (Button) findViewById(R.id.btnNetWorkConnection);
 
         btnTest.setOnClickListener(this);
         btnAppInfo.setOnClickListener(this);
@@ -63,6 +62,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         btnCheckBox.setOnClickListener(this);
         btnToggleButton.setOnClickListener(this);
         btnPageView.setOnClickListener(this);
+        btnNetWorkConnection.setOnClickListener(this);
     }
 
     @Override
@@ -120,6 +120,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             case R.id.btnPageView:
                 intent = new Intent(mActivity, PageViewActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.btnNetWorkConnection:
+                intent = new Intent(mActivity, NetWorkConnectionActivity.class);
                 startActivity(intent);
                 break;
 

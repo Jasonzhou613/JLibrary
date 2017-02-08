@@ -20,18 +20,21 @@ public class NetWorkUtils {
     private final static String TAG = "Utils.NetWorkUtils";
 
     /**
-     * 获取网络链接类型，返回值：<br/>
-     * 正常时返回ConnectivityManager里所定义的类型，如：TYPE_WIFI、TYPE_MOBILE等 <br/>
-     * -1 表示网络不可用或发生异常 <br/>
-     * 0 表示TYPE_MOBILE <br/>
-     * 1 表示TYPE_WIFI<br/>
-     * 2 表示TYPE_MOBILE_MMS<br/>
-     * 3 表示TYPE_MOBILE_SUPL<br/>
-     * 4 表示TYPE_MOBILE_DUN<br/>
-     * 5 表示TYPE_MOBILE_HIPRI<br/>
-     * 6 表示TYPE_WIMAX<br/>
+     * 获取网络链接类型<br>
+     * status的值是 -1,
+     * {@link android.net.ConnectivityManager#TYPE_MOBILE},
+     * {@link android.net.ConnectivityManager#TYPE_WIFI},
+     * {@link android.net.ConnectivityManager#TYPE_MOBILE_MMS},
+     * {@link android.net.ConnectivityManager#TYPE_MOBILE_SUPL},
+     * {@link android.net.ConnectivityManager#TYPE_MOBILE_DUN},
+     * {@link android.net.ConnectivityManager#TYPE_MOBILE_HIPRI},
+     * {@link android.net.ConnectivityManager#TYPE_WIMAX},
+     * {@link android.net.ConnectivityManager#TYPE_BLUETOOTH},
+     * {@link android.net.ConnectivityManager#TYPE_DUMMY},
+     * {@link android.net.ConnectivityManager#TYPE_ETHERNET},
+     * {@link android.net.ConnectivityManager#TYPE_VPN},
      *
-     * @param context
+     * @param context 上下文
      * @return 网络链接类型，-1表示网络不可用
      */
     public static int getNetWorkStatus(Context context) {
@@ -50,7 +53,7 @@ public class NetWorkUtils {
             status = -1;
             JLog.e(TAG, "getNetWorkStatus, Exception: " + e.getMessage());
         }
-        JLog.d(TAG, "NetWorkUtils status:" + String.valueOf(status));
+        JLog.d(TAG, "NetWorkUtils status:" + String.valueOf(status) + ":" + getNetWorkStatusStr(status));
 
         return status;
     }
@@ -83,5 +86,52 @@ public class NetWorkUtils {
         }
         JLog.d(TAG, "wifi is not available.");
         return false;
+    }
+
+    /**
+     * @param status 网络状态
+     */
+    public static String getNetWorkStatusStr(int status) {
+        String statusStr = "UNKNOWN";
+
+        switch (status) {
+            case -1:
+                statusStr = "UNAVAILABLE";
+                break;
+            case ConnectivityManager.TYPE_MOBILE:
+                statusStr = "TYPE_MOBILE";
+                break;
+            case ConnectivityManager.TYPE_WIFI:
+                statusStr = "TYPE_WIFI";
+                break;
+            case ConnectivityManager.TYPE_MOBILE_MMS:
+                statusStr = "TYPE_MOBILE_MMS";
+                break;
+            case ConnectivityManager.TYPE_MOBILE_SUPL:
+                statusStr = "TYPE_MOBILE_SUPL";
+                break;
+            case ConnectivityManager.TYPE_MOBILE_DUN:
+                statusStr = "TYPE_MOBILE_DUN";
+                break;
+            case ConnectivityManager.TYPE_MOBILE_HIPRI:
+                statusStr = "TYPE_MOBILE_HIPRI";
+                break;
+            case ConnectivityManager.TYPE_WIMAX:
+                statusStr = "TYPE_WIMAX";
+                break;
+            case ConnectivityManager.TYPE_BLUETOOTH:
+                statusStr = "TYPE_BLUETOOTH";
+                break;
+            case ConnectivityManager.TYPE_DUMMY:
+                statusStr = "TYPE_DUMMY";
+                break;
+            case ConnectivityManager.TYPE_ETHERNET:
+                statusStr = "TYPE_ETHERNET";
+                break;
+            case ConnectivityManager.TYPE_VPN:
+                statusStr = "TYPE_VPN";
+                break;
+        }
+        return statusStr;
     }
 }

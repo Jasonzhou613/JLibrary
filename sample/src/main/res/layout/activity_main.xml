@@ -64,6 +64,11 @@
             style="@style/btn_style"
             android:text="@string/page_view"/>
 
+        <Button
+            android:id="@+id/btnNetWorkConnection"
+            style="@style/btn_style"
+            android:text="@string/network_connection"/>
+
     </LinearLayout>
 
 </ScrollView>
