@@ -21,6 +21,16 @@ import com.ttsea.jlibrary.utils.NetWorkUtils;
 public abstract class NetworkStateChangedReceiver extends BroadcastReceiver {
     private final String TAG = "NetworkStateChangedReceiver";
 
+    private boolean changeGlobal = true;
+
+    public NetworkStateChangedReceiver() {
+        this(true);
+    }
+
+    public NetworkStateChangedReceiver(boolean changeGlobal) {
+        this.changeGlobal = changeGlobal;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent == null || intent.getAction() == null
@@ -30,11 +40,29 @@ public abstract class NetworkStateChangedReceiver extends BroadcastReceiver {
         int status = NetWorkUtils.getNetWorkStatus(context);
         JLog.d(TAG, "network state changed, status:" + status + ":" + NetWorkUtils.getNetWorkStatusStr(status));
 
-        //这里可以根据网络状态设置全局变量
-        // to do
+        if (changeGlobal) {
+            //这里可以根据网络状态设置全局变量
+            // to do
+        }
 
         onNetworkStatusChanged(status);
     }
 
+    /**
+     * status的值是 -1,
+     * {@link android.net.ConnectivityManager#TYPE_MOBILE},
+     * {@link android.net.ConnectivityManager#TYPE_WIFI},
+     * {@link android.net.ConnectivityManager#TYPE_MOBILE_MMS},
+     * {@link android.net.ConnectivityManager#TYPE_MOBILE_SUPL},
+     * {@link android.net.ConnectivityManager#TYPE_MOBILE_DUN},
+     * {@link android.net.ConnectivityManager#TYPE_MOBILE_HIPRI},
+     * {@link android.net.ConnectivityManager#TYPE_WIMAX},
+     * {@link android.net.ConnectivityManager#TYPE_BLUETOOTH},
+     * {@link android.net.ConnectivityManager#TYPE_DUMMY},
+     * {@link android.net.ConnectivityManager#TYPE_ETHERNET},
+     * {@link android.net.ConnectivityManager#TYPE_VPN},
+     *
+     * @param status 网络状态,-1代表网络不可用
+     */
     public abstract void onNetworkStatusChanged(int status);
 }

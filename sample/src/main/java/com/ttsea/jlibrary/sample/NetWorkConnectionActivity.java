@@ -1,6 +1,7 @@
 package com.ttsea.jlibrary.sample;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,7 @@ import com.facebook.network.connectionclass.ConnectionClassManager;
 import com.facebook.network.connectionclass.ConnectionQuality;
 import com.ttsea.jlibrary.common.JToast;
 import com.ttsea.jlibrary.sample.base.BaseActivity;
+import com.ttsea.jlibrary.sample.common.NetworkStateChangedReceiver;
 import com.ttsea.jlibrary.utils.NetWorkUtils;
 
 /**
@@ -28,6 +30,20 @@ public class NetWorkConnectionActivity extends BaseActivity implements View.OnCl
     private Button btnStart;
     private TextView tvInfo;
 
+    private NetworkStateChangedReceiver networkStateChangedReceiver = new NetworkStateChangedReceiver() {
+        @Override
+        public void onNetworkStatusChanged(int status) {
+            if (status == -1) {
+                toastMessage("网络不可用");
+            } else if (status == ConnectivityManager.TYPE_WIFI) {
+                toastMessage("已连接wifi");
+            } else {
+                toastMessage("网络可用，" + NetWorkUtils.getNetWorkStatusStr(status));
+            }
+        }
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +59,22 @@ public class NetWorkConnectionActivity extends BaseActivity implements View.OnCl
         btnStart.setOnClickListener(this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //注册网络变化监听
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkStateChangedReceiver, filter);
+    }
+
+    @Override
+    protected void onPause() {
+        //反注册网络变化监听
+        unregisterReceiver(networkStateChangedReceiver);
+        super.onPause();
+    }
 
     @Override
     public void onClick(View v) {
@@ -57,17 +89,6 @@ public class NetWorkConnectionActivity extends BaseActivity implements View.OnCl
 
             default:
                 break;
-        }
-    }
-
-    @Override
-    public void onNetworkStatusChanged(int status) {
-        if (status == -1) {
-            toastMessage("网络不可用");
-        } else if (status == ConnectivityManager.TYPE_WIFI) {
-            toastMessage("已连接wifi");
-        } else {
-            toastMessage("网络可用，" + NetWorkUtils.getNetWorkStatusStr(status));
         }
     }
 }

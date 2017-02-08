@@ -1,11 +1,8 @@
 package com.ttsea.jlibrary.sample.base;
 
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 
 import com.ttsea.jlibrary.base.JBaseActivity;
-import com.ttsea.jlibrary.sample.common.NetworkStateChangedReceiver;
 
 /**
  * Activity基类，继承JBaseActivity <br/>
@@ -17,12 +14,6 @@ import com.ttsea.jlibrary.sample.common.NetworkStateChangedReceiver;
  * <b>last modified date:</b> 2016/4/11 20:13
  */
 public class BaseActivity extends JBaseActivity {
-    private NetworkStateChangedReceiver networkStateChangedReceiver = new NetworkStateChangedReceiver() {
-        @Override
-        public void onNetworkStatusChanged(int status) {
-            BaseActivity.this.onNetworkStatusChanged(status);
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,17 +28,10 @@ public class BaseActivity extends JBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        //注册网络变化监听
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(networkStateChangedReceiver, filter);
     }
 
     @Override
     protected void onPause() {
-        //反注册网络变化监听
-        unregisterReceiver(networkStateChangedReceiver);
         super.onPause();
     }
 
@@ -59,25 +43,5 @@ public class BaseActivity extends JBaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    /**
-     * status的值是 -1,
-     * {@link android.net.ConnectivityManager#TYPE_MOBILE},
-     * {@link android.net.ConnectivityManager#TYPE_WIFI},
-     * {@link android.net.ConnectivityManager#TYPE_MOBILE_MMS},
-     * {@link android.net.ConnectivityManager#TYPE_MOBILE_SUPL},
-     * {@link android.net.ConnectivityManager#TYPE_MOBILE_DUN},
-     * {@link android.net.ConnectivityManager#TYPE_MOBILE_HIPRI},
-     * {@link android.net.ConnectivityManager#TYPE_WIMAX},
-     * {@link android.net.ConnectivityManager#TYPE_BLUETOOTH},
-     * {@link android.net.ConnectivityManager#TYPE_DUMMY},
-     * {@link android.net.ConnectivityManager#TYPE_ETHERNET},
-     * {@link android.net.ConnectivityManager#TYPE_VPN},
-     *
-     * @param status 网络状态,-1代表网络不可用
-     */
-    public void onNetworkStatusChanged(int status) {
-
     }
 }
