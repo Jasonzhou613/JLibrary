@@ -8,9 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.facebook.network.connectionclass.ConnectionClassManager;
-import com.facebook.network.connectionclass.ConnectionQuality;
-import com.ttsea.jlibrary.common.JToast;
 import com.ttsea.jlibrary.sample.base.BaseActivity;
 import com.ttsea.jlibrary.sample.common.NetworkStateChangedReceiver;
 import com.ttsea.jlibrary.utils.NetWorkUtils;
@@ -83,8 +80,6 @@ public class NetWorkConnectionActivity extends BaseActivity implements View.OnCl
         switch (v.getId()) {
 
             case R.id.btnStart:
-                ConnectionQuality cq = ConnectionClassManager.getInstance().getCurrentBandwidthQuality();
-                JToast.makeText(mActivity, "" + cq.name());
                 break;
 
             default:
