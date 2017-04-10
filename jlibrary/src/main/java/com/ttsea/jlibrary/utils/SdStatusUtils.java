@@ -55,7 +55,7 @@ public class SdStatusUtils {
      *
      * @return 返回SD卡的剩余容量，若SD卡不可用则返回0
      */
-    public static long getAvailableBlock() {
+    public static long getAvailableBlockMB() {
         long availableBlock = 0;
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
@@ -85,18 +85,18 @@ public class SdStatusUtils {
     /**
      * 判读SD卡是否存在且剩余的容量是否大于minAvailableBlock，单位MB
      *
-     * @param minAvailableBlock SD的最小可用容量
+     * @param minAvailableBlockMB SD的最小可用容量
      * @return 如果SD卡的剩余容量大于minAvailableBlock则返回true，否则返回false
      */
-    public static boolean isABlockEnough(long minAvailableBlock) {
-        long availableBlock = getAvailableBlock();
+    public static boolean isABlockEnough(long minAvailableBlockMB) {
+        long availableBlock = getAvailableBlockMB();
 
-        if (availableBlock > minAvailableBlock) {
+        if (availableBlock > minAvailableBlockMB) {
             return true;
 
         } else {
             JLog.d(TAG, "SDcard space not enough, the min available block is "
-                    + String.valueOf(minAvailableBlock) + " MB");
+                    + String.valueOf(minAvailableBlockMB) + " MB");
             return false;
         }
     }

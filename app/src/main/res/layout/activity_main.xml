@@ -1,19 +1,74 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/activity_main"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.ttsea.jlibrary.sample.MainActivity">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"/>
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="16dp">
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/btnTest"
+            style="@style/btn_style"
+            android:text="@string/test"/>
+
+        <Button
+            android:id="@+id/btnAppInfo"
+            style="@style/btn_style"
+            android:text="@string/app_info"/>
+
+        <Button
+            android:id="@+id/btnExit"
+            style="@style/btn_style"
+            android:text="@string/exit_app"/>
+
+        <Button
+            android:id="@+id/btnComponent"
+            style="@style/btn_style"
+            android:text="@string/component"/>
+
+        <Button
+            android:id="@+id/btnPhoto"
+            style="@style/btn_style"
+            android:text="@string/photo"/>
+
+        <Button
+            android:id="@+id/btnJAsync"
+            style="@style/btn_style"
+            android:text="@string/async_http"/>
+
+        <Button
+            android:id="@+id/btnTimer"
+            style="@style/btn_style"
+            android:text="@string/my_timer"/>
+
+        <Button
+            android:id="@+id/btnRoundImage"
+            style="@style/btn_style"
+            android:text="@string/round_image"/>
+
+        <Button
+            android:id="@+id/btnCheckBox"
+            style="@style/btn_style"
+            android:text="@string/smooth_check_box"/>
+
+        <Button
+            android:id="@+id/btnToggleButton"
+            style="@style/btn_style"
+            android:text="@string/toggle_button"/>
+
+        <Button
+            android:id="@+id/btnPageView"
+            style="@style/btn_style"
+            android:text="@string/page_view"/>
+
+        <Button
+            android:id="@+id/btnNetWorkConnection"
+            style="@style/btn_style"
+            android:text="@string/network_connection"/>
+
+    </LinearLayout>
+
+</ScrollView>

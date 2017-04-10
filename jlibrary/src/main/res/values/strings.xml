@@ -29,6 +29,7 @@
     <string name="dateutility_a_hour_ago">小时前</string>
     <string name="dateutility_today">今天</string>
     <string name="dateutility_yesterday">昨天</string>
+    <string name="dateutility_today_before_yesterday">前天</string>
     <!-- utils end -->
 
     <!-- component start -->

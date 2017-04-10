@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.ttsea.jlibrary.R;
 
 public class ActivityUtils {
+
     /**
      * 从上到下切入Activity
      */
@@ -54,7 +55,6 @@ public class ActivityUtils {
         // 第一个参数为启动时动画效果，第二个参数为退出时动画效果
         activity.overridePendingTransition(0, R.anim.activity_out_to_left);
     }
-
 
     /**
      * 从右到左切入Activity

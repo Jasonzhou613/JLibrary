@@ -1,7 +1,6 @@
 package com.ttsea.jlibrary.utils;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.content.Context;
 
 import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.common.JLog;
@@ -23,52 +22,95 @@ public class DateUtils {
 
     /**
      * 格式化要显示的时间<br/>
-     * 1. 1分钟内显示：刚刚<br/>
-     * 2. 1~5分钟内显示：n分钟前<br/>
-     * 3. 1~2小时内显示：n小时前<br/>
-     * 4. 超过2小时小于1天显示：操作时间，如18:00 <br/>
-     * 5. 超过一天 小于两天则显示：昨天+操作时间，如昨天18:00<br/>
-     * 6. 超过两天显示：2014-05-15 12:00 <br/>
-     * 7. 如果时间为负数则显示：未知
+     * 1. 2分钟内显示：刚刚<br/>
+     * 2. 一天内显示：操作时间，如18:00 <br/>
+     * 3. 超过一天 小于两天则显示：昨天+操作时间，如 昨天18:00<br/>
+     * 4. 超过两天 小于三天则显示：前天+操作时间，如 前天18:00<br/>
+     * 4. 超过三天显示：2014-05-15 12:00 <br/>
+     * 5. 如果时间为负数则显示：未知
      *
-     * @param timeInterval 以毫秒为单位
-     * @return
+     * @param lastOperationTime 它的格式：String类型
+     * @return String
      */
-    @SuppressLint("SimpleDateFormat")
-    public static String getFormatOperationTime(Activity activity, long timeInterval, long operationTime) {
+    public static String getFormatOperationTime(Context context, String lastOperationTime) {
+        String strTime;
+        try {
+            long time = Long.parseLong(lastOperationTime);
+            strTime = getFormatOperationTime(context, time);
+        } catch (Exception e) {
+            JLog.e(TAG, "getFormatOperationTime Exception: " + e.getMessage());
+            strTime = context.getString(R.string.dateutility_unknow);
+        }
+
+        return strTime;
+    }
+
+    /**
+     * 格式化要显示的时间<br/>
+     * 1. 2分钟内显示：刚刚<br/>
+     * 2. 一天内显示：操作时间，如18:00 <br/>
+     * 3. 超过一天 小于两天则显示：昨天+操作时间，如 昨天18:00<br/>
+     * 4. 超过两天 小于三天则显示：前天+操作时间，如 前天18:00<br/>
+     * 4. 超过三天显示：2014-05-15 12:00 <br/>
+     * 5. 如果时间为负数则显示：未知
+     *
+     * @param lastOperationTime 它的格式：long类型
+     * @return String
+     */
+    public static String getFormatOperationTime(Context context, long lastOperationTime) {
         String strTime = "";
         SimpleDateFormat formatter;
+        long currentTimeMills = System.currentTimeMillis();
 
-        long between = timeInterval / 1000;// 除以1000是为了转换成秒
-        long day = between / (24 * 60 * 60);
-        long hour = between / (60 * 60) - day * 24;
-        long minute = between / 60 - day * 24 * 60 - hour * 60;
-        long second = (between - day * 24 * 60 * 60 - hour * 60 * 60 - minute * 60);
+        try {
+            // 获取lastOperationTime该时间点当天的零点时间戳
+            long beginZeroPointTimeMillis = getZeroTimeMillis(lastOperationTime);
+            Date beginDate = new Date(lastOperationTime);// 获取当前时间
+            // lastOperationTime时间戳与当前时间戳的时间差
+            long lastCurrentTimeMillis = (currentTimeMills - lastOperationTime) / 1000;
 
-        if (between < 0) {// 为负数
-            strTime = activity.getString(R.string.dateutility_unknow);
+            // lastOperationTime该时间当天零点时间戳与当前时间戳的时间差
+            long between = (currentTimeMills - beginZeroPointTimeMillis) / 1000;// 除以1000是为了转换成秒
+            long day = between / (24 * 60 * 60);
+            long hour = between / (60 * 60) - day * 24;
+            long minute = between / 60 - day * 24 * 60 - hour * 60;
+            long second = (between - day * 24 * 60 * 60 - hour * 60 * 60 - minute * 60);
 
-        } else if (between < 60) {// 0~1分钟内
-            strTime = activity.getString(R.string.dateutility_a_moment_ago);
+            if (between < 0) {
+                strTime = context.getString(R.string.dateutility_unknow);
+                return strTime;
+            }
 
-        } else if (between < 300) {// 1~5分钟之内
-            strTime = minute + activity.getString(R.string.dateutility_a_min_ago);
+            if (day == 0) {
+                if (lastCurrentTimeMillis < 120) {// 0~2分钟内
+                    strTime = context.getString(R.string.dateutility_a_moment_ago);
+                } else {
+                    formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                    strTime = context.getString(R.string.dateutility_today) + formatter.format(beginDate);
+                }
 
-        } else if (between < (60 * 60 * 2)) {// 1~2小时内
-            strTime = hour + activity.getString(R.string.dateutility_a_hour_ago);
+            } else if (day == 1) {
+                formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                strTime = context.getString(R.string.dateutility_yesterday)
+                        + formatter.format(beginDate);
 
-        } else if (between < (60 * 60 * 24)) {// 超过2小时小于1天
-            strTime = activity.getString(R.string.dateutility_today)
-                    + hour + ":" + minute;
+            } else if (day == 2) {
+                formatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                strTime = context
+                        .getString(R.string.dateutility_today_before_yesterday)
+                        + formatter.format(beginDate);
 
-        } else if (between < (60 * 60 * 24 * 2)) {// 超过一天 小于两天
-            strTime = activity.getString(R.string.dateutility_yesterday)
-                    + hour + ":" + minute;
+            } else {
+                formatter = new SimpleDateFormat("yyy-MM-dd HH:mm", Locale.getDefault());
+                strTime = formatter.format(beginDate);
+            }
 
-        } else {
-            strTime = DateUtils.parseString(operationTime, "yyyy-MM-dd HH:mm");
+            JLog.d(TAG, day + "天" + hour + "小时" + minute + "分" + second + "秒");
+
+        } catch (Exception e) {
+            JLog.e(TAG, "getFormatOperationTime Exception: " + e.getMessage());
+            strTime = context.getString(R.string.dateutility_unknow);
         }
-        JLog.d(TAG, day + "天" + hour + "小时" + minute + "分" + second + "秒");
 
         return strTime;
     }
@@ -134,5 +176,20 @@ public class DateUtils {
         }
 
         return d;
+    }
+
+    /**
+     * 获取timeMillis当天零点的时间戳
+     *
+     * @param timeMillis 当前时间戳
+     * @return long
+     */
+    public static long getZeroTimeMillis(long timeMillis) {
+        Date date = new Date(timeMillis);
+        long l = 24 * 60 * 60 * 1000; // 每天的毫秒数
+        // date.getTime()是现在的毫秒数，它 减去 当天零点到现在的毫秒数（
+        // 现在的毫秒数%一天总的毫秒数，取余。），理论上等于零点的毫秒数，不过这个毫秒数是UTC+0时区的。
+        // 减8个小时的毫秒值是为了解决时区的问题。
+        return (date.getTime() - (date.getTime() % l) - 8 * 60 * 60 * 1000);
     }
 }

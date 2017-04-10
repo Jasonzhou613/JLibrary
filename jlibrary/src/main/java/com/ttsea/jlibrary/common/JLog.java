@@ -17,7 +17,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * 用来打印想要输出的数据，将DEBUG设为false后会根据{@link #LOG_TAG}来输错日志 <br>
+ * 用来打印想要输出的数据，默认为false，将DEBUG设为false后会根据{@link #LOG_TAG}来输错日志 <br>
  * 从高到低为ASSERT, ERROR, WARN, INFO, DEBUG, VERBOSE<br>
  * 使用adb shell setprop log.tag.{@link #LOG_TAG}来控制输出log等级
  * <p>
@@ -29,40 +29,20 @@ import java.io.OutputStream;
 public class JLog {
     private static final String TAG = "JLog";
 
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = false;
     /**
      * 输出日志等级，当DEBUG为false的时候会根据设置的等级来输出日志<br/>
      * 从高到低为ASSERT, ERROR, WARN, INFO, DEBUG, VERBOSE<br/>
      */
-    private static String LOG_TAG = "jlibrary.log.DEGREE";
-
-    public static void initIfNeed(Context context) {
-        DEBUG = context.getResources().getBoolean(R.bool._j_debug_model);
-        LOG_TAG = context.getResources().getString(R.string._j_debug_log_tag);
-
-        Log.d(TAG, "DEBUG:" + DEBUG);
-    }
+    private static String LOG_TAG = "jlibrary.log.LEVEL";
 
     /**
-     * Enables logger (if {@link #disableLogging()} was called before)
+     * 开启或者关闭log
+     *
+     * @param enable true为开启log，false为关闭log
      */
-    public static void enableLogging() {
-        DEBUG = true;
-    }
-
-    /**
-     * Disables logger, no logs will be passed to LogCat, all log methods will
-     * do nothing
-     */
-    public static void disableLogging() {
-        DEBUG = false;
-    }
-
-    /**
-     * if {@link #DEBUG} is true, it is debug mode
-     */
-    public static boolean isDebugMode() {
-        return DEBUG;
+    public static void enableLog(boolean enable) {
+        DEBUG = enable;
     }
 
     public static void v(String tag, String msg) {
@@ -144,8 +124,7 @@ public class JLog {
         }
         JLog.d(TAG, "Start save content, content=" + content);
         String date = DateUtils.getCurrentTime("yyyy-MM-dd_HH_mm_ss");
-        String debugFiledir = SdStatusUtils.getExternalStorageAbsoluteDir() + "/"
-                + context.getResources().getString(R.string._j_root_cache_dir_debug);
+        String debugFiledir = CacheDirUtils.getSdDataDir(context);
         String filePath = debugFiledir + "/" + date + "_" + fileName;
         try {
             File file = new File(filePath);
@@ -207,8 +186,10 @@ public class JLog {
                 fos.write(b, 0, i);
             }
             JLog.d(TAG, "copy file successful, desFile=" + desFile.getAbsolutePath());
+
         } catch (Exception e) {
             e.printStackTrace();
+            JLog.e(TAG, "Exception e:" + e.getMessage());
         } finally {
             if (fis != null) {
                 try {
@@ -226,15 +207,6 @@ public class JLog {
                 }
             }
         }
-    }
-
-    public static void copyDB2SD(Context context, String dbName) {
-        if (!DEBUG && !Log.isLoggable(LOG_TAG, Log.DEBUG)) {
-            return;
-        }
-        File dbFile = context.getDatabasePath(dbName);
-        copyFile(dbFile.getAbsolutePath(), CacheDirUtils.getCacheDir(context)
-                + File.separator + "db");
     }
 
     public static void printCursor(Cursor c) {

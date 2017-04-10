@@ -3,6 +3,7 @@ package com.ttsea.jlibrary.base;
 import android.app.Activity;
 import android.app.Application;
 
+import com.ttsea.jlibrary.JLibrary;
 import com.ttsea.jlibrary.common.JLog;
 
 import java.util.LinkedList;
@@ -21,7 +22,7 @@ import java.util.List;
  * <b>author:</b> Jason <br>
  * <b>version:</b> 1.0 <br>
  */
-public class JBaseApplication extends Application {
+class JBaseApplication extends Application {
     private static final String TAG = "Base.JBaseApplication";
     private List<Activity> mActivityList = new LinkedList<Activity>();
 

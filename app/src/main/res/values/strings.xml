@@ -1,5 +1,27 @@
 <resources>
 
     <string name="app_name">JLibrary</string>
+    <string name="test">test</string>
+    <string name="app_info">app info</string>
+    <string name="exit_app">exit app</string>
+    <string name="component">component</string>
+    <string name="show_alter_dialog">show alter dialog</string>
+    <string name="show_dialog">show dialog</string>
+    <string name="show_transparent_dialog">show transparent dialog</string>
+    <string name="show_progress">show progress</string>
+    <string name="photo">photo</string>
+    <string name="async_http">async http</string>
+    <string name="select_photo">select photo</string>
+    <string name="my_timer">timer</string>
+    <string name="round_image">round image</string>
+    <string name="smooth_check_box">SmoothCheckBox</string>
+    <string name="toggle_button">toggle button</string>
+    <string name="page_view">Page View</string>
+    <string name="network_connection">NetWork Connection</string>
+
+    <string name="get_data">get data</string>
+    <string name="send_email">send email</string>
+
+    <string name="__leak_canary_display_activity_label">JLibrary-Leaks</string>
 
 </resources>

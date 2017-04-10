@@ -47,7 +47,6 @@ public class BitmapUtils {
         }
 
         try {
-
             baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
@@ -79,7 +78,7 @@ public class BitmapUtils {
      * @return
      */
     public static Bitmap compressBitmapWidthAndHeight(Bitmap bmp, int maxWidthAndHeight) {
-        if (bmp == null && bmp.isRecycled()) {
+        if (bmp == null || bmp.isRecycled()) {
             JLog.d(TAG, "compressBitmapWidthAndHeight, bmp is null or bmp is recycled");
             return null;
         }
@@ -110,9 +109,9 @@ public class BitmapUtils {
     /**
      * 压缩图片，直至bmp的大小 小于maxSizeInKB
      *
-     * @param bmp
+     * @param bmp         Bitmap
      * @param maxSizeInKB bitmap最大值，单位KB
-     * @return
+     * @return Bitmap
      */
     public static Bitmap compressBitmap(Bitmap bmp, int maxSizeInKB) {
         if (maxSizeInKB <= 0) {
@@ -158,7 +157,7 @@ public class BitmapUtils {
      *
      * @param path              图片地址
      * @param maxWidthAndHeight 图片输出的最大长宽
-     * @return
+     * @return Bitmap
      */
     public static Bitmap revisionImageSize(String path, int maxWidthAndHeight) {
         Bitmap bitmap = null;

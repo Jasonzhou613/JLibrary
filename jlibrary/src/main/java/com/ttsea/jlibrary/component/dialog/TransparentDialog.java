@@ -71,7 +71,7 @@ public class TransparentDialog extends Dialog {
             if (mContext != null) {
                 loadingHintText.setTextColor(mContext.getResources().getColor(R.color.white));
             }
-        } else {
+        } else if (loadingHintText != null) {
             loadingHintText.setVisibility(View.GONE);
         }
         super.show();
@@ -84,6 +84,7 @@ public class TransparentDialog extends Dialog {
                 super.dismiss();
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 }

@@ -115,7 +115,7 @@ public class CropActivity extends JBaseActivity implements View.OnClickListener 
         }
 
         if (Utils.isEmpty(outPutPath)) {
-            outPutPath = CacheDirUtils.getTempDir(mActivity);
+            outPutPath = CacheDirUtils.getSDTempDir(mActivity);
         }
 
         if (aspectX < 0) {

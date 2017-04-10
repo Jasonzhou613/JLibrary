@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.ttsea.jlibrary.JLibrary;
 import com.ttsea.jlibrary.R;
-import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.component.dialog.MyAlertDialog;
 import com.ttsea.jlibrary.component.dialog.MyDialog;
 import com.ttsea.jlibrary.component.dialog.MyProgressDialog;
@@ -28,14 +28,14 @@ import java.util.List;
  * <b>author:</b> Jason <br>
  * <b>version:</b> 1.0 <br>
  */
-public class JBaseFragmentActivity extends FragmentActivity {
+public class JBaseFragmentActivity extends AppCompatActivity {
     public Activity mActivity;
     public OnSingleClickListener mOnSingleClickListener;
 
     private MyProgressDialog progressDialog;
     private MyDialog myDialog;
     private Toast mToast;
-    private List<OnActivityLifeChangedListener> onActivityLifeChangedListenerList;
+    private List<OnActivityLifeChangedListener> mOnActivityLifeChangedListenerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,16 +43,17 @@ public class JBaseFragmentActivity extends FragmentActivity {
         mActivity = this;
 
         JBaseApplication.addActivity(mActivity);
-        //调试模式下，使其能够使用hierarchyview
-        if (JLog.isDebugMode()) {
-            ViewServer.get(mActivity).addWindow(this);
+        //调试模式下，使其能够使用hierarchyviewer
+        if (JLibrary.isDebugMode()) {
+            ViewServer.get(mActivity).addWindow(mActivity);
+        } else {
         }
 
         init();
     }
 
     private void init() {
-        onActivityLifeChangedListenerList = new ArrayList<OnActivityLifeChangedListener>();
+        mOnActivityLifeChangedListenerList = new ArrayList<OnActivityLifeChangedListener>();
         myDialog = new MyDialog(mActivity, R.style.my_dialog_theme, null, 120, 120);
         mOnSingleClickListener = new OnSingleClickListener() {
             @Override
@@ -65,8 +66,9 @@ public class JBaseFragmentActivity extends FragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        for (int i = 0; i < onActivityLifeChangedListenerList.size(); i++) {
-            OnActivityLifeChangedListener l = onActivityLifeChangedListenerList.get(i);
+
+        for (int i = 0; i < mOnActivityLifeChangedListenerList.size(); i++) {
+            OnActivityLifeChangedListener l = mOnActivityLifeChangedListenerList.get(i);
             if (l != null) {
                 l.onStart();
             }
@@ -77,11 +79,12 @@ public class JBaseFragmentActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         //调试模式下，使其能够使用hierarchyview
-        if (JLog.isDebugMode()) {
-            ViewServer.get(mActivity).setFocusedWindow(this);
+        if (JLibrary.isDebugMode()) {
+            ViewServer.get(mActivity).setFocusedWindow(mActivity);
         }
-        for (int i = 0; i < onActivityLifeChangedListenerList.size(); i++) {
-            OnActivityLifeChangedListener l = onActivityLifeChangedListenerList.get(i);
+
+        for (int i = 0; i < mOnActivityLifeChangedListenerList.size(); i++) {
+            OnActivityLifeChangedListener l = mOnActivityLifeChangedListenerList.get(i);
             if (l != null) {
                 l.onResume();
             }
@@ -91,8 +94,9 @@ public class JBaseFragmentActivity extends FragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        for (int i = 0; i < onActivityLifeChangedListenerList.size(); i++) {
-            OnActivityLifeChangedListener l = onActivityLifeChangedListenerList.get(i);
+
+        for (int i = 0; i < mOnActivityLifeChangedListenerList.size(); i++) {
+            OnActivityLifeChangedListener l = mOnActivityLifeChangedListenerList.get(i);
             if (l != null) {
                 l.onPause();
             }
@@ -102,8 +106,9 @@ public class JBaseFragmentActivity extends FragmentActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        for (int i = 0; i < onActivityLifeChangedListenerList.size(); i++) {
-            OnActivityLifeChangedListener l = onActivityLifeChangedListenerList.get(i);
+
+        for (int i = 0; i < mOnActivityLifeChangedListenerList.size(); i++) {
+            OnActivityLifeChangedListener l = mOnActivityLifeChangedListenerList.get(i);
             if (l != null) {
                 l.onStop();
             }
@@ -113,17 +118,23 @@ public class JBaseFragmentActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         //调试模式下，使其能够使用hierarchyview
-        if (JLog.isDebugMode()) {
-            ViewServer.get(mActivity).removeWindow(this);
+        if (JLibrary.isDebugMode()) {
+            ViewServer.get(mActivity).removeWindow(mActivity);
         }
-        while (!onActivityLifeChangedListenerList.isEmpty()) {
-            OnActivityLifeChangedListener l = onActivityLifeChangedListenerList.remove(0);
+        while (!mOnActivityLifeChangedListenerList.isEmpty()) {
+            OnActivityLifeChangedListener l = mOnActivityLifeChangedListenerList.remove(0);
             if (l != null) {
                 l.onDestroy();
             }
         }
         JBaseApplication.removeActivity(mActivity);
+
         super.onDestroy();
+    }
+
+    public void dismissAllDialog() {
+        dismissDialog();
+        dismissProgress();
     }
 
     /** 显示加载框 */
@@ -298,13 +309,13 @@ public class JBaseFragmentActivity extends FragmentActivity {
         showToast(getStringById(resId));
     }
 
-    /** finish该acitivity，并且设置resultCode */
+    /** finish该activity，并且设置resultCode */
     public void finish(int resultCode) {
         mActivity.setResult(resultCode);
         mActivity.finish();
     }
 
-    /** finish该acitivity，并且设置resultCode和Intent */
+    /** finish该activity，并且设置resultCode和Intent */
     public void finish(int resultCode, Intent data) {
         mActivity.setResult(resultCode, data);
         mActivity.finish();
@@ -316,14 +327,14 @@ public class JBaseFragmentActivity extends FragmentActivity {
 
     /** 添加Activity生命周期监听器 */
     public void addActivityLifeCycleListener(OnActivityLifeChangedListener l) {
-        if (!onActivityLifeChangedListenerList.contains(l)) {
-            onActivityLifeChangedListenerList.add(l);
+        if (!mOnActivityLifeChangedListenerList.contains(l)) {
+            mOnActivityLifeChangedListenerList.add(l);
         }
     }
 
     /** 移除指定的Activity生命周期监听器 */
     public void removeActivityLifeCycleListener(OnActivityLifeChangedListener l) {
-        onActivityLifeChangedListenerList.remove(l);
+        mOnActivityLifeChangedListenerList.remove(l);
     }
 
     /** 显示正常的View */

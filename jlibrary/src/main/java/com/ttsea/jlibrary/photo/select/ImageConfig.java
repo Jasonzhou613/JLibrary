@@ -270,7 +270,7 @@ public class ImageConfig implements Serializable {
                 this.pathList = new ArrayList<ImageItem>();
             }
             if (outPutPath == null) {
-                outPutPath = CacheDirUtils.getTempDir(mContext);
+                outPutPath = CacheDirUtils.getSDTempDir(mContext);
             }
             if (titleBgColorRes == -1) {
                 titleBgColorRes = R.color.photo_title_bar_bg;

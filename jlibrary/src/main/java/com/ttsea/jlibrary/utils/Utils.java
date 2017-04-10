@@ -1,12 +1,9 @@
 package com.ttsea.jlibrary.utils;
 
-import android.app.Activity;
 import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import com.ttsea.jlibrary.common.JLog;
 
@@ -29,38 +26,20 @@ public class Utils {
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    /**
-     * 通过Uri获取图片的绝对路径
-     *
-     * @param activity
-     * @param uri
-     * @return String or null
-     */
-    public static String getPathByUri(Activity activity, Uri uri) {
-        String path = null;
-        if (uri == null) {
-            return null;
-        }
-
+    /** 显示软键盘 */
+    public static void showInput(final Context context, final EditText editText) {
         try {
-            // Bitmap bm = MediaStore.Images.Media
-            // .getBitmap(resolver, originalUri); // 先得到bitmap图片
-            String[] proj = {MediaStore.Images.Media.DATA};
-            // 好像是android多媒体数据库的封装接口，具体的看Android文档
-            Cursor cursor = activity.managedQuery(uri, proj, null,
-                    null, null);
-            // 按我个人理解 这个是获得用户选择的图片的索引值
-            int column_index = cursor
-                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            // 将光标移至开头 ，这个很重要，不小心很容易引起越界
-            cursor.moveToFirst();
-            // 最后根据索引值获取图片路径
-            path = cursor.getString(column_index);
-
+            editText.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    InputMethodManager keyboard = (InputMethodManager)
+                            context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    keyboard.showSoftInput(editText, 0);
+                }
+            }, 500);
         } catch (Exception e) {
-            JLog.e(TAG, "getPathByUri, Exception e:" + e.toString());
+            JLog.e(TAG, "Exception e:" + e.toString());
         }
-        return path;
     }
 
     /** 判断str是否为空 */

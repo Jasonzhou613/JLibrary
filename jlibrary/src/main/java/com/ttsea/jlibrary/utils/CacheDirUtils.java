@@ -2,6 +2,7 @@ package com.ttsea.jlibrary.utils;
 
 import android.content.Context;
 
+import com.ttsea.jlibrary.JLibrary;
 import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.common.JLog;
 
@@ -35,22 +36,20 @@ public class CacheDirUtils {
     /** 需要存在SD卡里的数据目录 */
     private static String ROOT_SD_DATA_DIR = null;
     /** 临时目录 */
-    private static String TEMP_DIR = null;
-
+    private static String TEMP_DIR = "tmp";
 
     /** 如果目录变量为初始化，则初始化 */
     public static void initIfNeed(Context context) {
         if (ROOT_CACHE_DIR_DEBUG == null
                 || CACHE_IMAGE_DIR == null
                 || CACHE_DATA_DIR == null
-                || ROOT_SD_DATA_DIR == null
-                || TEMP_DIR == null) {
+                || ROOT_SD_DATA_DIR == null) {
 
-            ROOT_CACHE_DIR_DEBUG = getStringById(context, R.string._j_root_cache_dir_debug);
+            ROOT_CACHE_DIR_DEBUG = getStringById(context, R.string._j_cache_root_dir_debug);
             CACHE_IMAGE_DIR = getStringById(context, R.string._j_cache_image_dir);
             CACHE_DATA_DIR = getStringById(context, R.string._j_cache_data_dir);
-            ROOT_SD_DATA_DIR = getStringById(context, R.string._j_root_sd_data_dir);
-            TEMP_DIR = getStringById(context, R.string._j_tmp_dir);
+            ROOT_SD_DATA_DIR = getStringById(context, R.string._j_sd_data_root_dir);
+
             JLog.d(TAG, "init dirs: " + "ROOT_CACHE_DIR_DEBUG:" + ROOT_CACHE_DIR_DEBUG +
                     "\n " + "CACHE_IMAGE_DIR:" + CACHE_IMAGE_DIR +
                     "\n " + "CACHE_DATA_DIR:" + CACHE_DATA_DIR +
@@ -69,11 +68,13 @@ public class CacheDirUtils {
      */
     public static String getCacheDir(Context context) {
         initIfNeed(context);
-        if (JLog.isDebugMode()) {
+
+        if (JLibrary.isDebugMode()) {
             String exSDdir = SdStatusUtils.getExternalStorageAbsoluteDir();
             if (exSDdir != null) {
-                CACHE_DIR = exSDdir + File.separator + getStringById(context, R.string._j_root_cache_dir_debug);
+                CACHE_DIR = exSDdir + File.separator + ROOT_CACHE_DIR_DEBUG + File.separator + "cache";
                 createDirIfNeed(CACHE_DIR);
+
                 return CACHE_DIR;
             }
         }
@@ -131,7 +132,39 @@ public class CacheDirUtils {
         return sdDataDir;
     }
 
-    public static String getTempDir(Context context) {
+    /**
+     * 获取存放在SD卡里图片的地址
+     *
+     * @param context 上下文
+     * @return String
+     */
+    public static String getSDImageDir(Context context) {
+        initIfNeed(context);
+        String dir = getSdDataDir(context) + File.separator + CACHE_IMAGE_DIR;
+        createDirIfNeed(dir);
+        return dir;
+    }
+
+    /**
+     * 获取存放在SD卡里数据的地址
+     *
+     * @param context 上下文
+     * @return String
+     */
+    public static String getSDDataDir(Context context) {
+        initIfNeed(context);
+        String dir = getSdDataDir(context) + File.separator + CACHE_DATA_DIR;
+        createDirIfNeed(dir);
+        return dir;
+    }
+
+    /**
+     * 获取SD卡临时目录
+     *
+     * @param context 上下文
+     * @return String
+     */
+    public static String getSDTempDir(Context context) {
         initIfNeed(context);
         String dirPath = getSdDataDir(context) + File.separator + TEMP_DIR;
         createDirIfNeed(dirPath);

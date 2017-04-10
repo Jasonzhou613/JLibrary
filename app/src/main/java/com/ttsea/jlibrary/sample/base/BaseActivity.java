@@ -1,4 +1,4 @@
-package com.ttsea.jlibrary.base;
+package com.ttsea.jlibrary.sample.base;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -8,27 +8,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
-import com.ttsea.jlibrary.JLibrary;
-import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.component.dialog.MyAlertDialog;
 import com.ttsea.jlibrary.component.dialog.MyDialog;
 import com.ttsea.jlibrary.component.dialog.MyProgressDialog;
 import com.ttsea.jlibrary.debug.ViewServer;
 import com.ttsea.jlibrary.interfaces.OnActivityLifeChangedListener;
 import com.ttsea.jlibrary.interfaces.OnSingleClickListener;
+import com.ttsea.jlibrary.sample.R;
+import com.ttsea.jlibrary.sample.config.Config;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * /Activity基类，这里只对UI进行处理 <br>
+ * Activity基类，这里只对UI进行处理 <br>
  * <p>
  * <b>more:</b>更多请点 <a href="http://www.ttsea.com" target="_blank">这里</a> <br>
- * <b>date:</b> 2017/4/10 9:55 <br>
+ * <b>date:</b> 2017/4/10 11:10 <br>
  * <b>author:</b> Jason <br>
  * <b>version:</b> 1.0 <br>
  */
-public class JBaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity {
     public Activity mActivity;
     public OnSingleClickListener mOnSingleClickListener;
 
@@ -42,9 +42,9 @@ public class JBaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mActivity = this;
 
-        JBaseApplication.addActivity(mActivity);
+        BaseApplication.addActivity(mActivity);
         //调试模式下，使其能够使用hierarchyviewer
-        if (JLibrary.isDebugMode()) {
+        if (Config.DEBUG) {
             ViewServer.get(mActivity).addWindow(mActivity);
         } else {
         }
@@ -58,7 +58,7 @@ public class JBaseActivity extends AppCompatActivity {
         mOnSingleClickListener = new OnSingleClickListener() {
             @Override
             public void onSingleClick(View v) {
-                JBaseActivity.this.onSingleClick(v);
+                BaseActivity.this.onSingleClick(v);
             }
         };
     }
@@ -79,7 +79,7 @@ public class JBaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         //调试模式下，使其能够使用hierarchyview
-        if (JLibrary.isDebugMode()) {
+        if (Config.DEBUG) {
             ViewServer.get(mActivity).setFocusedWindow(mActivity);
         }
 
@@ -118,7 +118,7 @@ public class JBaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         //调试模式下，使其能够使用hierarchyview
-        if (JLibrary.isDebugMode()) {
+        if (Config.DEBUG) {
             ViewServer.get(mActivity).removeWindow(mActivity);
         }
         while (!mOnActivityLifeChangedListenerList.isEmpty()) {
@@ -127,7 +127,7 @@ public class JBaseActivity extends AppCompatActivity {
                 l.onDestroy();
             }
         }
-        JBaseApplication.removeActivity(mActivity);
+        BaseApplication.removeActivity(mActivity);
 
         super.onDestroy();
     }
