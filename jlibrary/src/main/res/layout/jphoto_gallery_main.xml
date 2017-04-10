@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black">
+
+    <include layout="@layout/jtitle_bar_left"/>
+
+    <com.ttsea.jlibrary.photo.gallery.ViewPagerFixed
+        android:id="@+id/viwePager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/llyTitleBar"
+        android:layout_centerHorizontal="true"
+        android:background="@color/photo_black"
+        android:unselectedAlpha="1"/>
+
+    <RelativeLayout
+        android:id="@+id/llyBottomView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/translucent44">
+
+        <Button
+            android:id="@+id/btnUnClockwiseRotation"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/jphoto_unclockwise_rotation_selector"/>
+
+        <Button
+            android:id="@+id/btnClockwiseRotation"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/jphoto_clockwise_rotation_selector"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

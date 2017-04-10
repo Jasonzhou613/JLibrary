@@ -1,0 +1,56 @@
+<resources>
+
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+    </style>
+
+    <style name="AppTheme" parent="AppBaseTheme">
+    </style>
+
+    <!-- MyProgressDialog样式 start -->
+    <style name="my_progress_dialog_theme" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+    <!-- MyProgressDialog样式 end -->
+
+    <!-- MyDialog样式 start-->
+    <style name="my_dialog_theme" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@drawable/jmy_dialog_bg</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+    <!-- MyDialog样式 end-->
+
+    <!-- TransparentDialog样式 start-->
+    <style name="my_transparent_theme" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@drawable/jmy_dialog_bg</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFrame">@null</item><!--边框-->
+        <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
+        <item name="android:windowIsTranslucent">true</item><!--半透明-->
+        <item name="android:backgroundDimEnabled">false</item><!--模糊-->
+    </style>
+    <!-- TransparentDialog样式 end-->
+
+    <!-- MyAlertDialog样式 start-->
+    <style name="my_alert_dialog" parent="android:style/Theme.Dialog">
+        <item name="android:background">#00000000</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+    <!-- MyAlertDialog样式 end-->
+
+    <!-- photo start -->
+    <style name="Photo.Gallery.Progress.Style" parent="@android:style/Widget.ProgressBar.Large">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:indeterminateDrawable">@drawable/jphoto_progress_bg</item>
+        <item name="android:indeterminateDuration">1200</item>
+        <item name="android:minWidth">50dip</item>
+        <item name="android:maxWidth">50dip</item>
+        <item name="android:minHeight">50dip</item>
+        <item name="android:maxHeight">50dip</item>
+    </style>
+    <!-- photo start -->
+
+</resources>

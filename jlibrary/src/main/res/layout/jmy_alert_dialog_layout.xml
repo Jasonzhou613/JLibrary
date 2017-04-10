@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:clickable="true"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/jmy_alert_dialog_bg"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/llyTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/hit"
+                android:textColor="#FF333333"
+                android:textSize="14sp"
+                android:visibility="visible"/>
+
+            <include layout="@layout/jdivider_line_horizontal"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llyContentView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.0"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/tvMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left|center"
+                android:lineSpacingMultiplier="1.5"
+                android:minHeight="80.0dip"
+                android:padding="16.0dip"
+                android:textColor="#FF666666"
+                android:textSize="12sp"/>
+
+            <include layout="@layout/jdivider_line_horizontal"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <Button
+                android:id="@+id/negativeButton"
+                android:layout_width="0dp"
+                android:layout_height="40dip"
+                android:layout_weight="1.0"
+                android:background="@drawable/jmy_alert_dialog_cancel_btn_selector"
+                android:gravity="center"
+                android:text="@string/cancel"
+                android:textColor="#FF666666"
+                android:textSize="14sp"
+                android:visibility="visible"/>
+
+            <include
+                android:id="@+id/divider"
+                layout="@layout/jdivider_line_vertical"/>
+
+            <Button
+                android:id="@+id/positiveButton"
+                android:layout_width="0dp"
+                android:layout_height="40dip"
+                android:layout_weight="1.0"
+                android:background="@drawable/jmy_alert_dialog_ok_btn_selector"
+                android:gravity="center"
+                android:text="@string/ok"
+                android:textColor="#FF45C4D4"
+                android:textSize="14sp"
+                android:visibility="visible"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
+
+

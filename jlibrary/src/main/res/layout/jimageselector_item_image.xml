@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/ivImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"/>
+
+    <View
+        android:id="@+id/photoMask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/translucent44"
+        android:visibility="gone"/>
+
+    <FrameLayout
+        android:id="@+id/flyCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|right"
+        android:paddingBottom="20dp"
+        android:paddingLeft="20dp">
+
+        <ImageView
+            android:id="@+id/ivCheck"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="top|right"
+            android:contentDescription="@null"
+            android:scaleType="center"
+            android:src="@drawable/imageselector_select_uncheck"/>
+
+    </FrameLayout>
+
+</FrameLayout>
