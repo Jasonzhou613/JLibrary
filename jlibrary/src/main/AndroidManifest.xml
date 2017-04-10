@@ -2,10 +2,49 @@
     package="com.ttsea.jlibrary"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- 联网 -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <!-- sd卡读写权限 -->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
     <application
         android:allowBackup="true"
         android:label="@string/app_name"
         android:supportsRtl="true">
+
+        <!--Photo Activitys start -->
+        <activity
+            android:name="com.ttsea.jlibrary.photo.select.ImageSelectorActivity"
+            android:theme="@style/Theme.PhotoTheme"/>
+
+        <activity
+            android:name="com.ttsea.jlibrary.photo.select.ImagePreviewActivity"
+            android:theme="@style/Theme.PhotoTheme"/>
+
+        <activity
+            android:name="com.ttsea.jlibrary.photo.crop.CropActivity"
+            android:theme="@style/Theme.PhotoTheme">
+            <intent-filter>
+                <action android:name="com.ttsea.photo.crop.action.CROP"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="image/*"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.ttsea.jlibrary.photo.gallery.GalleryActivity"
+            android:theme="@style/Theme.PhotoTheme">
+            <intent-filter>
+                <action android:name="com.ttsea.photo.crop.action.GALLERY"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="image/*"/>
+            </intent-filter>
+        </activity>
+        <!--Photo Activitys end -->
 
     </application>
 

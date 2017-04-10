@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ttsea.jlibrary.R;
-import com.ttsea.jlibrary.base.JBaseFragmentActivity;
+import com.ttsea.jlibrary.base.JBaseActivity;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.photo.crop.CropActivity;
 import com.ttsea.jlibrary.photo.crop.CropConstants;
@@ -23,7 +23,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageSelectorActivity extends JBaseFragmentActivity implements View.OnClickListener,
+public class ImageSelectorActivity extends JBaseActivity implements View.OnClickListener,
         ImageSelectorFragment.OnImageSelectListener {
     private final String TAG = "Select.ImageSelectorActivity";
 
@@ -76,7 +76,7 @@ public class ImageSelectorActivity extends JBaseFragmentActivity implements View
         int marginTB = (marginLR * 2) / 3;
         if (params != null) {
             params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            params.height = DisplayUtils.dip2px(mActivity, 32);
             if (params instanceof RelativeLayout.LayoutParams) {
                 ((RelativeLayout.LayoutParams) params).setMargins(0, 0, marginLR, 0);
             }

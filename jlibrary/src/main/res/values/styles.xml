@@ -6,6 +6,10 @@
     <style name="AppTheme" parent="AppBaseTheme">
     </style>
 
+    <style name="Theme.PhotoTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <!-- MyProgressDialog样式 start -->
     <style name="my_progress_dialog_theme" parent="@android:style/Theme.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -22,7 +26,7 @@
 
     <!-- TransparentDialog样式 start-->
     <style name="my_transparent_theme" parent="@android:style/Theme.Dialog">
-        <item name="android:windowBackground">@drawable/jmy_dialog_bg</item>
+        <item name="android:windowBackground">@drawable/jtransparent_dialog_bg</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFrame">@null</item><!--边框-->
         <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->

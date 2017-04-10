@@ -28,7 +28,7 @@ import java.util.List;
  * <b>author:</b> Jason <br>
  * <b>version:</b> 1.0 <br>
  */
-public class JBaseFragmentActivity extends AppCompatActivity {
+class JBaseFragmentActivity extends AppCompatActivity {
     public Activity mActivity;
     public OnSingleClickListener mOnSingleClickListener;
 
