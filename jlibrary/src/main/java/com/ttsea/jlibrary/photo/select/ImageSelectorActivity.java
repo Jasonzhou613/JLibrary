@@ -57,12 +57,13 @@ public class ImageSelectorActivity extends JBaseActivity implements View.OnClick
 
         if (cropConfig == null) {
             cropConfig = new CropConfig.Builder().build();
-
-        } else if (ImageUtils.isEmpty(cropConfig.getOutPutPath())) {
+        }
+        if (ImageUtils.isEmpty(cropConfig.getOutPutPath())) {
             cropConfig.getBuilder().setOutPutPath(CacheDirUtils.getImageCacheDir(mActivity));
         }
 
-        JLog.d(TAG, "selectConfig:" + selectConfig.toString() + "\ncropConfig:" + cropConfig.toString());
+        JLog.d(TAG, "selectConfig:" + selectConfig.toString());
+        JLog.d(TAG, "cropConfig:" + cropConfig.toString());
 
         initView();
 

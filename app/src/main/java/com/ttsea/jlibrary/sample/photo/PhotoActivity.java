@@ -147,21 +147,21 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 
     private void selectPhoto() {
         SelectConfig selectConfig = new SelectConfig.Builder()
-                .setMultiSelect(true)//设置是否是多选，默认为：true
+                .setMultiSelect(false)//设置是否是多选，默认为：true
                 .setMaxSize(9)//多选时，最多可选数量，默认为：9
                 .setShowCamera(true)//是否显示拍照项，认为：true
                 //请求code，用于onActivityResult接收，默认为：ImageSelector.TAKE_PHOTO_BY_GALLERY
                 .setRequestCode(REQUEST_CODE_SELECT_PIC)
                 //设置原本已经选择了的图片
                 //.setPathList(selectedList)
-                .setCrop(false)
+                .setCrop(true)
                 .build();
 
         CropConfig cropConfig = new CropConfig.Builder()
                 //设置剪切图片的输出路径
-                .setOutPutPath(CacheDirUtils.getSdTempDir(mActivity) + File.separator + "photo")
+                .setOutPutPath(CacheDirUtils.getSdTempDir(mActivity))
                 .setAspectX(4)//设置X比例
-                .setAspectY(3)//设置Y比例
+                .setAspectY(4)//设置Y比例
                 .setOutputX(500)//设置保存图片X最大值
                 .setOutputY(500)//设置保存图片Y最大值
                 //设置剪切模式，默认为(CROP_MODE_RECTANGLE)矩形
@@ -169,8 +169,8 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 .setImageSuffix(".nomedia")//设置剪切图片后保存和拍照保存后的后缀名，默认为".jpg"
                 .setReturnData(false)//是否返回数据
                 .setFixedAspectRatio(true)//设置是否保持剪切比例，默认为true
-                .setCanMoveFrame(false)//按住剪切框中间，是否可以拖动整个剪切框, 默认为false
-                .setCanDragFrameConner(false)//按住剪切框四个角，是否可以拖动剪切框的四个角
+                .setCanMoveFrame(true)//按住剪切框中间，是否可以拖动整个剪切框, 默认为false
+                .setCanDragFrameConner(true)//按住剪切框四个角，是否可以拖动剪切框的四个角
                 .build();
 
         JLog.d(TAG, "selectConfig:" + selectConfig.toString() + "\n cropConfig:" + cropConfig.toString());

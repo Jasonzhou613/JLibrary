@@ -74,18 +74,18 @@
             juility:cv_cropMode="rectangle"
             juility:cv_fixedAspectRatio="true"
 
-            juility:cv_frameLineColor="#FF00CC00"
+            juility:cv_frameLineColor="#FFFFFFFF"
             juility:cv_frameLineShowMode="show_always"
             juility:cv_frameLineWidth="1.66dp"
             juility:cv_frameShadowColor="@color/translucent99"
 
             juility:cv_gridColumnCount="2"
-            juility:cv_gridLineColor="#FF00CC00"
+            juility:cv_gridLineColor="#FFFFFFFF"
             juility:cv_gridLineShowMode="show_on_touch"
             juility:cv_gridLineWidth="1dp"
             juility:cv_gridRowCount="2"
 
-            juility:cv_handleLineColor="#FF00CC00"
+            juility:cv_handleLineColor="#FFFFFFFF"
             juility:cv_handleLineLength="20dp"
             juility:cv_handleLineShowMode="show_always"
             juility:cv_handleLineWidth="2dp"/>

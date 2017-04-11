@@ -14,6 +14,7 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.ttsea.jlibrary.JLibrary;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.sample.R;
+import com.ttsea.jlibrary.sample.config.Config;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
 
 import java.io.File;
@@ -51,7 +52,7 @@ public class BaseApplication extends Application {
     /** 初始化全局变量 */
     private void initGlobalConfig() {
         JLibrary.init(getApplicationContext());
-        //JLibrary.debugMode(Config.DEBUG);
+        JLibrary.debugMode(Config.DEBUG);
     }
 
     /** 初始化ImageLoader */
