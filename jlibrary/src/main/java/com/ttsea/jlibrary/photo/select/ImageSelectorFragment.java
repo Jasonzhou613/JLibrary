@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -62,6 +63,7 @@ public class ImageSelectorFragment extends android.support.v4.app.Fragment imple
     private View popupAnchorView;
     private TextView tvPreview;
     private View llyPreview;
+    private View loadingView;
 
     private ArrayList<ImageItem> selectedList;
     private List<ImageItem> imageList;
@@ -118,11 +120,13 @@ public class ImageSelectorFragment extends android.support.v4.app.Fragment imple
         btnCategory = (TextView) view.findViewById(R.id.btnCategory);
         tvPreview = (TextView) view.findViewById(R.id.tvPreview);
         llyPreview = view.findViewById(R.id.llyPreview);
+        loadingView = view.findViewById(R.id.loadingView);
 
         tvDate.setVisibility(View.GONE);
         btnCategory.setText(R.string.image_all_folder);
         btnCategory.setOnClickListener(this);
         tvPreview.setOnClickListener(this);
+        loadingView.setOnClickListener(this);
 
         init();
     }
@@ -503,7 +507,7 @@ public class ImageSelectorFragment extends android.support.v4.app.Fragment imple
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.btnCategory) {//点击所有图片，弹出相册选择pop
+        if (v.getId() == R.id.btnCategory && folderList.size() > 0) {//点击所有图片，弹出相册选择pop
             showFolderPopupWindow();
         } else if (v.getId() == R.id.tvPreview) {//预览
             previewList(selectedList, 0);
@@ -572,10 +576,11 @@ public class ImageSelectorFragment extends android.support.v4.app.Fragment imple
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            loadingView.setVisibility(View.VISIBLE);
+
             if (id == LOADER_TYPE_ALL) {
                 CursorLoader cursorLoader =
-                        new CursorLoader(getActivity(),
-                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION,
+                        new CursorLoader(getActivity(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION,
                                 null, null, IMAGE_PROJECTION[2] + " DESC");
                 return cursorLoader;
 
@@ -591,61 +596,86 @@ public class ImageSelectorFragment extends android.support.v4.app.Fragment imple
 
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            if (data == null) {
+                loadingView.setVisibility(View.GONE);
+                return;
+            }
+
             JLog.printCursor(data);
-            if (data != null) {
-                int count = data.getCount();
-                if (count > 0) {
-                    ArrayList<ImageItem> tempImageList = new ArrayList<>();
-                    imageList.clear();
-                    folderList.clear();
-                    data.moveToFirst();
-                    do
-                    {
-                        String path = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]));
-                        String name = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1]));
-                        long dateTime = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
 
-                        //加载所有图片
-                        ImageItem image = new ImageItem(path, name, dateTime);
-                        tempImageList.add(image);
+            if (data.getCount() > 0) {
+                ArrayList<ImageItem> tempImageList = new ArrayList<>();
+                imageList.clear();
+                folderList.clear();
+                data.moveToFirst();
 
-                        //加载所有文件夹
-                        File imageFile = new File(path);
-                        File folderFile = imageFile.getParentFile();
-                        Folder folder = new Folder();
-                        folder.setName(folderFile.getName());
-                        folder.setPath(folderFile.getAbsolutePath());
-                        folder.setCover(image);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
 
-                        if (!folderList.contains(folder)) {
-                            List<ImageItem> imageList = new ArrayList<>();
-                            imageList.add(image);
-                            folder.setImages(imageList);
-                            folderList.add(folder);
-                        } else {
-                            Folder f = folderList.get(folderList.indexOf(folder));
-                            f.getImages().add(image);
-                        }
+                do
+                {
+                    String path = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]));
+                    String name = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1]));
+                    long dateTime = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
+
+                    BitmapFactory.decodeFile(path, options);
+                    if (options.mCancel || options.outWidth == -1 || options.outHeight == -1) {
+                        //表示图片已损毁
+                        JLog.e(TAG, "Image has damaged, path:" + path);
+                        continue;
                     }
-                    while (data.moveToNext());
 
-                    imageList.addAll(tempImageList);
-                    imageAdapter.notifyDataSetChanged();
-                    //设置默认选择项
-                    imageAdapter.setDefaultSelected(selectedList);
+                    //加载所有图片
+                    ImageItem image = new ImageItem(path, name, dateTime);
+                    tempImageList.add(image);
 
-                    if ((folderList == null || folderList.size() < 1)
-                            && !selectConfig.isShowCamera()) {
-                        gvImages.setVisibility(View.GONE);
-                        tvNoPicture.setVisibility(View.VISIBLE);
+                    //加载所有文件夹
+                    File imageFile = new File(path);
+                    File folderFile = imageFile.getParentFile();
+                    Folder folder = new Folder();
+                    folder.setName(folderFile.getName());
+                    folder.setPath(folderFile.getAbsolutePath());
+                    folder.setCover(image);
+
+                    if (!folderList.contains(folder)) {
+                        List<ImageItem> imageList = new ArrayList<>();
+                        imageList.add(image);
+                        folder.setImages(imageList);
+                        folderList.add(folder);
                     } else {
-                        gvImages.setVisibility(View.VISIBLE);
-                        tvNoPicture.setVisibility(View.GONE);
+                        Folder f = folderList.get(folderList.indexOf(folder));
+                        f.getImages().add(image);
                     }
+                }
+                while (data.moveToNext());
 
-                    folderAdapter.setData(folderList);
+                imageList.addAll(tempImageList);
+                imageAdapter.notifyDataSetChanged();
+                //设置默认选择项
+                imageAdapter.setDefaultSelected(selectedList);
+
+                if ((folderList == null || folderList.size() < 1) && !selectConfig.isShowCamera()) {
+                    gvImages.setVisibility(View.GONE);
+                    tvNoPicture.setVisibility(View.VISIBLE);
+
+                } else {
+                    gvImages.setVisibility(View.VISIBLE);
+                    tvNoPicture.setVisibility(View.GONE);
+                }
+
+                folderAdapter.setData(folderList);
+            } else {
+                if (!selectConfig.isShowCamera()) {
+                    gvImages.setVisibility(View.GONE);
+                    tvNoPicture.setVisibility(View.VISIBLE);
+
+                } else {
+                    gvImages.setVisibility(View.VISIBLE);
+                    tvNoPicture.setVisibility(View.GONE);
                 }
             }
+
+            loadingView.setVisibility(View.GONE);
         }
 
         @Override

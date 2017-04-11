@@ -45,7 +45,7 @@
     <!-- MyAlertDialog样式 end-->
 
     <!-- photo start -->
-    <style name="Photo.Gallery.Progress.Style" parent="@android:style/Widget.ProgressBar.Large">
+    <style name="Photo.Progress.Style" parent="@android:style/Widget.ProgressBar.Large">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:indeterminateDrawable">@drawable/jphoto_progress_bg</item>
@@ -54,6 +54,12 @@
         <item name="android:maxWidth">50dip</item>
         <item name="android:minHeight">50dip</item>
         <item name="android:maxHeight">50dip</item>
+    </style>
+
+    <style name="Photo.Gallery.Progress.Style" parent="@style/Photo.Progress.Style">
+    </style>
+
+    <style name="Photo.Select.Progress.Style" parent="@style/Photo.Progress.Style">
     </style>
     <!-- photo start -->
 

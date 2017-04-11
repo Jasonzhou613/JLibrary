@@ -93,4 +93,17 @@
 
     </RelativeLayout>
 
+    <FrameLayout
+        android:id="@+id/loadingView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/pbProgress"
+            style="@style/Photo.Select.Progress.Style"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
+
 </RelativeLayout>

@@ -154,6 +154,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 .setRequestCode(REQUEST_CODE_SELECT_PIC)
                 //设置原本已经选择了的图片
                 //.setPathList(selectedList)
+                .setCrop(false)
                 .build();
 
         CropConfig cropConfig = new CropConfig.Builder()
