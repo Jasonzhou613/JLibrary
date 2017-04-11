@@ -103,4 +103,15 @@ public class ImageItem implements Serializable {
     public int hashCode() {
         return path != null ? path.hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        return "ImageItem{" +
+                "path='" + path + '\'' +
+                ", name='" + name + '\'' +
+                ", tag='" + tag + '\'' +
+                ", time=" + time +
+                ", isSelected=" + isSelected +
+                '}';
+    }
 }

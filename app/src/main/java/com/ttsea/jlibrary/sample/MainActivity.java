@@ -16,6 +16,8 @@ import com.ttsea.jlibrary.utils.DigitUtils;
 import com.ttsea.jlibrary.utils.RandomUtils;
 import com.ttsea.jlibrary.utils.SdStatusUtils;
 
+import io.reactivex.Observable;
+
 public class MainActivity extends BaseActivity {
     private final String TAG = "MainActivity";
 
@@ -141,13 +143,13 @@ public class MainActivity extends BaseActivity {
 //        ApkUtils.install(mActivity, new File(""));
 //        ApkUtils.launch(mActivity, "com.tiantiantui.ttt");
 
-        JLog.d(TAG, "getDataCacheDir:" + CacheDirUtils.getCacheDir(mActivity));
+        JLog.d(TAG, "getCacheDir:" + CacheDirUtils.getCacheDir(mActivity));
         JLog.d(TAG, "getImageCacheDir:" + CacheDirUtils.getImageCacheDir(mActivity));
         JLog.d(TAG, "getDataCacheDir:" + CacheDirUtils.getDataCacheDir(mActivity));
+        JLog.d(TAG, "getSdRootDir:" + CacheDirUtils.getSdRootDir(mActivity));
+        JLog.d(TAG, "getSdImageDir:" + CacheDirUtils.getSdImageDir(mActivity));
         JLog.d(TAG, "getSdDataDir:" + CacheDirUtils.getSdDataDir(mActivity));
-        JLog.d(TAG, "getSDImageDir:" + CacheDirUtils.getSDImageDir(mActivity));
-        JLog.d(TAG, "getSDDataDir:" + CacheDirUtils.getSDDataDir(mActivity));
-        JLog.d(TAG, "getSDTempDir:" + CacheDirUtils.getSDTempDir(mActivity));
+        JLog.d(TAG, "getSdTempDir:" + CacheDirUtils.getSdTempDir(mActivity));
 
         JLog.d(TAG, "getFloat:" + DigitUtils.getFloat(5.153456f, 1));
 

@@ -19,14 +19,17 @@
         <!--Photo Activitys start -->
         <activity
             android:name="com.ttsea.jlibrary.photo.select.ImageSelectorActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.PhotoTheme"/>
 
         <activity
             android:name="com.ttsea.jlibrary.photo.select.ImagePreviewActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.PhotoTheme"/>
 
         <activity
             android:name="com.ttsea.jlibrary.photo.crop.CropActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.PhotoTheme">
             <intent-filter>
                 <action android:name="com.ttsea.photo.crop.action.CROP"/>
@@ -37,6 +40,7 @@
 
         <activity
             android:name="com.ttsea.jlibrary.photo.gallery.GalleryActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.PhotoTheme">
             <intent-filter>
                 <action android:name="com.ttsea.photo.crop.action.GALLERY"/>

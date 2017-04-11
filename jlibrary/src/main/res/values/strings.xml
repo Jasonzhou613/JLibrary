@@ -53,6 +53,7 @@
     <string name="image_save_imageing">正在保存&#8230;</string>
     <string name="photo_not_select_pic">未选择图片</string>
     <string name="photo_position_can_not_less_than_zero">位置不能小于0</string>
+    <string name="photo_crop_image_error">剪切图片出错</string>
     <!-- Photo end -->
 
     <!-- Photo Crop 剪切图片，start -->

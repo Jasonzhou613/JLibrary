@@ -13,9 +13,10 @@ import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.photo.crop.CropView;
 import com.ttsea.jlibrary.photo.gallery.GalleryActivity;
 import com.ttsea.jlibrary.photo.gallery.GalleryConstants;
-import com.ttsea.jlibrary.photo.select.ImageConfig;
+import com.ttsea.jlibrary.photo.select.CropConfig;
 import com.ttsea.jlibrary.photo.select.ImageItem;
 import com.ttsea.jlibrary.photo.select.ImageSelector;
+import com.ttsea.jlibrary.photo.select.SelectConfig;
 import com.ttsea.jlibrary.sample.base.BaseActivity;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
 
@@ -40,7 +41,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 
     private ImageView ivImage;
     private TextView tvImagePath;
-    private List<ImageItem> selectedList;
+    private ArrayList<ImageItem> selectedList;
 
     private final int REQUEST_CODE_SELECT_PIC = 100;
     private final int REQUEST_CODE_BROWSE_PIC = 101;
@@ -138,24 +139,25 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         bundle.putInt(GalleryConstants.KEY_SELECTED_POSITION, 0);
         bundle.putBoolean(GalleryConstants.KEY_CAN_SAVE, true);
         bundle.putBoolean(GalleryConstants.KEY_CAN_ROTATE, false);
-        bundle.putString(GalleryConstants.KEY_SAVE_PATH, CacheDirUtils.getSDTempDir(mActivity));
+        bundle.putString(GalleryConstants.KEY_SAVE_PATH, CacheDirUtils.getSdTempDir(mActivity));
         intent.putExtras(bundle);
         startActivityForResult(intent, REQUEST_CODE_BROWSE_PIC);
     }
 
     private void selectPhoto() {
-        ImageConfig config = new ImageConfig.Builder(this)
-                .setMutiSelect(true)//设置是否是多选，默认为：true
+        SelectConfig selectConfig = new SelectConfig.Builder()
+                .setMultiSelect(true)//设置是否是多选，默认为：true
                 .setMaxSize(9)//多选时，最多可选数量，默认为：9
                 .setShowCamera(true)//是否显示拍照项，认为：true
                 //请求code，用于onActivityResult接收，默认为：ImageSelector.TAKE_PHOTO_BY_GALLERY
                 .setRequestCode(REQUEST_CODE_SELECT_PIC)
                 //设置原本已经选择了的图片
                 //.setPathList(selectedList)
+                .build();
 
-                .setCrop(false)//设置是否需要剪切,默认为：false，单选时生效
+        CropConfig cropConfig = new CropConfig.Builder()
                 //设置剪切图片的输出路径
-                .setOutPutPath(CacheDirUtils.getSDTempDir(mActivity) + File.separator + "photo")
+                .setOutPutPath(CacheDirUtils.getSdTempDir(mActivity) + File.separator + "photo")
                 .setAspectX(4)//设置X比例
                 .setAspectY(3)//设置Y比例
                 .setOutputX(500)//设置保存图片X最大值
@@ -167,12 +169,11 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
                 .setFixedAspectRatio(true)//设置是否保持剪切比例，默认为true
                 .setCanMoveFrame(false)//按住剪切框中间，是否可以拖动整个剪切框, 默认为false
                 .setCanDragFrameConner(false)//按住剪切框四个角，是否可以拖动剪切框的四个角
-
                 .build();
 
-        JLog.d(TAG, "config:" + config.toString());
+        JLog.d(TAG, "selectConfig:" + selectConfig.toString() + "\n cropConfig:" + cropConfig.toString());
 
-        ImageSelector.open(mActivity, config);
+        ImageSelector.open(mActivity, selectConfig, cropConfig);
     }
 
     @SuppressWarnings({"unchecked", "deprecation"})

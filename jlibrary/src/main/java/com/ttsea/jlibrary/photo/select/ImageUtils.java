@@ -53,4 +53,12 @@ class ImageUtils {
 
         return file;
     }
+
+    /** 判断str是否为空 */
+    static boolean isEmpty(String str) {
+        if (str == null || str.length() < 1) {
+            return true;
+        }
+        return false;
+    }
 }

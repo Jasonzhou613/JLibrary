@@ -9,14 +9,12 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
@@ -35,17 +33,16 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.ttsea.jlibrary.R;
-import com.ttsea.jlibrary.common.JImageLoader;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.common.JToast;
 import com.ttsea.jlibrary.interfaces.OnItemViewClickListener;
+import com.ttsea.jlibrary.utils.CacheDirUtils;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageSelectorFragment extends Fragment implements View.OnClickListener,
+public class ImageSelectorFragment extends android.support.v4.app.Fragment implements View.OnClickListener,
         OnItemViewClickListener, AdapterView.OnItemClickListener {
     private final String TAG = "Select.ImageSelectorFragment";
 
@@ -66,14 +63,14 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
     private TextView tvPreview;
     private View llyPreview;
 
-    private List<ImageItem> selectedList;
+    private ArrayList<ImageItem> selectedList;
     private List<ImageItem> imageList;
     private List<Folder> folderList;
 
     private OnImageSelectListener onImageSelectListener;
     private ImageAdapter imageAdapter;
     private FolderAdapter folderAdapter;
-    private ImageConfig imageConfig;
+    private SelectConfig selectConfig;
     private File tempFile;
 
     private int currentLoaderType = LOADER_TYPE_ALL;
@@ -83,17 +80,26 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
     public void onAttach(Activity activity) {
         mActivity = activity;
         super.onAttach(activity);
+
         try {
             onImageSelectListener = (OnImageSelectListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException("The Activity must implement ImageSelectorFragment.Callback interface...");
         }
-    }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        loadImages(LOADER_TYPE_ALL);
+        if (mActivity != null && mActivity.getIntent() != null
+                && mActivity.getIntent().getExtras() != null) {
+            Bundle bundle = mActivity.getIntent().getExtras();
+            selectConfig = (SelectConfig) bundle.getSerializable("selectConfig");
+        }
+
+        if (selectConfig == null) {
+            throw new NullPointerException("selectConfig could not be null");
+        }
+
+        if (ImageUtils.isEmpty(selectConfig.getOutPutPath())) {
+            selectConfig.getBuilder().setOutPutPath(CacheDirUtils.getSdRootDir(mActivity));
+        }
     }
 
     @Override
@@ -105,11 +111,11 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        tvDate = (TextView) view.findViewById(R.id.tvDate);
-        btnCategory = (TextView) view.findViewById(R.id.btnCategory);
         gvImages = (GridView) view.findViewById(R.id.gvImages);
         tvNoPicture = (TextView) view.findViewById(R.id.tvNoPicture);
+        tvDate = (TextView) view.findViewById(R.id.tvDate);
         popupAnchorView = view.findViewById(R.id.rlyBottomView);
+        btnCategory = (TextView) view.findViewById(R.id.btnCategory);
         tvPreview = (TextView) view.findViewById(R.id.tvPreview);
         llyPreview = view.findViewById(R.id.llyPreview);
 
@@ -121,22 +127,28 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
         init();
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        loadImages(LOADER_TYPE_ALL);
+    }
+
     private void init() {
         selectedList = new ArrayList<>();
         folderList = new ArrayList<>();
         imageList = new ArrayList<>();
 
-        imageConfig = ImageSelector.getImageConfig();
         folderAdapter = new FolderAdapter(mActivity);
         imageAdapter = new ImageAdapter(mActivity, imageList);
-        imageAdapter.setShowCamera(imageConfig.isShowCamera());
-        imageAdapter.setShowSelectIndicator(imageConfig.isMutiSelect());
+        imageAdapter.setShowCamera(selectConfig.isShowCamera());
+        imageAdapter.setShowSelectIndicator(selectConfig.isMultiSelect());
         imageAdapter.setOnItemViewClickListener(this);
 
         gvImages.setAdapter(imageAdapter);
         gvImages.setOnItemClickListener(this);
 
-        selectedList = imageConfig.getPathList();
+        selectedList = selectConfig.getPathList();
         if (selectedList == null) {
             selectedList = new ArrayList<ImageItem>();
         }
@@ -187,6 +199,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
                 int columnWidth = (width - columnSpace * (numCount - 1)) / numCount;
                 JLog.d(TAG, "columnWidth:" + columnWidth + ", columnSpace:" + columnSpace);
                 gvImages.setVerticalSpacing(columnSpace);
+                gvImages.setNumColumns(numCount);
                 imageAdapter.setItemSize(columnWidth);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -223,7 +236,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
         }
         tvPreview.setText(txt);
 
-        if (imageConfig.isMutiSelect()) {
+        if (selectConfig.isMultiSelect()) {
             llyPreview.setVisibility(View.VISIBLE);
         } else {
             llyPreview.setVisibility(View.INVISIBLE);
@@ -297,7 +310,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
                         if (index == 0) {
                             loadImages(LOADER_TYPE_ALL);
                             btnCategory.setText(R.string.image_all_folder);
-                            if (imageConfig.isShowCamera()) {
+                            if (selectConfig.isShowCamera()) {
                                 imageAdapter.setShowCamera(true);
                             } else {
                                 imageAdapter.setShowCamera(false);
@@ -329,7 +342,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
         if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             // 设置系统相机拍照后的输出路径
             // 创建临时文件
-            tempFile = ImageUtils.createTmpFile(imageConfig.getOutPutPath(), imageConfig.getImageSuffix());
+            tempFile = ImageUtils.createTmpFile(selectConfig.getOutPutPath(), selectConfig.getImageSuffix());
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(tempFile));
             startActivityForResult(cameraIntent, REQUEST_CODE_TAKE_CAMERA);
         } else {
@@ -344,7 +357,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
             JLog.d(TAG, "image is null, return");
             return;
         }
-        if (imageConfig.isMutiSelect()) {
+        if (selectConfig.isMultiSelect()) {
             if (selectedList.contains(image)) {
                 selectedList.remove(image);
                 image.setSelected(false);
@@ -352,7 +365,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
                     onImageSelectListener.onImageUnselected(selectedList, image);
                 }
             } else {
-                if (selectedList.size() >= imageConfig.getMaxSize()) {
+                if (selectedList.size() >= selectConfig.getMaxSize()) {
                     JToast.makeTextCenter(mActivity, getStringById(R.string.image_msg_amount_limit));
                     return;
                 }
@@ -381,7 +394,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
         Bundle bundle = new Bundle();
         //bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) list);
         bundle.putInt(ImageSelector.KEY_SELECTED_POSITION, position);
-        bundle.putInt(ImageSelector.KEY_MAX_SIZE, imageConfig.getMaxSize());
+        bundle.putInt(ImageSelector.KEY_MAX_SIZE, selectConfig.getMaxSize());
         intent.putExtras(bundle);
         startActivityForResult(intent, REQUEST_CODE_PREVIEW);
     }
@@ -433,10 +446,10 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (imageConfig.isMutiSelect()) {//多选
+        if (selectConfig.isMultiSelect()) {//多选
             if (imageAdapter.isShowCamera()) {//如果显示了拍照按钮
                 if (position == 0) {
-                    if (selectedList.size() >= imageConfig.getMaxSize()) {
+                    if (selectedList.size() >= selectConfig.getMaxSize()) {
                         JToast.makeTextCenter(mActivity, getStringById(R.string.image_msg_amount_limit));
                         return;
                     }
@@ -566,7 +579,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
             if (data != null) {
                 int count = data.getCount();
                 if (count > 0) {
-                    List<ImageItem> tempImageList = new ArrayList<>();
+                    ArrayList<ImageItem> tempImageList = new ArrayList<>();
                     imageList.clear();
                     folderList.clear();
                     data.moveToFirst();
@@ -606,7 +619,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
                     imageAdapter.setDefaultSelected(selectedList);
 
                     if ((folderList == null || folderList.size() < 1)
-                            && !imageConfig.isShowCamera()) {
+                            && !selectConfig.isShowCamera()) {
                         gvImages.setVisibility(View.GONE);
                         tvNoPicture.setVisibility(View.VISIBLE);
                     } else {
@@ -644,7 +657,7 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
          * @param selectedList 选择图片后的image list
          * @param image        被选择的图片
          */
-        void onImageSelected(List<ImageItem> selectedList, ImageItem image);
+        void onImageSelected(ArrayList<ImageItem> selectedList, ImageItem image);
 
         /**
          * 取消选择图片后触发
@@ -652,14 +665,14 @@ public class ImageSelectorFragment extends Fragment implements View.OnClickListe
          * @param selectedList 取消选择图片后的image list
          * @param image        被取消选择的图片
          */
-        void onImageUnselected(List<ImageItem> selectedList, ImageItem image);
+        void onImageUnselected(ArrayList<ImageItem> selectedList, ImageItem image);
 
         /**
          * 由于一些原因需要刷新被选择的图片列表
          *
          * @param selectedList 被选择的图片列表
          */
-        void onRefreshSelectedList(List<ImageItem> selectedList);
+        void onRefreshSelectedList(ArrayList<ImageItem> selectedList);
 
         /**
          * 拍照后触发

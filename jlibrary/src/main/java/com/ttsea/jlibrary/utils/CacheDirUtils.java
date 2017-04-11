@@ -117,9 +117,9 @@ public class CacheDirUtils {
      * 获取需要存放在SD卡里的数据的目录
      *
      * @param context 上下文
-     * @return String
+     * @return sd/ROOT_SD_DATA_DIR
      */
-    public static String getSdDataDir(Context context) {
+    public static String getSdRootDir(Context context) {
         initIfNeed(context);
         String exSDdir = SdStatusUtils.getExternalStorageAbsoluteDir();
         if (exSDdir == null) {
@@ -133,27 +133,27 @@ public class CacheDirUtils {
     }
 
     /**
-     * 获取存放在SD卡里图片的地址
+     * 获取存放在SD卡里图片的目录
      *
      * @param context 上下文
-     * @return String
+     * @return sd/ROOT_SD_DATA_DIR/CACHE_IMAGE_DIR
      */
-    public static String getSDImageDir(Context context) {
+    public static String getSdImageDir(Context context) {
         initIfNeed(context);
-        String dir = getSdDataDir(context) + File.separator + CACHE_IMAGE_DIR;
+        String dir = getSdRootDir(context) + File.separator + CACHE_IMAGE_DIR;
         createDirIfNeed(dir);
         return dir;
     }
 
     /**
-     * 获取存放在SD卡里数据的地址
+     * 获取存放在SD卡里数据的目录
      *
      * @param context 上下文
-     * @return String
+     * @return sd/ROOT_SD_DATA_DIR/CACHE_DATA_DIR
      */
-    public static String getSDDataDir(Context context) {
+    public static String getSdDataDir(Context context) {
         initIfNeed(context);
-        String dir = getSdDataDir(context) + File.separator + CACHE_DATA_DIR;
+        String dir = getSdRootDir(context) + File.separator + CACHE_DATA_DIR;
         createDirIfNeed(dir);
         return dir;
     }
@@ -162,11 +162,11 @@ public class CacheDirUtils {
      * 获取SD卡临时目录
      *
      * @param context 上下文
-     * @return String
+     * @return sd/ROOT_SD_DATA_DIR/TEMP_DIR
      */
-    public static String getSDTempDir(Context context) {
+    public static String getSdTempDir(Context context) {
         initIfNeed(context);
-        String dirPath = getSdDataDir(context) + File.separator + TEMP_DIR;
+        String dirPath = getSdRootDir(context) + File.separator + TEMP_DIR;
         createDirIfNeed(dirPath);
         return dirPath;
     }

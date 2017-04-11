@@ -15,9 +15,9 @@ import android.widget.TextView;
 import com.ttsea.jlibrary.base.JBaseAdapter;
 import com.ttsea.jlibrary.common.JImageLoader;
 import com.ttsea.jlibrary.component.widget.roundImage.RoundedImageView;
-import com.ttsea.jlibrary.photo.select.ImageConfig;
 import com.ttsea.jlibrary.photo.select.ImageItem;
 import com.ttsea.jlibrary.photo.select.ImageSelector;
+import com.ttsea.jlibrary.photo.select.SelectConfig;
 import com.ttsea.jlibrary.sample.base.BaseActivity;
 
 import java.util.ArrayList;
@@ -106,12 +106,12 @@ public class RoundImageActivity extends BaseActivity implements View.OnClickList
 
         switch (v.getId()) {
             case R.id.btnSelect:
-                ImageConfig config = new ImageConfig.Builder(mActivity)
-                        .setMutiSelect(false)
+                SelectConfig config = new SelectConfig.Builder()
+                        .setMultiSelect(false)
                         .setRequestCode(REQUEST_CODE_SELECT_PIC)
                         .setCrop(false)
                         .build();
-                ImageSelector.open(mActivity, config);
+                ImageSelector.open(mActivity, config, null);
                 break;
 
             default:

@@ -16,19 +16,19 @@ import com.ttsea.jlibrary.base.JBaseActivity;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.photo.crop.CropActivity;
 import com.ttsea.jlibrary.photo.crop.CropConstants;
+import com.ttsea.jlibrary.utils.CacheDirUtils;
 import com.ttsea.jlibrary.utils.DisplayUtils;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ImageSelectorActivity extends JBaseActivity implements View.OnClickListener,
         ImageSelectorFragment.OnImageSelectListener {
     private final String TAG = "Select.ImageSelectorActivity";
 
-    private List<ImageItem> selectedList;
-    private ImageConfig imageConfig;
+    private ArrayList<ImageItem> selectedList;
+    private SelectConfig selectConfig;
+    private CropConfig cropConfig;
 
     private View llyTitleBar;
     private Button btnLeft;
@@ -40,13 +40,36 @@ public class ImageSelectorActivity extends JBaseActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.jimageselector_activity);
 
-        imageConfig = ImageSelector.getImageConfig();
+        if (mActivity != null && mActivity.getIntent() != null
+                && mActivity.getIntent().getExtras() != null) {
+            Bundle bundle = mActivity.getIntent().getExtras();
+            selectConfig = (SelectConfig) bundle.getSerializable("selectConfig");
+            cropConfig = (CropConfig) bundle.getSerializable("cropConfig");
+        }
+
+        if (selectConfig == null) {
+            throw new NullPointerException("selectConfig could not be null");
+        }
+
+        if (ImageUtils.isEmpty(selectConfig.getOutPutPath())) {
+            selectConfig.getBuilder().setOutPutPath(CacheDirUtils.getSdRootDir(mActivity));
+        }
+
+        if (cropConfig == null) {
+            cropConfig = new CropConfig.Builder().build();
+
+        } else if (ImageUtils.isEmpty(cropConfig.getOutPutPath())) {
+            cropConfig.getBuilder().setOutPutPath(CacheDirUtils.getImageCacheDir(mActivity));
+        }
+
+        JLog.d(TAG, "selectConfig:" + selectConfig.toString() + "\ncropConfig:" + cropConfig.toString());
+
+        initView();
+
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.content, Fragment.instantiate(this, ImageSelectorFragment.class.getName(), null))
                 .commit();
-
-        initView();
     }
 
     private void initView() {
@@ -59,11 +82,11 @@ public class ImageSelectorActivity extends JBaseActivity implements View.OnClick
         btnRight.setOnClickListener(this);
 
         btnRight.setBackgroundResource(R.drawable.jphoto_select_ok_btn_selector);
-        btnRight.setTextColor(getColorById(imageConfig.getTitleSubmitTextColorRes()));
-        tvTitleBarName.setTextColor(getColorById(imageConfig.getTitleTextColorRes()));
-        llyTitleBar.setBackgroundColor(getColorById(imageConfig.getTitleBgColorRes()));
+        btnRight.setTextColor(getColorById(selectConfig.getTitleSubmitTextColorRes()));
+        tvTitleBarName.setTextColor(getColorById(selectConfig.getTitleTextColorRes()));
+        llyTitleBar.setBackgroundColor(getColorById(selectConfig.getTitleBgColorRes()));
 
-        selectedList = imageConfig.getPathList();
+        selectedList = selectConfig.getPathList();
         if (selectedList == null) {
             selectedList = new ArrayList<ImageItem>();
         }
@@ -76,7 +99,7 @@ public class ImageSelectorActivity extends JBaseActivity implements View.OnClick
         int marginTB = (marginLR * 2) / 3;
         if (params != null) {
             params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-            params.height = DisplayUtils.dip2px(mActivity, 32);
+            params.height = DisplayUtils.dip2px(mActivity, 30);
             if (params instanceof RelativeLayout.LayoutParams) {
                 ((RelativeLayout.LayoutParams) params).setMargins(0, 0, marginLR, 0);
             }
@@ -93,17 +116,17 @@ public class ImageSelectorActivity extends JBaseActivity implements View.OnClick
         //Intent intent = new Intent(CropConstants.ACTION_CROP);
         Intent intent = new Intent(mActivity, CropActivity.class);
         intent.setDataAndType(Uri.fromFile(new File(imagePath)), "image/*");
-        intent.putExtra(CropConstants.OUT_PUT_PATH, imageConfig.getOutPutPath());
-        intent.putExtra(CropConstants.ASPECT_X, imageConfig.getAspectX());
-        intent.putExtra(CropConstants.ASPECT_Y, imageConfig.getAspectY());
-        intent.putExtra(CropConstants.OUTPUT_X, imageConfig.getOutputX());
-        intent.putExtra(CropConstants.OUTPUT_Y, imageConfig.getOutputY());
-        intent.putExtra(CropConstants.CROP_MODEL, imageConfig.getCropModel());
-        intent.putExtra(CropConstants.IMAGE_SUFFIX, imageConfig.getImageSuffix());
-        intent.putExtra(CropConstants.RETURN_DATA, imageConfig.isReturnData());
-        intent.putExtra(CropConstants.CAN_MOVE_FRAME, imageConfig.isCanMoveFrame());
-        intent.putExtra(CropConstants.CAN_DRAG_FRAME_CONNER, imageConfig.isCanDragFrameConner());
-        intent.putExtra(CropConstants.FIXED_ASPECT_RATIO, imageConfig.isFixedAspectRatio());
+        intent.putExtra(CropConstants.OUT_PUT_PATH, cropConfig.getOutPutPath());
+        intent.putExtra(CropConstants.ASPECT_X, cropConfig.getAspectX());
+        intent.putExtra(CropConstants.ASPECT_Y, cropConfig.getAspectY());
+        intent.putExtra(CropConstants.OUTPUT_X, cropConfig.getOutputX());
+        intent.putExtra(CropConstants.OUTPUT_Y, cropConfig.getOutputY());
+        intent.putExtra(CropConstants.CROP_MODEL, cropConfig.getCropModel());
+        intent.putExtra(CropConstants.IMAGE_SUFFIX, cropConfig.getImageSuffix());
+        intent.putExtra(CropConstants.RETURN_DATA, cropConfig.isReturnData());
+        intent.putExtra(CropConstants.CAN_MOVE_FRAME, cropConfig.isCanMoveFrame());
+        intent.putExtra(CropConstants.CAN_DRAG_FRAME_CONNER, cropConfig.isCanDragFrameConner());
+        intent.putExtra(CropConstants.FIXED_ASPECT_RATIO, cropConfig.isFixedAspectRatio());
 
         startActivityForResult(intent, CropConstants.REQUEST_CODE_CROP_IMAGE);
     }
@@ -115,12 +138,12 @@ public class ImageSelectorActivity extends JBaseActivity implements View.OnClick
             btnRight.setEnabled(false);
         } else {
             txt = (getStringById(R.string.finish)) +
-                    "(" + selectedList.size() + "/" + imageConfig.getMaxSize() + ")";
+                    "(" + selectedList.size() + "/" + selectConfig.getMaxSize() + ")";
             btnRight.setEnabled(true);
         }
         btnRight.setText(txt);
 
-        if (imageConfig.isMutiSelect()) {
+        if (selectConfig.isMultiSelect()) {
             btnRight.setVisibility(View.VISIBLE);
         } else {
             btnRight.setVisibility(View.INVISIBLE);
@@ -134,59 +157,68 @@ public class ImageSelectorActivity extends JBaseActivity implements View.OnClick
 
     @Override
     public void onSingleImageSelected(ImageItem image) {
-        JLog.d(TAG, "onSingleImageSelected, image:" + image.toString());
-        if (imageConfig.isCrop()) {
+        JLog.d(TAG, "image:" + image.toString());
+        if (selectConfig.isCrop()) {
             crop(new File(image.getPath()));
+
         } else {
             selectedList.clear();
             selectedList.add(image);
             Intent data = new Intent();
             Bundle bundle = new Bundle();
-            bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) selectedList);
+            bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, selectedList);
             data.putExtras(bundle);
             finish(RESULT_OK, data);
         }
     }
 
     @Override
-    public void onImageSelected(List<ImageItem> list, ImageItem image) {
-        JLog.d(TAG, "onImageSelected, add image:" + image.toString());
-        selectedList = list;
+    public void onImageSelected(ArrayList<ImageItem> list, ImageItem image) {
+        JLog.d(TAG, "add image:" + image.toString());
+        selectedList.clear();
+        if (list != null) {
+            selectedList.addAll(list);
+        }
         refreshBtnRightStatus();
     }
 
     @Override
-    public void onImageUnselected(List<ImageItem> list, ImageItem image) {
-        JLog.d(TAG, "onImageSelected, remove image:" + image.toString());
-        selectedList = list;
+    public void onImageUnselected(ArrayList<ImageItem> list, ImageItem image) {
+        JLog.d(TAG, "remove image:" + image.toString());
+        selectedList.clear();
+        if (list != null) {
+            selectedList.addAll(list);
+        }
         refreshBtnRightStatus();
     }
 
     @Override
-    public void onRefreshSelectedList(List<ImageItem> selectedList) {
-        JLog.d(TAG, "onRefreshSelectedList, selectedList.size:" + selectedList.size());
-        this.selectedList = selectedList;
+    public void onRefreshSelectedList(ArrayList<ImageItem> list) {
+        JLog.d(TAG, "onRefreshSelectedList, list.size:" + list.size());
+        selectedList.clear();
+        if (list != null) {
+            selectedList.addAll(list);
+        }
         refreshBtnRightStatus();
     }
 
     @Override
     public void onCameraShot(File imageFile) {
         JLog.d(TAG, "onCameraShot, filePath:" + imageFile.getAbsolutePath());
-        if (imageFile != null) {
-            if (imageConfig.isCrop() && !imageConfig.isMutiSelect()) {
-                crop(imageFile);
-            } else {
-                ImageItem item = new ImageItem(imageFile.getAbsolutePath());
-                item.setSelected(true);
-                selectedList.clear();
-                selectedList.add(item);
 
-                Intent data = new Intent();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) selectedList);
-                data.putExtras(bundle);
-                finish(RESULT_OK, data);
-            }
+        if (selectConfig.isCrop() && !selectConfig.isMultiSelect()) {
+            crop(imageFile);
+        } else {
+            ImageItem item = new ImageItem(imageFile.getAbsolutePath());
+            item.setSelected(true);
+            selectedList.clear();
+            selectedList.add(item);
+
+            Intent data = new Intent();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, selectedList);
+            data.putExtras(bundle);
+            finish(RESULT_OK, data);
         }
     }
 
@@ -198,7 +230,7 @@ public class ImageSelectorActivity extends JBaseActivity implements View.OnClick
             if (selectedList != null && selectedList.size() > 0) {
                 Intent data = new Intent();
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) selectedList);
+                bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, selectedList);
                 data.putExtras(bundle);
                 finish(RESULT_OK, data);
             }
@@ -226,7 +258,7 @@ public class ImageSelectorActivity extends JBaseActivity implements View.OnClick
         if (requestCode == CropConstants.REQUEST_CODE_CROP_IMAGE) {//剪切图片回来
             if (resultCode == CropConstants.RESULT_CODE_CROP_OK) {
                 if (data.getData() == null) {
-                    toastMessage("剪切图片出错");
+                    toastMessage(R.string.photo_crop_image_error);
                     return;
                 }
                 ImageItem item = new ImageItem(data.getData().getPath());
@@ -237,14 +269,15 @@ public class ImageSelectorActivity extends JBaseActivity implements View.OnClick
 
                 Intent intent = new Intent();
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, (Serializable) selectedList);
+                bundle.putSerializable(ImageSelector.KEY_SELECTED_LIST, selectedList);
                 intent.putExtras(bundle);
                 finish(RESULT_OK, intent);
 
             } else if (resultCode == CropConstants.RESULT_CODE_CROP_CANCLED) {
                 //toastMessage("取消了剪切图片");
+
             } else if (resultCode == CropConstants.RESULT_CODE_CROP_ERROR) {
-                toastMessage("剪切图片出错");
+                toastMessage(R.string.photo_crop_image_error);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

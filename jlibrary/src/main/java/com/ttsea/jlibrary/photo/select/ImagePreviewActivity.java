@@ -102,7 +102,7 @@ public class ImagePreviewActivity extends JBaseActivity implements View.OnClickL
         int marginTB = (marginLR * 2) / 3;
         if (params != null) {
             params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            params.height = DisplayUtils.dip2px(mActivity, 30);
             if (params instanceof RelativeLayout.LayoutParams) {
                 ((RelativeLayout.LayoutParams) params).setMargins(0, 0, marginLR, 0);
             }
