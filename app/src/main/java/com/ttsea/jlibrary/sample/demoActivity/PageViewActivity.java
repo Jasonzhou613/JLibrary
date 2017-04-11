@@ -1,4 +1,4 @@
-package com.ttsea.jlibrary.sample;
+package com.ttsea.jlibrary.sample.demoActivity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +17,7 @@ import com.ttsea.jlibrary.common.JImageLoader;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.component.pageflow.PageIndicator;
 import com.ttsea.jlibrary.component.pageflow.PageView;
+import com.ttsea.jlibrary.sample.R;
 import com.ttsea.jlibrary.sample.base.BaseActivity;
 
 import java.util.ArrayList;

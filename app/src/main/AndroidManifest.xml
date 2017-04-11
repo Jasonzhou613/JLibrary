@@ -27,31 +27,35 @@
         </activity>
 
         <activity
-            android:name="com.ttsea.jlibrary.sample.ComponentActivity"
+            android:name="com.ttsea.jlibrary.sample.demoActivity.ComponentActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.ttsea.jlibrary.sample.PhotoActivity"
+            android:name="com.ttsea.jlibrary.sample.photo.PhotoActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.ttsea.jlibrary.sample.AsyncHttpActivity"
+            android:name="com.ttsea.jlibrary.sample.photo.PhotoTransferActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.transparent"/>
+        <activity
+            android:name="com.ttsea.jlibrary.sample.demoActivity.AsyncHttpActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.ttsea.jlibrary.sample.MyTimerActivity"
+            android:name="com.ttsea.jlibrary.sample.demoActivity.MyTimerActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.ttsea.jlibrary.sample.RoundImageActivity"
+            android:name="com.ttsea.jlibrary.sample.demoActivity.RoundImageActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.ttsea.jlibrary.sample.SmoothCheckBoxActivity"
+            android:name="com.ttsea.jlibrary.sample.demoActivity.SmoothCheckBoxActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.ttsea.jlibrary.sample.ToggleButtonActivity"
+            android:name="com.ttsea.jlibrary.sample.demoActivity.ToggleButtonActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.ttsea.jlibrary.sample.PageViewActivity"
+            android:name="com.ttsea.jlibrary.sample.demoActivity.PageViewActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.ttsea.jlibrary.sample.NetWorkConnectionActivity"
+            android:name="com.ttsea.jlibrary.sample.demoActivity.NetWorkConnectionActivity"
             android:screenOrientation="portrait"/>
 
         <!-- 自定义Glide缓存大小和目录 -->

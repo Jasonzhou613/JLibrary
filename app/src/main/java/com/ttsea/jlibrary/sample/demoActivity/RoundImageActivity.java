@@ -1,4 +1,4 @@
-package com.ttsea.jlibrary.sample;
+package com.ttsea.jlibrary.sample.demoActivity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,6 +18,7 @@ import com.ttsea.jlibrary.component.widget.roundImage.RoundedImageView;
 import com.ttsea.jlibrary.photo.select.ImageItem;
 import com.ttsea.jlibrary.photo.select.ImageSelector;
 import com.ttsea.jlibrary.photo.select.SelectConfig;
+import com.ttsea.jlibrary.sample.R;
 import com.ttsea.jlibrary.sample.base.BaseActivity;
 
 import java.util.ArrayList;

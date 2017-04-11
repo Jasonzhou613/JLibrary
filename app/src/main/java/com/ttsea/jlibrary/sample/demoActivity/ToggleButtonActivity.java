@@ -1,4 +1,4 @@
-package com.ttsea.jlibrary.sample;
+package com.ttsea.jlibrary.sample.demoActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.component.widget.JellyToggle.JellyToggleButton;
 import com.ttsea.jlibrary.component.widget.JellyToggle.State;
 import com.ttsea.jlibrary.component.widget.ToggleButton;
+import com.ttsea.jlibrary.sample.R;
 import com.ttsea.jlibrary.sample.base.BaseActivity;
 
 /**

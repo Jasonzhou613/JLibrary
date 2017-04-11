@@ -130,7 +130,12 @@ public class ImageSelectorFragment extends android.support.v4.app.Fragment imple
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        if (savedInstanceState != null) {
+            String tempPath = savedInstanceState.getString("tempFile");
+            if (!ImageUtils.isEmpty(tempPath)) {
+                tempFile = new File(tempPath);
+            }
+        }
         loadImages(LOADER_TYPE_ALL);
     }
 
@@ -406,6 +411,17 @@ public class ImageSelectorFragment extends android.support.v4.app.Fragment imple
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (outState == null) {
+            outState = new Bundle();
+        }
+        if (tempFile != null) {
+            outState.putString("tempFile", tempFile.getAbsolutePath());
+        }
+        super.onSaveInstanceState(outState);
     }
 
     @Override

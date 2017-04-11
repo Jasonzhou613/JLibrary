@@ -1,4 +1,4 @@
-package com.ttsea.jlibrary.sample;
+package com.ttsea.jlibrary.sample.demoActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +9,7 @@ import android.widget.Button;
 import com.ttsea.jlibrary.common.JToast;
 import com.ttsea.jlibrary.component.dialog.MyAlertDialog;
 import com.ttsea.jlibrary.component.dialog.TransparentDialog;
+import com.ttsea.jlibrary.sample.R;
 import com.ttsea.jlibrary.sample.base.BaseActivity;
 
 /**

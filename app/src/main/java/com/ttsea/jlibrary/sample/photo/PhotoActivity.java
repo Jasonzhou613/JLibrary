@@ -1,4 +1,4 @@
-package com.ttsea.jlibrary.sample;
+package com.ttsea.jlibrary.sample.photo;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,6 +17,7 @@ import com.ttsea.jlibrary.photo.select.CropConfig;
 import com.ttsea.jlibrary.photo.select.ImageItem;
 import com.ttsea.jlibrary.photo.select.ImageSelector;
 import com.ttsea.jlibrary.photo.select.SelectConfig;
+import com.ttsea.jlibrary.sample.R;
 import com.ttsea.jlibrary.sample.base.BaseActivity;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
 
@@ -173,7 +174,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 
         JLog.d(TAG, "selectConfig:" + selectConfig.toString() + "\n cropConfig:" + cropConfig.toString());
 
-        ImageSelector.open(mActivity, selectConfig, cropConfig);
+        PhotoTransferActivity.start(mActivity, selectConfig, cropConfig);
     }
 
     @SuppressWarnings({"unchecked", "deprecation"})

@@ -9,14 +9,21 @@ import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.common.JToast;
 import com.ttsea.jlibrary.sample.base.BaseActivity;
 import com.ttsea.jlibrary.sample.base.BaseApplication;
+import com.ttsea.jlibrary.sample.demoActivity.AsyncHttpActivity;
+import com.ttsea.jlibrary.sample.demoActivity.ComponentActivity;
+import com.ttsea.jlibrary.sample.demoActivity.MyTimerActivity;
+import com.ttsea.jlibrary.sample.demoActivity.NetWorkConnectionActivity;
+import com.ttsea.jlibrary.sample.demoActivity.PageViewActivity;
+import com.ttsea.jlibrary.sample.demoActivity.RoundImageActivity;
+import com.ttsea.jlibrary.sample.demoActivity.SmoothCheckBoxActivity;
+import com.ttsea.jlibrary.sample.demoActivity.ToggleButtonActivity;
+import com.ttsea.jlibrary.sample.photo.PhotoActivity;
 import com.ttsea.jlibrary.utils.ApkUtils;
 import com.ttsea.jlibrary.utils.AppInformationUtils;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
 import com.ttsea.jlibrary.utils.DigitUtils;
 import com.ttsea.jlibrary.utils.RandomUtils;
 import com.ttsea.jlibrary.utils.SdStatusUtils;
-
-import io.reactivex.Observable;
 
 public class MainActivity extends BaseActivity {
     private final String TAG = "MainActivity";

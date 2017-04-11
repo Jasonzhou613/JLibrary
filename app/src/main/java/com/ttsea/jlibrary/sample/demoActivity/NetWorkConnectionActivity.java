@@ -1,4 +1,4 @@
-package com.ttsea.jlibrary.sample;
+package com.ttsea.jlibrary.sample.demoActivity;
 
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.ttsea.jlibrary.sample.R;
 import com.ttsea.jlibrary.sample.base.BaseActivity;
 import com.ttsea.jlibrary.sample.common.NetworkStateChangedReceiver;
 import com.ttsea.jlibrary.utils.NetWorkUtils;
