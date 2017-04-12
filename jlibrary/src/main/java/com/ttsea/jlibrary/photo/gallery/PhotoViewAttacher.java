@@ -24,7 +24,6 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
-import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.utils.Utils;
 
@@ -400,12 +399,15 @@ class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
 
     @Override
     public final void onScale(float scaleFactor, float focusX, float focusY) {
-        JLog.d(TAG, String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f", scaleFactor, focusX, focusY));
+        JLog.d(TAG, String.format("onScale: scaleFactor: %.2f. scale: %.2f. mMaxScale: %.2f mMinScale: %.2f",
+                scaleFactor, getScale(), mMaxScale, mMinScale));
 
-        if (hasDrawable(getImageView())
-                && (getScale() < mMaxScale || scaleFactor < 1f)) {
-            mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
-            checkAndDisplayMatrix();
+        if (hasDrawable(getImageView())) {
+            if ((getScale() < mMaxScale && scaleFactor >= 1f)
+                    || (getScale() >= 0.2 && scaleFactor <= 1f)) {
+                mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
+                checkAndDisplayMatrix();
+            }
         }
     }
 
