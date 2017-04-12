@@ -562,6 +562,8 @@ public class BaseCropImageView extends TransformImageView {
                 if (!cropImageView.isImageWrapCropBounds()) {
                     cropImageView.post(this);
                 }
+            } else {
+                cropImageView.setImageToWrapCropBounds();
             }
         }
     }
