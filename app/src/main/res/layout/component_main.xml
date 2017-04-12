@@ -28,6 +28,38 @@
             style="@style/btn_style"
             android:text="@string/show_progress"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <ProgressBar
+                style="@style/JCycleProgressBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <ProgressBar
+                style="@style/JCycleProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"/>
+
+            <ProgressBar
+                style="@style/JCycleProgressBar.Large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <ProgressBar
+                style="@style/JHorizontalProgressBar"
+                android:layout_margin="16dp"
+                android:max="100"
+                android:progress="50"
+                android:secondaryProgress="60"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </ScrollView>

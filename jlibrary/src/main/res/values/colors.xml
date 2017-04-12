@@ -308,9 +308,4 @@
     <color name="zFF8800">#FF8800</color>
     <color name="zCC0000">#CC0000</color>
 
-    <!-- Photo select start -->
-    <color name="photo_title_bar_bg">#FF393A3F</color>
-    <color name="photo_black">#000000</color>
-    <!-- Photo select end -->
-
 </resources>

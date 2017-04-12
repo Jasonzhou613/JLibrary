@@ -11,7 +11,7 @@
 
     <ProgressBar
         android:id="@+id/pbProgress"
-        style="@style/Photo.Gallery.Progress.Style"
+        style="@style/JCycleProgressBar"
         android:layout_gravity="center"/>
 
 </FrameLayout>
