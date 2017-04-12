@@ -61,10 +61,7 @@ public class PhotoTransferActivity extends BaseActivity {
             return;
         }
 
-        if (savedInstanceState.getParcelable("data") != null) {
-            data = savedInstanceState.getParcelable("data");
-        }
-
+        data = savedInstanceState.getParcelable("data");
         resultCode = savedInstanceState.getInt("resultCode");
 
         setResult(resultCode, data);
@@ -78,7 +75,7 @@ public class PhotoTransferActivity extends BaseActivity {
             public void run() {
                 PhotoTransferActivity.super.finish();
             }
-        }, 600);
+        }, 400);
     }
 
     @Override

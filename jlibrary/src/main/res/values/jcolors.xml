@@ -8,9 +8,9 @@
     <!-- Photo select end -->
 
     <!-- cycle progressbar颜色 -->
-    <color name="_j_cycle_gradient_start">#33000000</color>
-    <color name="_j_cycle_gradient_end">#0000FF</color>
-    <color name="_j_cycle_gradient_center">#6495ED</color>
+    <color name="_j_cycle_gradient_start">#00000000</color>
+    <color name="_j_cycle_gradient_end">#f7f7fc</color>
+    <color name="_j_cycle_gradient_center">#c5c7f7</color>
 
     <!-- horizontal progressbar颜色 -->
     <color name="_j_horizontal_bg_gradient_start">#FF9D9E9D</color>

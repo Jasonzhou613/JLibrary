@@ -4,9 +4,24 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-    <include
-        android:id="@+id/titleBar"
-        layout="@layout/jtitle_bar_center"/>
+    <FrameLayout
+        android:id="@+id/_topView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            android:id="@+id/titleBar"
+            layout="@layout/jtitle_bar_center"/>
+
+        <ProgressBar
+            android:id="@+id/pbProgress"
+            style="@style/JCycleProgressBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="16dp"
+            android:visibility="gone"/>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/llyBottom"
@@ -52,7 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/llyBottom"
-        android:layout_below="@id/titleBar">
+        android:layout_below="@id/_topView">
 
         <com.ttsea.jlibrary.photo.crop.CropImageView
             android:id="@+id/ivCropImageView"

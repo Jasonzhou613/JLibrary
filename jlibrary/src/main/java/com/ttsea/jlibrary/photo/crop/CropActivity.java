@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ttsea.jlibrary.R;
@@ -42,6 +43,7 @@ public class CropActivity extends JBaseActivity implements View.OnClickListener 
     private TextView tvTitleBarName;
     private View llyCropCancel;
     private View llyCropSure;
+    private ProgressBar pbProgress;
 
     private String imagePath;
     private String outPutPath;
@@ -149,6 +151,7 @@ public class CropActivity extends JBaseActivity implements View.OnClickListener 
         tvTitleBarName = (TextView) findViewById(R.id.tvTitleBarName);
         llyCropCancel = findViewById(R.id.llyCropCancel);
         llyCropSure = findViewById(R.id.llyCropSure);
+        pbProgress = (ProgressBar) findViewById(R.id.pbProgress);
 
         cropView = (CropView) findViewById(R.id.cropView);
         ivCropImageView = (CropImageView) findViewById(R.id.ivCropImageView);
@@ -243,7 +246,8 @@ public class CropActivity extends JBaseActivity implements View.OnClickListener 
 
         @Override
         protected void onPreExecute() {
-            showDialog("正在保存...", false);
+            //showDialog("正在保存...", false);
+            pbProgress.setVisibility(View.VISIBLE);
             bitmap = ivCropImageView.crop();
         }
 
@@ -259,6 +263,7 @@ public class CropActivity extends JBaseActivity implements View.OnClickListener 
         @Override
         protected void onPostExecute(Uri uri) {
             dismissDialog();
+            pbProgress.setVisibility(View.GONE);
             if (uri != null) {
                 Intent intent = new Intent();
                 intent.setData(uri);
