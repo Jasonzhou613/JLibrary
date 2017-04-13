@@ -30,14 +30,14 @@
             android:name="com.ttsea.jlibrary.sample.demoActivity.ComponentActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.ttsea.jlibrary.sample.photo.PhotoActivity"
+            android:name=".demoActivity.photo.PhotoActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.ttsea.jlibrary.sample.photo.PhotoTransferActivity"
+            android:name=".demoActivity.photo.PhotoTransferActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.transparent"/>
         <activity
-            android:name="com.ttsea.jlibrary.sample.demoActivity.AsyncHttpActivity"
+            android:name="com.ttsea.jlibrary.sample.demoActivity.async.AsyncHttpActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name="com.ttsea.jlibrary.sample.demoActivity.MyTimerActivity"

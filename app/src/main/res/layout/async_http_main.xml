@@ -9,20 +9,9 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/btnGetData"
-            style="@style/btn_style"
-            android:text="@string/get_data"/>
-
-        <Button
             android:id="@+id/btnSendEmail"
             style="@style/btn_style"
             android:text="@string/send_email"/>
-
-        <Button
-            android:id="@+id/btnDownload"
-            style="@style/btn_style"
-            android:text="Download server"/>
-
 
     </LinearLayout>
 

@@ -1,4 +1,4 @@
-package com.ttsea.jlibrary.sample.photo;
+package com.ttsea.jlibrary.sample.demoActivity.photo;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,7 +21,6 @@ import com.ttsea.jlibrary.sample.R;
 import com.ttsea.jlibrary.sample.base.BaseActivity;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

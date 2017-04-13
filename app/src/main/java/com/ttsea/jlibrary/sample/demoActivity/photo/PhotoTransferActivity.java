@@ -1,4 +1,4 @@
-package com.ttsea.jlibrary.sample.photo;
+package com.ttsea.jlibrary.sample.demoActivity.photo;
 
 import android.app.Activity;
 import android.content.Intent;

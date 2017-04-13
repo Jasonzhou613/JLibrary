@@ -11,7 +11,7 @@ import javax.mail.PasswordAuthentication;
  * <b>author:</b> Jason <br>
  * <b>version:</b> 1.0 <br>
  */
-public class MyAuthenticator extends Authenticator {
+class MyAuthenticator extends Authenticator {
     String userName = null;
     String password = null;
 
@@ -25,5 +25,13 @@ public class MyAuthenticator extends Authenticator {
 
     protected PasswordAuthentication getPasswordAuthentication() {
         return new PasswordAuthentication(userName, password);
+    }
+
+    @Override
+    public String toString() {
+        return "MyAuthenticator{" +
+                "userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }
