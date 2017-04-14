@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 发送邮件参考样列
  */
-class SendEmailDemo {
+final class SendEmailDemo {
     private static final String TAG = "SendEmailDemo";
 
     public static boolean send(String subject, String content) {
