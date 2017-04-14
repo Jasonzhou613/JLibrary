@@ -1,6 +1,9 @@
 package com.ttsea.jlibrary.jasynchttp.mail;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
@@ -12,6 +15,7 @@ import javax.activation.MailcapCommandMap;
 import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -35,47 +39,36 @@ public class MultiMailSender {
      * 发送单一邮件，这个方法不会发送附件，并且所有的文字将以文本的形式发送
      *
      * @param mailInfo 待发送邮件的信息
-     * @return 是否发送成功，true:是，false:否
      */
-    public static boolean sendSingleMail(MailInfo mailInfo) {
-        try {
-            Message mailMessage = mailInfoToMessage(mailInfo);
-            mailMessage.setText(mailInfo.getContent());
-            // 发送邮件
-            Transport.send(mailMessage);
-            return true;
+    public static void sendSingleMail(MailInfo mailInfo) throws
+            MessagingException, MalformedURLException, FileNotFoundException, UnsupportedEncodingException {
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return false;
+        Message mailMessage = null;
+        mailMessage = mailInfoToMessage(mailInfo);
+        mailMessage.setText(mailInfo.getContent());
+        // 发送邮件
+        Transport.send(mailMessage);
     }
 
     /**
      * 发送多媒体邮件，这个方法可以发送附件，并且所有的文本将以html的格式发送<br>
      *
      * @param mailInfo 待发送邮件的信息
-     * @return 是否发送成功，true:是，false:否
      */
-    public static boolean sendMultiMail(MailInfo mailInfo) {
-        try {
-            MailcapCommandMap mc = (MailcapCommandMap) CommandMap.getDefaultCommandMap();
-            mc.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
-            mc.addMailcap("text/xml;; x-java-content-handler=com.sun.mail.handlers.text_xml");
-            mc.addMailcap("text/plain;; x-java-content-handler=com.sun.mail.handlers.text_plain");
-            mc.addMailcap("multipart/*;; x-java-content-handler=com.sun.mail.handlers.multipart_mixed");
-            mc.addMailcap("message/rfc822;; x-java-content-handler=com.sun.mail.handlers.message_rfc822");
-            CommandMap.setDefaultCommandMap(mc);
+    public static void sendMultiMail(MailInfo mailInfo) throws
+            MessagingException, MalformedURLException, FileNotFoundException, UnsupportedEncodingException {
 
-            Message mailMessage = mailInfoToMessage(mailInfo);
-            // 发送邮件
-            Transport.send(mailMessage);
-            return true;
+        MailcapCommandMap mc = (MailcapCommandMap) CommandMap.getDefaultCommandMap();
+        mc.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
+        mc.addMailcap("text/xml;; x-java-content-handler=com.sun.mail.handlers.text_xml");
+        mc.addMailcap("text/plain;; x-java-content-handler=com.sun.mail.handlers.text_plain");
+        mc.addMailcap("multipart/*;; x-java-content-handler=com.sun.mail.handlers.multipart_mixed");
+        mc.addMailcap("message/rfc822;; x-java-content-handler=com.sun.mail.handlers.message_rfc822");
+        CommandMap.setDefaultCommandMap(mc);
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return false;
+        Message mailMessage = mailInfoToMessage(mailInfo);
+        // 发送邮件
+        Transport.send(mailMessage);
     }
 
     /**
@@ -83,9 +76,14 @@ public class MultiMailSender {
      *
      * @param mailInfo 待发邮件内容及相关信息
      * @return Message
-     * @throws Exception e
+     * @throws MessagingException
+     * @throws MalformedURLException
+     * @throws UnsupportedEncodingException
+     * @throws FileNotFoundException
      */
-    private static Message mailInfoToMessage(MailInfo mailInfo) throws Exception {
+    private static Message mailInfoToMessage(MailInfo mailInfo) throws
+            MessagingException, MalformedURLException, UnsupportedEncodingException, FileNotFoundException {
+
         MyAuthenticator authenticator = null;
         if (mailInfo.isValidate()) {
             authenticator = new MyAuthenticator(mailInfo.getUserName(),
@@ -153,7 +151,11 @@ public class MultiMailSender {
                 attachFilesPart.setDataHandler(new DataHandler(url));
 
             } else {
-                FileDataSource fds = new FileDataSource(new File(attach.getPath()));
+                File file = new File(attach.getPath());
+                if (!file.exists()) {
+                    throw new FileNotFoundException("file not found, file:" + file.getAbsolutePath());
+                }
+                FileDataSource fds = new FileDataSource(file);
                 attachFilesPart.setDataHandler(new DataHandler(fds));
             }
             //设置文件名

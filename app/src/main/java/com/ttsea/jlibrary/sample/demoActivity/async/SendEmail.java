@@ -29,7 +29,8 @@ public class SendEmail {
         }
 
         //return sendSingleMail(receivers, ccs, bcc, subject, content, attachList);
-        return sendMultiMail(receivers, ccs, bcc, subject, content, attachList);
+        //return sendMultiMail(receivers, ccs, bcc, subject, content, attachList);
+        return sendMultiMail(receivers, null, null, subject, content, attachList);
     }
 
     /**
@@ -96,8 +97,8 @@ public class SendEmail {
         // 这个类主要是设置邮件
         MailInfo mailInfo = new MailInfo();
         // 设置发送邮件的服务器信息
-        mailInfo.setMailServerHost("smtp.***.qq.com");
-        mailInfo.setMailServerPort("456");
+        mailInfo.setMailServerHost("smtp.exmail.qq.com");
+        mailInfo.setMailServerPort("465");
         mailInfo.setValidate(true);
         mailInfo.setSsl(true);
 
@@ -123,23 +124,25 @@ public class SendEmail {
             // 以html格式发送邮件
             JLog.d(TAG, "sending a multi email...");
 
-            if (MultiMailSender.sendMultiMail(mailInfo)) {
-                JLog.d(TAG, "successful...");
+            try {
+                MultiMailSender.sendMultiMail(mailInfo);
                 result = true;
-            } else {
-                JLog.d(TAG, "failed....");
+            } catch (Exception e) {
+                e.printStackTrace();
+                JLog.e(TAG, "Exception e:" + e.getMessage());
                 result = false;
             }
+
         } else {
 
             // 以text格式发送邮件
             JLog.d(TAG, "sending a single email...");
-
-            if (MultiMailSender.sendSingleMail(mailInfo)) {
-                JLog.d(TAG, "successful...");
+            try {
+                MultiMailSender.sendSingleMail(mailInfo);
                 result = true;
-            } else {
-                JLog.d(TAG, "failed....");
+            } catch (Exception e) {
+                e.printStackTrace();
+                JLog.e(TAG, "Exception e:" + e.getMessage());
                 result = false;
             }
         }
@@ -147,4 +150,3 @@ public class SendEmail {
         return result;
     }
 }
-
