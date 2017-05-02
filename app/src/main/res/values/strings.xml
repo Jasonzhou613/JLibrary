@@ -18,6 +18,7 @@
     <string name="toggle_button">toggle button</string>
     <string name="page_view">Page View</string>
     <string name="network_connection">NetWork Connection</string>
+    <string name="share_preference">SharedPreferences</string>
 
     <string name="get_data">get data</string>
     <string name="send_email">send email</string>

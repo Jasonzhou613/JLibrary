@@ -9,7 +9,6 @@ import com.ttsea.jlibrary.common.JLog;
 import com.ttsea.jlibrary.common.JToast;
 import com.ttsea.jlibrary.sample.base.BaseActivity;
 import com.ttsea.jlibrary.sample.base.BaseApplication;
-import com.ttsea.jlibrary.sample.demoActivity.async.AsyncHttpActivity;
 import com.ttsea.jlibrary.sample.demoActivity.ComponentActivity;
 import com.ttsea.jlibrary.sample.demoActivity.MyTimerActivity;
 import com.ttsea.jlibrary.sample.demoActivity.NetWorkConnectionActivity;
@@ -17,13 +16,17 @@ import com.ttsea.jlibrary.sample.demoActivity.PageViewActivity;
 import com.ttsea.jlibrary.sample.demoActivity.RoundImageActivity;
 import com.ttsea.jlibrary.sample.demoActivity.SmoothCheckBoxActivity;
 import com.ttsea.jlibrary.sample.demoActivity.ToggleButtonActivity;
+import com.ttsea.jlibrary.sample.demoActivity.async.AsyncHttpActivity;
 import com.ttsea.jlibrary.sample.demoActivity.photo.PhotoActivity;
+import com.ttsea.jlibrary.sample.model.Person;
+import com.ttsea.jlibrary.sample.model.Shoes;
 import com.ttsea.jlibrary.utils.ApkUtils;
 import com.ttsea.jlibrary.utils.AppInformationUtils;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
 import com.ttsea.jlibrary.utils.DigitUtils;
 import com.ttsea.jlibrary.utils.RandomUtils;
 import com.ttsea.jlibrary.utils.SdStatusUtils;
+import com.ttsea.jlibrary.utils.SharedPreferencesUtils;
 
 public class MainActivity extends BaseActivity {
     private final String TAG = "MainActivity";
@@ -40,6 +43,7 @@ public class MainActivity extends BaseActivity {
     private Button btnToggleButton;
     private Button btnPageView;
     private Button btnNetWorkConnection;
+    private Button btnSP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +66,7 @@ public class MainActivity extends BaseActivity {
         btnToggleButton = (Button) findViewById(R.id.btnToggleButton);
         btnPageView = (Button) findViewById(R.id.btnPageView);
         btnNetWorkConnection = (Button) findViewById(R.id.btnNetWorkConnection);
+        btnSP = (Button) findViewById(R.id.btnSP);
 
         btnTest.setOnClickListener(mOnSingleClickListener);
         btnAppInfo.setOnClickListener(mOnSingleClickListener);
@@ -75,6 +80,7 @@ public class MainActivity extends BaseActivity {
         btnToggleButton.setOnClickListener(mOnSingleClickListener);
         btnPageView.setOnClickListener(mOnSingleClickListener);
         btnNetWorkConnection.setOnClickListener(mOnSingleClickListener);
+        btnSP.setOnClickListener(mOnSingleClickListener);
     }
 
     //@Override
@@ -140,6 +146,10 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
                 break;
 
+            case R.id.btnSP:
+                sharedPreference();
+                break;
+
             default:
                 break;
         }
@@ -179,5 +189,22 @@ public class MainActivity extends BaseActivity {
                 ", VersionName:" + AppInformationUtils.getVersionName(mActivity) +
                 ", VersionCode:" + AppInformationUtils.getVersionCode(mActivity)
         );
+    }
+
+    private void sharedPreference() {
+        Person person = new Person("Jason", "18", "male");
+        Shoes shoes = new Shoes(41, "blue", 199);
+        SharedPreferencesUtils.putObject(mActivity, person);
+        SharedPreferencesUtils.putObject(mActivity, shoes);
+
+        Person localPerson = SharedPreferencesUtils.getObject(mActivity, Person.class);
+        if (localPerson != null) {
+            JLog.d(TAG, "localPerson:" + localPerson.toString());
+        }
+
+        Shoes localShoes = SharedPreferencesUtils.getObject(mActivity, Shoes.class);
+        if (localShoes != null) {
+            JLog.d(TAG, "localShoes:" + localShoes.toString());
+        }
     }
 }

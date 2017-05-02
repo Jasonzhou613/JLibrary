@@ -69,6 +69,11 @@
             style="@style/btn_style"
             android:text="@string/network_connection"/>
 
+        <Button
+            android:id="@+id/btnSP"
+            style="@style/btn_style"
+            android:text="@string/share_preference"/>
+
     </LinearLayout>
 
 </ScrollView>
