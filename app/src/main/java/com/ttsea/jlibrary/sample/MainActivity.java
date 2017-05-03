@@ -24,9 +24,19 @@ import com.ttsea.jlibrary.utils.ApkUtils;
 import com.ttsea.jlibrary.utils.AppInformationUtils;
 import com.ttsea.jlibrary.utils.CacheDirUtils;
 import com.ttsea.jlibrary.utils.DigitUtils;
+import com.ttsea.jlibrary.utils.MD5Utils;
 import com.ttsea.jlibrary.utils.RandomUtils;
 import com.ttsea.jlibrary.utils.SdStatusUtils;
 import com.ttsea.jlibrary.utils.SharedPreferencesUtils;
+
+import java.io.File;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends BaseActivity {
     private final String TAG = "MainActivity";
@@ -44,6 +54,7 @@ public class MainActivity extends BaseActivity {
     private Button btnPageView;
     private Button btnNetWorkConnection;
     private Button btnSP;
+    private Button btnMD5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +78,7 @@ public class MainActivity extends BaseActivity {
         btnPageView = (Button) findViewById(R.id.btnPageView);
         btnNetWorkConnection = (Button) findViewById(R.id.btnNetWorkConnection);
         btnSP = (Button) findViewById(R.id.btnSP);
+        btnMD5 = (Button) findViewById(R.id.btnMD5);
 
         btnTest.setOnClickListener(mOnSingleClickListener);
         btnAppInfo.setOnClickListener(mOnSingleClickListener);
@@ -81,6 +93,7 @@ public class MainActivity extends BaseActivity {
         btnPageView.setOnClickListener(mOnSingleClickListener);
         btnNetWorkConnection.setOnClickListener(mOnSingleClickListener);
         btnSP.setOnClickListener(mOnSingleClickListener);
+        btnMD5.setOnClickListener(mOnSingleClickListener);
     }
 
     //@Override
@@ -150,6 +163,10 @@ public class MainActivity extends BaseActivity {
                 sharedPreference();
                 break;
 
+            case R.id.btnMD5:
+                calcMD5();
+                break;
+
             default:
                 break;
         }
@@ -206,5 +223,50 @@ public class MainActivity extends BaseActivity {
         if (localShoes != null) {
             JLog.d(TAG, "localShoes:" + localShoes.toString());
         }
+    }
+
+    long startTime = 0;
+    long endTime = 0;
+
+    private void calcMD5() {
+        String filePath = SdStatusUtils.getExternalStorageAbsoluteDir()
+                + File.separator + "UCDownloads" + File.separator + "video" + File.separator + "water.mkv";
+
+        Observable.just(filePath)
+                .subscribeOn(Schedulers.io())
+                .map(new Function<String, String>() {
+                    @Override
+                    public String apply(String s) throws Exception {
+                        File file = new File(s);
+                        return MD5Utils.getFileMD5(file);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        showDialog("正在计算...", false);
+                        startTime = System.currentTimeMillis();
+                        JLog.d(TAG, "startTime" + startTime);
+                    }
+
+                    @Override
+                    public void onNext(String value) {
+                        JLog.d(TAG, "md5:" + value);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        dismissAllDialog();
+                        JLog.d(TAG, "Throwable e:" + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        dismissAllDialog();
+                        endTime = System.currentTimeMillis();
+                        JLog.d(TAG, "endTime" + endTime + ", take time:" + (endTime - startTime));
+                    }
+                });
     }
 }
