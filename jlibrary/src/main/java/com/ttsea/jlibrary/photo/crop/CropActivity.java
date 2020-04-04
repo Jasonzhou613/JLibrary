@@ -13,11 +13,12 @@ import android.widget.TextView;
 
 import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.base.JBaseActivity;
-import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.utils.BitmapUtils;
-import com.ttsea.jlibrary.utils.CacheDirUtils;
-import com.ttsea.jlibrary.utils.DateUtils;
-import com.ttsea.jlibrary.utils.Utils;
+import com.ttsea.jlibrary.common.bitmap.BitmapOption;
+import com.ttsea.jlibrary.common.bitmap.BitmapUtils;
+import com.ttsea.jlibrary.common.utils.CacheDirUtils;
+import com.ttsea.jlibrary.common.utils.DateUtils;
+import com.ttsea.jlibrary.common.utils.Utils;
+import com.ttsea.jlibrary.debug.JLog;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -255,7 +256,19 @@ public class CropActivity extends JBaseActivity implements View.OnClickListener 
         protected Uri doInBackground(Void... params) {
             Uri uri = saveBitmap(bitmap);
             if (return_data) {
-                bitmap = BitmapUtils.compressBitmapWidthAndHeight(bitmap, 156);
+                BitmapOption.Builder builder = new BitmapOption.Builder();
+                builder.setMaxWidth(156)
+                        .setMaxHeight(156)
+                        .setMaxSizeInKB(100)
+                        .setConfig(Bitmap.Config.RGB_565)
+                        .setLockRatio(true);
+
+                try {
+                    bitmap = BitmapUtils.compressBitmap(bitmap, builder.build());
+
+                } catch (Exception e) {
+                    JLog.w("Exception e:" + e.getMessage());
+                }
             }
             return uri;
         }

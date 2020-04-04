@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.Scroller;
 
 import com.ttsea.jlibrary.R;
-import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.debug.JLog;
 
 
 public class PageIndicator extends Indicator {

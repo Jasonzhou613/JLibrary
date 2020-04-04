@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.debug.JLog;
 import com.ttsea.jlibrary.component.widget.JellyToggle.JellyToggleButton;
 import com.ttsea.jlibrary.component.widget.JellyToggle.State;
 import com.ttsea.jlibrary.component.widget.ToggleButton;

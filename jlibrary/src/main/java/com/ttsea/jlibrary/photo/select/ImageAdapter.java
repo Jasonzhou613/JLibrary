@@ -10,8 +10,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.ttsea.jlibrary.R;
-import com.ttsea.jlibrary.common.JImageLoader;
-import com.ttsea.jlibrary.interfaces.OnItemViewClickListener;
+import com.ttsea.jlibrary.common.imageloader.JImageLoader;
+import com.ttsea.jlibrary.common.interfaces.OnItemViewClickListener;
 
 import java.util.ArrayList;
 import java.util.List;

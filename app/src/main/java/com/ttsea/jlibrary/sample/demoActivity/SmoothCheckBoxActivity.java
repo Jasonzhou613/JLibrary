@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.debug.JLog;
 import com.ttsea.jlibrary.component.widget.SmoothCheckBox;
 import com.ttsea.jlibrary.sample.R;
 import com.ttsea.jlibrary.sample.base.BaseActivity;

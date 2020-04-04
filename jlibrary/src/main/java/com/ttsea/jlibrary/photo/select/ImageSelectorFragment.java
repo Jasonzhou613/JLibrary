@@ -34,10 +34,11 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.ttsea.jlibrary.R;
-import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.common.JToast;
-import com.ttsea.jlibrary.interfaces.OnItemViewClickListener;
-import com.ttsea.jlibrary.utils.CacheDirUtils;
+import com.ttsea.jlibrary.common.interfaces.OnItemViewClickListener;
+import com.ttsea.jlibrary.common.utils.CacheDirUtils;
+import com.ttsea.jlibrary.common.utils.JToast;
+import com.ttsea.jlibrary.debug.JLog;
+import com.ttsea.jlibrary.debug.PrintUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -601,7 +602,7 @@ public class ImageSelectorFragment extends android.support.v4.app.Fragment imple
                 return;
             }
 
-            JLog.printCursor(data);
+            PrintUtils.printCursor(data);
 
             if (data.getCount() > 0) {
                 ArrayList<ImageItem> tempImageList = new ArrayList<>();

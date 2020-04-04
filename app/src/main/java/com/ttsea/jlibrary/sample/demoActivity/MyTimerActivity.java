@@ -7,8 +7,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.common.MyTimer;
+import com.ttsea.jlibrary.common.utils.MyTimer;
+import com.ttsea.jlibrary.debug.JLog;
 import com.ttsea.jlibrary.sample.R;
 import com.ttsea.jlibrary.sample.base.BaseActivity;
 
@@ -90,12 +90,12 @@ public class MyTimerActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void stop() {
-        myTimer.stop();
+        myTimer.stop(false);
     }
 
     @Override
     protected void onDestroy() {
-        myTimer.stop();
+        myTimer.stop(false);
         super.onDestroy();
     }
 

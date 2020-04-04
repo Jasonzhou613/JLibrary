@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- okHttp默认请求头配置，key和value用逗号隔开 -->
+    <string-array name="headers">
+        <item>User-Agent,jlibrary</item>
+        <item>platform,android</item>
+    </string-array>
+
+    <!-- okHttp请求体配置，key和value用逗号隔开 -->
+    <string-array name="formBody">
+    </string-array>
+
+    <!-- http连接超时时间，单位秒-->
+    <integer name="connectTimeout">20</integer>
+    <!-- http写入超时时间，单位秒-->
+    <integer name="writeTimeout">20</integer>
+    <!-- http读取超时时间，单位秒-->
+    <integer name="readTimeout">20</integer>
+    <!-- http连接池个数-->
+    <integer name="connectionPoolCount">6</integer>
+
+</resources>

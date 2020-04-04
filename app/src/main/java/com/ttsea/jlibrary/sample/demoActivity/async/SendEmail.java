@@ -1,11 +1,11 @@
 package com.ttsea.jlibrary.sample.demoActivity.async;
 
 
-import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.jasynchttp.mail.MailAttachEntity;
-import com.ttsea.jlibrary.jasynchttp.mail.MailInfo;
-import com.ttsea.jlibrary.jasynchttp.mail.MultiMailSender;
-import com.ttsea.jlibrary.utils.Utils;
+import com.ttsea.jlibrary.debug.JLog;
+import com.ttsea.jlibrary.mail.MailAttachEntity;
+import com.ttsea.jlibrary.mail.MailInfo;
+import com.ttsea.jlibrary.mail.MultiMailSender;
+import com.ttsea.jlibrary.common.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;

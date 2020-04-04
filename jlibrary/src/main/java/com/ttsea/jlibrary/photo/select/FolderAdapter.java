@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ttsea.jlibrary.R;
-import com.ttsea.jlibrary.common.JImageLoader;
+import com.ttsea.jlibrary.common.imageloader.JImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;

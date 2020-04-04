@@ -5,9 +5,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.ttsea.jlibrary.common.JToast;
+import com.ttsea.jlibrary.common.utils.JToast;
+import com.ttsea.jlibrary.debug.JLog;
 import com.ttsea.jlibrary.sample.R;
 import com.ttsea.jlibrary.sample.base.BaseActivity;
+import com.ttsea.jlibrary.sample.base.SamplePresenterImpl;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -26,9 +31,13 @@ import io.reactivex.schedulers.Schedulers;
  * <b>last modified date:</b> 2016/9/20 10:53
  */
 public class AsyncHttpActivity extends BaseActivity implements View.OnClickListener {
-    private Button btnSendEmail;
-
     private final String TAG = "MainActivity";
+
+    private Button btnSendEmail;
+    private Button btnSyncHttp;
+    private Button btnAsyncHttp;
+
+    private SamplePresenterImpl mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +45,14 @@ public class AsyncHttpActivity extends BaseActivity implements View.OnClickListe
         setContentView(R.layout.async_http_main);
 
         btnSendEmail = (Button) findViewById(R.id.btnSendEmail);
+        btnSyncHttp = (Button) findViewById(R.id.btnSyncHttp);
+        btnAsyncHttp = (Button) findViewById(R.id.btnAsyncHttp);
 
         btnSendEmail.setOnClickListener(this);
+        btnSyncHttp.setOnClickListener(this);
+        btnAsyncHttp.setOnClickListener(this);
+
+        mPresenter = new SamplePresenterImpl(mActivity);
     }
 
     @Override
@@ -46,9 +61,16 @@ public class AsyncHttpActivity extends BaseActivity implements View.OnClickListe
 
         switch (v.getId()) {
 
-
-            case R.id.btnSendEmail:
+            case R.id.btnSendEmail://发送邮件
                 sendEmail();
+                break;
+
+            case R.id.btnSyncHttp://同步请求
+                syncHttp();
+                break;
+
+            case R.id.btnAsyncHttp://异步请求
+                asyncHttp();
                 break;
 
             default:
@@ -93,5 +115,29 @@ public class AsyncHttpActivity extends BaseActivity implements View.OnClickListe
                         dismissAllDialog();
                     }
                 });
+    }
+
+    private void syncHttp() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String url = "http://www.baidu.com";
+                    Map<String, String> params = new HashMap<>();
+                    String jsonData = mPresenter.getResponseSync(url, params);
+                    JLog.d("syncHttp, jsonData:" + jsonData);
+
+                } catch (Exception e) {
+                    JLog.e("Exception e:" + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    private void asyncHttp() {
+        String url = "http://www.baidu.com";
+        Map<String, String> params = new HashMap<>();
+        mPresenter.addRequest(url, params, 0x001);
     }
 }

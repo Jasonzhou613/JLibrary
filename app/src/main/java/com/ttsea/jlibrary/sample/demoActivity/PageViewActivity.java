@@ -13,8 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ttsea.jlibrary.base.JBaseAdapter;
-import com.ttsea.jlibrary.common.JImageLoader;
-import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.common.imageloader.JImageLoader;
+import com.ttsea.jlibrary.debug.JLog;
 import com.ttsea.jlibrary.component.pageflow.PageIndicator;
 import com.ttsea.jlibrary.component.pageflow.PageView;
 import com.ttsea.jlibrary.sample.R;

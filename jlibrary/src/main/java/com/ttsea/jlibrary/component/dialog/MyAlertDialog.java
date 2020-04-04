@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ttsea.jlibrary.R;
-import com.ttsea.jlibrary.utils.Utils;
+import com.ttsea.jlibrary.common.utils.Utils;
 
 /**
  * 自定义AlertDialog <br>

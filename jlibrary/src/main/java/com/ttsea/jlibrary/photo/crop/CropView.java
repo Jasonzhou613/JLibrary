@@ -10,7 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.ttsea.jlibrary.R;
-import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.debug.JLog;
 
 /**
  * 剪切框 <br>

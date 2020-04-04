@@ -13,6 +13,16 @@
             style="@style/btn_style"
             android:text="@string/send_email"/>
 
+        <Button
+            android:id="@+id/btnSyncHttp"
+            style="@style/btn_style"
+            android:text="@string/sync_http"/>
+
+        <Button
+            android:id="@+id/btnAsyncHttp"
+            style="@style/btn_style"
+            android:text="@string/async_http2"/>
+
     </LinearLayout>
 
 </ScrollView>

@@ -5,8 +5,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.common.JToast;
+import com.ttsea.jlibrary.common.encryptor.MD5Utils;
+import com.ttsea.jlibrary.common.utils.ApkUtils;
+import com.ttsea.jlibrary.common.utils.AppInformationUtils;
+import com.ttsea.jlibrary.common.utils.CacheDirUtils;
+import com.ttsea.jlibrary.common.utils.DigitUtils;
+import com.ttsea.jlibrary.common.utils.JToast;
+import com.ttsea.jlibrary.common.utils.RandomUtils;
+import com.ttsea.jlibrary.common.utils.SdStatusUtils;
+import com.ttsea.jlibrary.common.utils.SharedPreferencesUtils;
+import com.ttsea.jlibrary.debug.JLog;
 import com.ttsea.jlibrary.sample.base.BaseActivity;
 import com.ttsea.jlibrary.sample.base.BaseApplication;
 import com.ttsea.jlibrary.sample.demoActivity.ComponentActivity;
@@ -20,14 +28,6 @@ import com.ttsea.jlibrary.sample.demoActivity.async.AsyncHttpActivity;
 import com.ttsea.jlibrary.sample.demoActivity.photo.PhotoActivity;
 import com.ttsea.jlibrary.sample.model.Person;
 import com.ttsea.jlibrary.sample.model.Shoes;
-import com.ttsea.jlibrary.utils.ApkUtils;
-import com.ttsea.jlibrary.utils.AppInformationUtils;
-import com.ttsea.jlibrary.utils.CacheDirUtils;
-import com.ttsea.jlibrary.utils.DigitUtils;
-import com.ttsea.jlibrary.utils.MD5Utils;
-import com.ttsea.jlibrary.utils.RandomUtils;
-import com.ttsea.jlibrary.utils.SdStatusUtils;
-import com.ttsea.jlibrary.utils.SharedPreferencesUtils;
 
 import java.io.File;
 
@@ -62,6 +62,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         initView();
+
     }
 
     private void initView() {

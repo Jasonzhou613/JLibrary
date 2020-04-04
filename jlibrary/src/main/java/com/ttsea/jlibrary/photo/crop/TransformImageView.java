@@ -15,8 +15,9 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.ttsea.jlibrary.R;
-import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.utils.BitmapUtils;
+import com.ttsea.jlibrary.common.bitmap.BitmapOption;
+import com.ttsea.jlibrary.common.bitmap.BitmapUtils;
+import com.ttsea.jlibrary.debug.JLog;
 
 /**
  * TransformImageView，涉及到旋转、平移、缩放 <br>
@@ -120,7 +121,22 @@ class TransformImageView extends ImageView {
     public void setImagePath(String path) {
         JLog.d(TAG, "setImagePath, path:" + path);
         mImagePath = path;
-        setImageBitmap(BitmapUtils.revisionImageSize(path));
+
+        try {
+            BitmapOption.Builder builder = new BitmapOption.Builder();
+            builder.setMaxWidth(1024)
+                    .setMaxHeight(1024)
+                    //.setMaxSizeInKB(200)
+                    //.setConfig(Bitmap.Config.RGB_565)
+                    .setLockRatio(true);
+
+            Bitmap bitmap = BitmapUtils.compressPicFile(path, builder.build());
+            setImageBitmap(bitmap);
+
+        } catch (Exception e) {
+            JLog.e("Exception e:" + e.getMessage());
+            setImageBitmap(null);
+        }
     }
 
     public String getImagePath() {

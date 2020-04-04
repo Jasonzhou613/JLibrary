@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.ttsea.jlibrary.sample.R;
 import com.ttsea.jlibrary.sample.base.BaseActivity;
 import com.ttsea.jlibrary.sample.common.NetworkStateChangedReceiver;
-import com.ttsea.jlibrary.utils.NetWorkUtils;
+import com.ttsea.jlibrary.common.utils.NetWorkUtils;
 
 /**
  * // to do <br>

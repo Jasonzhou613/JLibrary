@@ -2,9 +2,11 @@ package com.ttsea.jlibrary.base;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 
-import com.ttsea.jlibrary.JLibrary;
-import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.common.imageloader.JImageLoader;
+import com.ttsea.jlibrary.debug.GlobalCrashHandler;
+import com.ttsea.jlibrary.debug.JLog;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,14 +25,30 @@ import java.util.List;
  * <b>version:</b> 1.0 <br>
  */
 class JBaseApplication extends Application {
-    private static final String TAG = "Base.JBaseApplication";
+    private static final String TAG = "Base.Application";
     private List<Activity> mActivityList = new LinkedList<Activity>();
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        JLibrary.init(getApplicationContext());
+        // 解决AsyncTask.onPostExecute不执行问题, start
+        try {
+            Class.forName("android.os.AsyncTask");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        // 解决AsyncTask.onPostExecute不执行问题, end
+
+        // 异常捕捉
+        GlobalCrashHandler.init(this);
+        //初始化图片加载器
+        JImageLoader.init(this);
     }
 
     /** 添加Activity到ActivityList中 */
@@ -55,8 +73,15 @@ class JBaseApplication extends Application {
 
     /** 遍历ActivityList中所有的Activity并finish，退出整个程序 */
     public static void exitApplication(Activity activity) {
-        if (activity != null && activity.getApplication() instanceof JBaseApplication) {
-            List<Activity> activities = ((JBaseApplication) activity.getApplication()).mActivityList;
+        if (activity != null) {
+            exitApplication(activity.getApplication());
+        }
+    }
+
+    /** 遍历ActivityList中所有的Activity并finish，退出整个程序 */
+    public static void exitApplication(Application application) {
+        if (application instanceof JBaseApplication) {
+            List<Activity> activities = ((JBaseApplication) application).mActivityList;
             for (Activity a : activities) {
                 a.finish();
             }

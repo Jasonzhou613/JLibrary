@@ -21,7 +21,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.widget.ImageView.ScaleType;
 
-import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.debug.JLog;
 
 import java.util.HashSet;
 import java.util.Set;

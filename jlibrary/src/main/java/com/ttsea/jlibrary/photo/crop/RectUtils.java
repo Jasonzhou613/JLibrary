@@ -3,7 +3,7 @@ package com.ttsea.jlibrary.photo.crop;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
-import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.debug.JLog;
 
 /**
  * RectUtils <br>

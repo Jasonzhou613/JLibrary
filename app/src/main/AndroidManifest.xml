@@ -60,7 +60,7 @@
 
         <!-- 自定义Glide缓存大小和目录 -->
         <meta-data
-            android:name="com.ttsea.jlibrary.common.CustomCachingGlideModule"
+            android:name="com.ttsea.jlibrary.common.imageloader.CustomCachingGlideModule"
             android:value="GlideModule"/>
 
     </application>

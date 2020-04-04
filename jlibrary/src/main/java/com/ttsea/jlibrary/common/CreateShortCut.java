@@ -7,6 +7,7 @@ import android.content.Intent.ShortcutIconResource;
 import android.content.SharedPreferences;
 
 import com.ttsea.jlibrary.R;
+import com.ttsea.jlibrary.debug.JLog;
 
 /**
  * 在程序第一次启动的时候创建快捷方式<br>

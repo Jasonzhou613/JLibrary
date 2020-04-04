@@ -19,12 +19,12 @@ import android.widget.TextView;
 
 import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.base.JBaseActivity;
-import com.ttsea.jlibrary.common.JImageLoader;
-import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.common.JToast;
+import com.ttsea.jlibrary.common.imageloader.JImageLoader;
+import com.ttsea.jlibrary.common.utils.DisplayUtils;
+import com.ttsea.jlibrary.common.utils.JToast;
+import com.ttsea.jlibrary.debug.JLog;
 import com.ttsea.jlibrary.photo.gallery.PhotoView;
 import com.ttsea.jlibrary.photo.gallery.ViewPagerFixed;
-import com.ttsea.jlibrary.utils.DisplayUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;

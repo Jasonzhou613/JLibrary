@@ -3,8 +3,8 @@ package com.ttsea.jlibrary;
 import android.content.Context;
 import android.util.Log;
 
-import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.utils.CacheDirUtils;
+import com.ttsea.jlibrary.debug.JLog;
+import com.ttsea.jlibrary.common.utils.CacheDirUtils;
 
 /**
  * // to do <br>

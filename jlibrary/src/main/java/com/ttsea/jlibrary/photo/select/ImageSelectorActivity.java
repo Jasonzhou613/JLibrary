@@ -13,11 +13,11 @@ import android.widget.TextView;
 
 import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.base.JBaseActivity;
-import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.debug.JLog;
 import com.ttsea.jlibrary.photo.crop.CropActivity;
 import com.ttsea.jlibrary.photo.crop.CropConstants;
-import com.ttsea.jlibrary.utils.CacheDirUtils;
-import com.ttsea.jlibrary.utils.DisplayUtils;
+import com.ttsea.jlibrary.common.utils.CacheDirUtils;
+import com.ttsea.jlibrary.common.utils.DisplayUtils;
 
 import java.io.File;
 import java.util.ArrayList;

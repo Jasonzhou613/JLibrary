@@ -1,13 +1,11 @@
 package com.ttsea.jlibrary.photo.select;
 
-import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.utils.DateUtils;
-import com.ttsea.jlibrary.utils.Utils;
+import com.ttsea.jlibrary.debug.JLog;
+import com.ttsea.jlibrary.common.utils.DateUtils;
+import com.ttsea.jlibrary.common.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * // to do <br>
@@ -25,7 +23,7 @@ class ImageUtils {
 
         if (file.exists()) {
             long time = file.lastModified();
-            return DateUtils.parseString(time, "yyyy-MM-dd");
+            return DateUtils.parseLong(time, "yyyy-MM-dd");
         }
         return "1970-01-01";
     }
@@ -34,7 +32,7 @@ class ImageUtils {
         if (Utils.isEmpty(suffix)) {
             suffix = ".jpg";
         }
-        String fileName = "IMG_" + DateUtils.parseString(System.currentTimeMillis(), "yyyyMMdd_HHmmss") + suffix;
+        String fileName = "IMG_" + DateUtils.parseLong(System.currentTimeMillis(), "yyyyMMdd_HHmmss") + suffix;
         File file = new File(filePath, fileName);
 
         File parentFile = new File(file.getParent());

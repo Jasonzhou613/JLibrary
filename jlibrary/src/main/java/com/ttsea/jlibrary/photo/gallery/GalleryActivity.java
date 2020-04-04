@@ -20,13 +20,13 @@ import android.widget.TextView;
 
 import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.base.JBaseActivity;
-import com.ttsea.jlibrary.common.JImageLoader;
-import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.common.imageloader.JImageLoader;
+import com.ttsea.jlibrary.debug.JLog;
 import com.ttsea.jlibrary.component.dialog.TransparentDialog;
 import com.ttsea.jlibrary.photo.select.ImageItem;
-import com.ttsea.jlibrary.utils.CacheDirUtils;
-import com.ttsea.jlibrary.utils.DateUtils;
-import com.ttsea.jlibrary.utils.Utils;
+import com.ttsea.jlibrary.common.utils.CacheDirUtils;
+import com.ttsea.jlibrary.common.utils.DateUtils;
+import com.ttsea.jlibrary.common.utils.Utils;
 
 import java.io.File;
 import java.io.Serializable;

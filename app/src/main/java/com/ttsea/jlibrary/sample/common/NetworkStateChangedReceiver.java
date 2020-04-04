@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 
-import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.utils.NetWorkUtils;
+import com.ttsea.jlibrary.debug.JLog;
+import com.ttsea.jlibrary.common.utils.NetWorkUtils;
 
 /**
  * 网络连接变化监听 <br>

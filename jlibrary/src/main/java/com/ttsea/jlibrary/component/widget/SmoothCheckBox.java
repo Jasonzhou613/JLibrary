@@ -22,7 +22,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.Checkable;
 
 import com.ttsea.jlibrary.R;
-import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.debug.JLog;
 
 /**
  * CheckBox <br>

@@ -24,8 +24,8 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
-import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.utils.Utils;
+import com.ttsea.jlibrary.debug.JLog;
+import com.ttsea.jlibrary.common.utils.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;

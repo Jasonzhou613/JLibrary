@@ -8,14 +8,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.ttsea.jlibrary.common.interfaces.OnActivityLifeChangedListener;
+import com.ttsea.jlibrary.common.interfaces.OnSingleClickListener;
 import com.ttsea.jlibrary.component.dialog.MyAlertDialog;
 import com.ttsea.jlibrary.component.dialog.MyDialog;
 import com.ttsea.jlibrary.component.dialog.MyProgressDialog;
+import com.ttsea.jlibrary.debug.Config;
 import com.ttsea.jlibrary.debug.ViewServer;
-import com.ttsea.jlibrary.interfaces.OnActivityLifeChangedListener;
-import com.ttsea.jlibrary.interfaces.OnSingleClickListener;
 import com.ttsea.jlibrary.sample.R;
-import com.ttsea.jlibrary.sample.config.Config;
 
 import java.util.ArrayList;
 import java.util.List;

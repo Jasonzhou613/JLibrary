@@ -8,8 +8,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ttsea.jlibrary.common.JImageLoader;
-import com.ttsea.jlibrary.common.JLog;
+import com.ttsea.jlibrary.common.imageloader.JImageLoader;
+import com.ttsea.jlibrary.debug.JLog;
 import com.ttsea.jlibrary.photo.crop.CropView;
 import com.ttsea.jlibrary.photo.gallery.GalleryActivity;
 import com.ttsea.jlibrary.photo.gallery.GalleryConstants;
@@ -19,7 +19,7 @@ import com.ttsea.jlibrary.photo.select.ImageSelector;
 import com.ttsea.jlibrary.photo.select.SelectConfig;
 import com.ttsea.jlibrary.sample.R;
 import com.ttsea.jlibrary.sample.base.BaseActivity;
-import com.ttsea.jlibrary.utils.CacheDirUtils;
+import com.ttsea.jlibrary.common.utils.CacheDirUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;

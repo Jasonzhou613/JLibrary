@@ -1,6 +1,6 @@
 package com.ttsea.jlibrary.photo.select;
 
-import com.ttsea.jlibrary.utils.Utils;
+import com.ttsea.jlibrary.common.utils.Utils;
 
 import java.io.File;
 import java.io.Serializable;

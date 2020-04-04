@@ -33,8 +33,8 @@ import android.widget.Scroller;
 
 import com.ttsea.jlibrary.R;
 import com.ttsea.jlibrary.base.JBaseActivity;
-import com.ttsea.jlibrary.common.JLog;
-import com.ttsea.jlibrary.interfaces.OnActivityLifeChangedListener;
+import com.ttsea.jlibrary.debug.JLog;
+import com.ttsea.jlibrary.common.interfaces.OnActivityLifeChangedListener;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

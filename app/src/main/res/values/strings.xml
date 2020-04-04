@@ -23,6 +23,8 @@
 
     <string name="get_data">get data</string>
     <string name="send_email">send email</string>
+    <string name="sync_http">同步Http请求</string>
+    <string name="async_http2">异步Http请求</string>
 
     <string name="__leak_canary_display_activity_label">JLibrary-Leaks</string>
 
