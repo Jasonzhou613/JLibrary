@@ -4,7 +4,15 @@ import android.app.Activity;
 
 import com.ttsea.jlibrary.R;
 
-public class ActivityUtils {
+/**
+ * Activity处理工具类，可指定Activity的切入和切出动画<br>
+ *
+ * <p>
+ * <b>date:</b> 2018/5/18 15:37 <br>
+ * <b>author:</b> Jason <br>
+ * <b>version:</b> 1.0 <br>
+ */
+final public class ActivityUtils {
 
     /**
      * 从上到下切入Activity

@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.ttsea.jlibrary.debug.JLog;
 
-
 /**
  * 获取应用的版本号和版本代码 <br>
  * getVersionName()方法得到应用的Version name <br>
@@ -15,7 +14,7 @@ import com.ttsea.jlibrary.debug.JLog;
  * <b>author:</b> Jason <br>
  * <b>version:</b> 1.0 <br>
  */
-public class AppInformationUtils {
+final public class AppInformationUtils {
     private static final String TAG = "Utils.AppInformationUtils";
 
     /**
@@ -43,8 +42,7 @@ public class AppInformationUtils {
         } catch (Exception e) {
             JLog.e(TAG, "getVersionName, Exception: " + e.getMessage());
         }
-        JLog.d(TAG, "App package name:" + pkName + ", App version name:"
-                + versionName);
+        JLog.d(TAG, "App package name:" + pkName + ", App version name:" + versionName);
 
         return versionName;
     }
@@ -57,8 +55,7 @@ public class AppInformationUtils {
     public static int getVersionCode(Context context) {
         int versionCode = -1;
         try {
-            versionCode = context.getPackageManager().getPackageInfo(
-                    context.getPackageName(), 0).versionCode;
+            versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
 
         } catch (Exception e) {
             JLog.e(TAG, "getVersionCode, Exception: " + e.getMessage());

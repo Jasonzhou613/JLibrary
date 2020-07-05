@@ -7,7 +7,6 @@ import com.ttsea.jlibrary.debug.JLog;
 
 import java.io.File;
 
-
 /**
  * 获取SD卡的状态和剩余容量等 <br>
  * <p>
@@ -16,7 +15,7 @@ import java.io.File;
  * <b>author:</b> Jason <br>
  * <b>version:</b> 1.0 <br>
  */
-public class SdStatusUtils {
+final public class SdStatusUtils {
     private final static String TAG = "Utils.SdStatusUtils";
 
     /**
@@ -57,8 +56,7 @@ public class SdStatusUtils {
      */
     public static long getAvailableBlockMB() {
         long availableBlock = 0;
-        if (Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             // 取得SD卡文件路径
             File sdFile = Environment.getExternalStorageDirectory();
             // StatFs看文件系统空间的使用情况

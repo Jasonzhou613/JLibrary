@@ -17,7 +17,7 @@ import java.io.File;
  * <b>author:</b> Jason <br>
  * <b>version:</b> 1.0 <br>
  */
-public class CacheDirUtils {
+final public class CacheDirUtils {
     private static String TAG = "Utils.CacheDirUtils";
 
     /** release版本所有的缓存数据都存在该目录下，如: /data/data/[packagename]/cache */
@@ -25,13 +25,13 @@ public class CacheDirUtils {
     /** 调试模式下，所有的缓存数据都存在该目录下 */
     private static String ROOT_CACHE_DIR_DEBUG = null;
     /**
-     * 所有的图片缓存都存在该目录，在调试模式中，该目录存在于{@link #ROOT_CACHE_DIR_DEBUG}中；
-     * 正式情况存在于{@link #CACHE_DIR}中
+     * 所有的图片缓存都存在该目录，在调试模式中，该目录存在于{@link #ROOT_CACHE_DIR_DEBUG}中； 正式情况存在于
+     * {@link #CACHE_DIR}中
      */
     private static String CACHE_IMAGE_DIR = null;
     /**
-     * 所有的数据缓存都存在该目录，在调试模式中 该目录存在于{@link #ROOT_CACHE_DIR_DEBUG}中，
-     * 正式情况存在于{@link #CACHE_DIR}中
+     * 所有的数据缓存都存在该目录，在调试模式中 该目录存在于{@link #ROOT_CACHE_DIR_DEBUG}中， 正式情况存在于
+     * {@link #CACHE_DIR}中
      */
     private static String CACHE_DATA_DIR = null;
     /** 需要存在SD卡里的数据目录 */
@@ -41,22 +41,22 @@ public class CacheDirUtils {
 
     /** 如果目录变量为初始化，则初始化 */
     public static void initIfNeed(Context context) {
-        if (ROOT_CACHE_DIR_DEBUG == null
-                || CACHE_IMAGE_DIR == null
-                || CACHE_DATA_DIR == null
-                || ROOT_SD_DATA_DIR == null) {
+        if (ROOT_CACHE_DIR_DEBUG == null || CACHE_IMAGE_DIR == null
+                || CACHE_DATA_DIR == null || ROOT_SD_DATA_DIR == null) {
 
-            ROOT_CACHE_DIR_DEBUG = getStringById(context, R.string._j_cache_root_dir_debug);
-            CACHE_IMAGE_DIR = getStringById(context, R.string._j_cache_image_dir);
+            ROOT_CACHE_DIR_DEBUG = getStringById(context,
+                    R.string._j_cache_root_dir_debug);
+            CACHE_IMAGE_DIR = getStringById(context,
+                    R.string._j_cache_image_dir);
             CACHE_DATA_DIR = getStringById(context, R.string._j_cache_data_dir);
-            ROOT_SD_DATA_DIR = getStringById(context, R.string._j_sd_data_root_dir);
+            ROOT_SD_DATA_DIR = getStringById(context,
+                    R.string._j_sd_data_root_dir);
 
-            JLog.d(TAG, "init dirs: " + "ROOT_CACHE_DIR_DEBUG:" + ROOT_CACHE_DIR_DEBUG +
-                    "\n " + "CACHE_IMAGE_DIR:" + CACHE_IMAGE_DIR +
-                    "\n " + "CACHE_DATA_DIR:" + CACHE_DATA_DIR +
-                    "\n " + "ROOT_SD_DATA_DIR:" + ROOT_SD_DATA_DIR +
-                    "\n " + "TEMP_DIR:" + TEMP_DIR +
-                    "");
+            JLog.d(TAG, "init dirs: " + "ROOT_CACHE_DIR_DEBUG:"
+                    + ROOT_CACHE_DIR_DEBUG + "\n " + "CACHE_IMAGE_DIR:"
+                    + CACHE_IMAGE_DIR + "\n " + "CACHE_DATA_DIR:"
+                    + CACHE_DATA_DIR + "\n " + "ROOT_SD_DATA_DIR:"
+                    + ROOT_SD_DATA_DIR + "\n " + "TEMP_DIR:" + TEMP_DIR + "");
         }
     }
 
@@ -73,7 +73,8 @@ public class CacheDirUtils {
         if (Config.DEBUG) {
             String exSDdir = SdStatusUtils.getExternalStorageAbsoluteDir();
             if (exSDdir != null) {
-                CACHE_DIR = exSDdir + File.separator + ROOT_CACHE_DIR_DEBUG + File.separator + "cache";
+                CACHE_DIR = exSDdir + File.separator + ROOT_CACHE_DIR_DEBUG
+                        + File.separator + "cache";
                 createDirIfNeed(CACHE_DIR);
 
                 return CACHE_DIR;
@@ -95,7 +96,8 @@ public class CacheDirUtils {
      */
     public static String getImageCacheDir(Context context) {
         initIfNeed(context);
-        String dirPath = getCacheDir(context) + File.separator + CACHE_IMAGE_DIR;
+        String dirPath = getCacheDir(context) + File.separator
+                + CACHE_IMAGE_DIR;
         createDirIfNeed(dirPath);
         return dirPath;
     }
@@ -113,7 +115,6 @@ public class CacheDirUtils {
         createDirIfNeed(dirPath);
         return dirPath;
     }
-    
 
     /**
      * 获取需要存放在SD卡里的数据的目录
@@ -159,7 +160,7 @@ public class CacheDirUtils {
         createDirIfNeed(dir);
         return dir;
     }
-    
+
     /**
      * log存放目录
      *

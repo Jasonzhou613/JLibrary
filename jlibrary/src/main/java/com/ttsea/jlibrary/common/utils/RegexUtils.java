@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * <b>author:</b> Jason <br>
  * <b>version:</b> 1.0 <br>
  */
-public class RegexUtils {
+final public class RegexUtils {
 
     /**
      * 常字符，包含标点
@@ -143,7 +143,7 @@ public class RegexUtils {
     /**
      * 判断ip是否正确
      *
-     * @param portStr
+     * @param ip
      * @return
      */
     public static boolean isIP(String ip) {
@@ -156,10 +156,13 @@ public class RegexUtils {
     /**
      * 判断端口号是否正确
      *
-     * @param portStr
+     * @param port
      * @return
      */
     public static boolean isPort(String port) {
+        if (port == null || port.length() == 0) {
+            return false;
+        }
         Pattern pattern = Pattern.compile("[0-9]*");
         Matcher isNum = pattern.matcher(port);
         if (isNum.matches() && port.length() < 6 && Integer.valueOf(port) >= 1
@@ -170,9 +173,7 @@ public class RegexUtils {
     }
 
     /** 替换最后的字符 */
-    public static String replaceLast(String text, String regex,
-                                     String replacement) {
-        return text.replaceFirst("(?s)" + regex + "(?!.*?" + regex + ")",
-                replacement);
+    public static String replaceLast(String text, String regex, String replacement) {
+        return text.replaceFirst("(?s)" + regex + "(?!.*?" + regex + ")", replacement);
     }
 }

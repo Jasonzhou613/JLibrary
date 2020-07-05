@@ -1,6 +1,5 @@
 package com.ttsea.jlibrary.common.utils;
 
-
 import com.ttsea.jlibrary.debug.JLog;
 
 import java.io.BufferedInputStream;
@@ -22,7 +21,7 @@ import java.util.Random;
  * <b>author:</b> Jason <br>
  * <b>version:</b> 1.0 <br>
  */
-public class FileUtils {
+final public class FileUtils {
 
     private static final String TAG = "Utils.FileUtils";
 
@@ -62,14 +61,12 @@ public class FileUtils {
             JLog.e(TAG, "Source File not exist !");
         }
         FileChannel fic = fileIS.getChannel();
-        MappedByteBuffer mbuf = fic.map(FileChannel.MapMode.READ_ONLY, 0,
-                source.length());
+        MappedByteBuffer mbuf = fic.map(FileChannel.MapMode.READ_ONLY, 0, source.length());
         fic.close();
         fileIS.close();
         if (!dest.exists()) {
             String destPath = dest.getPath();
-            String destDir = destPath.substring(0,
-                    destPath.lastIndexOf(File.separatorChar));
+            String destDir = destPath.substring(0, destPath.lastIndexOf(File.separatorChar));
             File dir = new File(destDir);
             if (!dir.exists()) {
                 if (dir.mkdirs()) {
@@ -116,16 +113,18 @@ public class FileUtils {
      * @param closeInputStream 是否关闭输入流
      * @throws IOException
      */
-    public static void save(InputStream is, String path,
-                            boolean closeInputStream) throws IOException {
+    public static void save(InputStream is, String path, boolean closeInputStream) throws IOException {
         FileOutputStream os = new FileOutputStream(createFile(path));
         byte[] cache = new byte[10 * 1024];
         for (int len = 0; (len = is.read(cache)) != -1; ) {
             os.write(cache, 0, len);
         }
+
         os.close();
-        if (closeInputStream)
+
+        if (closeInputStream) {
             is.close();
+        }
     }
 
     /**
@@ -246,9 +245,7 @@ public class FileUtils {
             }
             result = true;
         } catch (Exception e) {
-            JLog.e(TAG,
-                    "deleteDirectoryWithOSNative, Error running delete script: e="
-                            + e.toString());
+            JLog.e(TAG, "deleteDirectoryWithOSNative, Error running delete script: e=" + e.toString());
         } finally {
             if (null != process) {
                 process.destroy();
@@ -271,8 +268,7 @@ public class FileUtils {
         try {
             Runtime runTime = Runtime.getRuntime();
             if (File.separatorChar == '\\') {
-                process = runTime.exec("CMD /D /C \"REN " + from + ' ' + to
-                        + "\"");
+                process = runTime.exec("CMD /D /C \"REN " + from + ' ' + to + "\"");
             } else {
                 process = runTime.exec("mv -f " + from + ' ' + to);
             }
@@ -314,8 +310,7 @@ public class FileUtils {
      * @return 如果文件夹创建成功，返回true。如果文件夹已经存在，返回false。
      * @throws IOException
      */
-    public static boolean makeDirectory(String directory, boolean createParents)
-            throws IOException {
+    public static boolean makeDirectory(String directory, boolean createParents) throws IOException {
         boolean created;
         File dir = new File(directory);
         if (createParents) {
@@ -364,8 +359,7 @@ public class FileUtils {
             public void run() {
                 StringBuilder sb = new StringBuilder(1024);
                 byte[] buf = new byte[128];
-                BufferedInputStream bis = new BufferedInputStream(
-                        p.getInputStream());
+                BufferedInputStream bis = new BufferedInputStream(p.getInputStream());
                 try {
                     while (bis.read(buf) != -1) {
                         sb.append(new String(buf).trim());
@@ -389,18 +383,18 @@ public class FileUtils {
      * @return 文件名
      */
     public static String extractName(String path) {
-        if (path == null)
+        if (path == null) {
             return null;
-        boolean hasFileName = path.substring(path.length() - 5, path.length())
-                .contains(".");
+        }
+
+        boolean hasFileName = path.substring(path.length() - 5, path.length()).contains(".");
+
         if (hasFileName) {
             return path.substring(path.lastIndexOf(File.separator) + 1);
         } else {
             return null;
         }
     }
-
-    private static final int min_leight = ".jpg".length();
 
     /**
      * 获取文件名或者URL路径的后缀名。 e.g http://www.foobar.com/ULogo.png 后缀名为 png,
@@ -410,10 +404,13 @@ public class FileUtils {
      * @return 后缀名
      */
     public static String getSuffix(String pathOrName) {
-        if (pathOrName == null || !pathOrName.contains(".")
-                || min_leight > pathOrName.length())
+        if (pathOrName == null || !pathOrName.contains(".")) {
             return null;
-        return pathOrName.substring(pathOrName.indexOf('.'));
+        }
+
+        int index = pathOrName.lastIndexOf('.');
+
+        return pathOrName.substring(index + 1);
     }
 
     /**

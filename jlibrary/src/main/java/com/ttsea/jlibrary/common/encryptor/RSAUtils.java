@@ -2,8 +2,6 @@ package com.ttsea.jlibrary.common.encryptor;
 
 import android.util.Base64;
 
-import com.ttsea.jlibrary.common.utils.Base64Utils;
-
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;

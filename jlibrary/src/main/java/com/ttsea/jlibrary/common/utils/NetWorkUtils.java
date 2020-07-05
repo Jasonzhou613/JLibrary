@@ -6,7 +6,6 @@ import android.net.NetworkInfo;
 
 import com.ttsea.jlibrary.debug.JLog;
 
-
 /**
  * 检测网络是否可用、获取网络链类型<br>
  * need "android.permission.ACCESS_NETWORK_STATE" permission
@@ -16,7 +15,7 @@ import com.ttsea.jlibrary.debug.JLog;
  * <b>author:</b> Jason <br>
  * <b>version:</b> 1.0 <br>
  */
-public class NetWorkUtils {
+final public class NetWorkUtils {
     private final static String TAG = "Utils.NetWorkUtils";
 
     /**

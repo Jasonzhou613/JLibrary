@@ -1,5 +1,12 @@
-package com.ttsea.jlibrary.common.utils;
+package com.ttsea.jlibrary.common.encryptor;
 
+/**
+ * Base64工具类<br>
+ * <p>
+ * <b>date:</b> 2018/5/18 15:37 <br>
+ * <b>author:</b> Jason <br>
+ * <b>version:</b> 1.0 <br>
+ */
 public final class Base64Utils {
     private static final int BASELENGTH = 128;
     private static final int LOOKUPLENGTH = 64;

@@ -14,7 +14,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Set;
 
-
 /**
  * SharedPreferences工具 <br>
  * <p>
@@ -23,7 +22,7 @@ import java.util.Set;
  * <b>author:</b> Jason <br>
  * <b>version:</b> 1.0 <br>
  */
-public class SharedPreferencesUtils {
+final public class SharedPreferencesUtils {
     private final static String TAG = "SharedPreferencesUtils";
 
     /**
@@ -37,8 +36,7 @@ public class SharedPreferencesUtils {
      * @return 是否保存成功
      */
     public static boolean put(Context context, String key, Object object) {
-        return put(context, getDefaultSharedPreferencesName(context), key,
-                object);
+        return put(context, getDefaultSharedPreferencesName(context), key, object);
     }
 
     /**
@@ -50,12 +48,9 @@ public class SharedPreferencesUtils {
      * @param object   要保存的数据
      * @return 是否保存成功
      */
-    public static boolean put(Context context, String fileName, String key,
-                              Object object) {
-
+    public static boolean put(Context context, String fileName, String key, Object object) {
         String type = object.getClass().getSimpleName();
-        SharedPreferences sp = context.getSharedPreferences(fileName,
-                Context.MODE_PRIVATE);
+        SharedPreferences sp = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
 
         if ("String".equals(type)) {
@@ -84,8 +79,7 @@ public class SharedPreferencesUtils {
      * @return 返回取到的值或者null
      */
     public static Object get(Context context, String key, Object defaultObject) {
-        return get(context, getDefaultSharedPreferencesName(context), key,
-                defaultObject);
+        return get(context, getDefaultSharedPreferencesName(context), key, defaultObject);
     }
 
     /**
@@ -97,12 +91,9 @@ public class SharedPreferencesUtils {
      * @param defaultObject 默认值
      * @return 返回取到的值或者null
      */
-    public static Object get(Context context, String fileName, String key,
-                             Object defaultObject) {
-
+    public static Object get(Context context, String fileName, String key, Object defaultObject) {
         String type = defaultObject.getClass().getSimpleName();
-        SharedPreferences sp = context.getSharedPreferences(fileName,
-                Context.MODE_PRIVATE);
+        SharedPreferences sp = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
 
         if ("String".equals(type)) {
             return sp.getString(key, (String) defaultObject);
@@ -130,8 +121,7 @@ public class SharedPreferencesUtils {
      * @return 是否保存成功
      */
     public static boolean putString(Context context, String key, String value) {
-        return putString(context, getDefaultSharedPreferencesName(context),
-                key, value);
+        return putString(context, getDefaultSharedPreferencesName(context), key, value);
     }
 
     /**
@@ -143,11 +133,8 @@ public class SharedPreferencesUtils {
      * @param value    要保存的数据
      * @return 是否保存成功
      */
-    public static boolean putString(Context context, String fileName,
-                                    String key, String value) {
-
-        SharedPreferences sp = context.getSharedPreferences(fileName,
-                Context.MODE_PRIVATE);
+    public static boolean putString(Context context, String fileName, String key, String value) {
+        SharedPreferences sp = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(key, value);
 
@@ -164,10 +151,8 @@ public class SharedPreferencesUtils {
      * @param defaultValue 默认值
      * @return 返回取到的值
      */
-    public static String getString(Context context, String key,
-                                   String defaultValue) {
-        return getString(context, getDefaultSharedPreferencesName(context),
-                key, defaultValue);
+    public static String getString(Context context, String key, String defaultValue) {
+        return getString(context, getDefaultSharedPreferencesName(context), key, defaultValue);
     }
 
     /**
@@ -179,11 +164,8 @@ public class SharedPreferencesUtils {
      * @param defaultValue 默认值
      * @return 返回取到的值
      */
-    public static String getString(Context context, String fileName,
-                                   String key, String defaultValue) {
-
-        SharedPreferences sp = context.getSharedPreferences(fileName,
-                Context.MODE_PRIVATE);
+    public static String getString(Context context, String fileName, String key, String defaultValue) {
+        SharedPreferences sp = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
 
         return sp.getString(key, defaultValue);
     }
@@ -199,8 +181,7 @@ public class SharedPreferencesUtils {
      * @return 是否保存成功
      */
     public static boolean putInt(Context context, String key, int value) {
-        return putInt(context, getDefaultSharedPreferencesName(context), key,
-                value);
+        return putInt(context, getDefaultSharedPreferencesName(context), key, value);
     }
 
     /**
@@ -212,11 +193,9 @@ public class SharedPreferencesUtils {
      * @param value    要保存的数据
      * @return 是否保存成功
      */
-    public static boolean putInt(Context context, String fileName, String key,
-                                 int value) {
+    public static boolean putInt(Context context, String fileName, String key, int value) {
 
-        SharedPreferences sp = context.getSharedPreferences(fileName,
-                Context.MODE_PRIVATE);
+        SharedPreferences sp = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt(key, value);
 
@@ -234,8 +213,7 @@ public class SharedPreferencesUtils {
      * @return 返回取到的值
      */
     public static int getInt(Context context, String key, int defaultValue) {
-        return getInt(context, getDefaultSharedPreferencesName(context), key,
-                defaultValue);
+        return getInt(context, getDefaultSharedPreferencesName(context), key, defaultValue);
     }
 
     /**
@@ -247,12 +225,8 @@ public class SharedPreferencesUtils {
      * @param defaultValue 默认值
      * @return 返回取到的值
      */
-    public static int getInt(Context context, String fileName, String key,
-                             int defaultValue) {
-
-        SharedPreferences sp = context.getSharedPreferences(fileName,
-                Context.MODE_PRIVATE);
-
+    public static int getInt(Context context, String fileName, String key, int defaultValue) {
+        SharedPreferences sp = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         return sp.getInt(key, defaultValue);
     }
 
@@ -267,8 +241,7 @@ public class SharedPreferencesUtils {
      * @return 是否保存成功
      */
     public static boolean putBoolean(Context context, String key, boolean value) {
-        return putBoolean(context, getDefaultSharedPreferencesName(context),
-                key, value);
+        return putBoolean(context, getDefaultSharedPreferencesName(context), key, value);
     }
 
     /**
@@ -280,11 +253,8 @@ public class SharedPreferencesUtils {
      * @param value    要保存的数据
      * @return 是否保存成功
      */
-    public static boolean putBoolean(Context context, String fileName,
-                                     String key, boolean value) {
-
-        SharedPreferences sp = context.getSharedPreferences(fileName,
-                Context.MODE_PRIVATE);
+    public static boolean putBoolean(Context context, String fileName, String key, boolean value) {
+        SharedPreferences sp = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean(key, value);
 
@@ -301,10 +271,8 @@ public class SharedPreferencesUtils {
      * @param defaultValue 默认值
      * @return 返回取到的值
      */
-    public static boolean getBoolean(Context context, String key,
-                                     boolean defaultValue) {
-        return getBoolean(context, getDefaultSharedPreferencesName(context),
-                key, defaultValue);
+    public static boolean getBoolean(Context context, String key, boolean defaultValue) {
+        return getBoolean(context, getDefaultSharedPreferencesName(context), key, defaultValue);
     }
 
     /**
@@ -316,12 +284,8 @@ public class SharedPreferencesUtils {
      * @param defaultValue 默认值
      * @return 返回取到的值
      */
-    public static boolean getBoolean(Context context, String fileName,
-                                     String key, boolean defaultValue) {
-
-        SharedPreferences sp = context.getSharedPreferences(fileName,
-                Context.MODE_PRIVATE);
-
+    public static boolean getBoolean(Context context, String fileName, String key, boolean defaultValue) {
+        SharedPreferences sp = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         return sp.getBoolean(key, defaultValue);
     }
 
@@ -336,8 +300,7 @@ public class SharedPreferencesUtils {
      * @return 是否保存成功
      */
     public static boolean putFloat(Context context, String key, float value) {
-        return putFloat(context, getDefaultSharedPreferencesName(context), key,
-                value);
+        return putFloat(context, getDefaultSharedPreferencesName(context), key, value);
     }
 
     /**
@@ -349,11 +312,8 @@ public class SharedPreferencesUtils {
      * @param value    要保存的数据
      * @return 是否保存成功
      */
-    public static boolean putFloat(Context context, String fileName,
-                                   String key, float value) {
-
-        SharedPreferences sp = context.getSharedPreferences(fileName,
-                Context.MODE_PRIVATE);
+    public static boolean putFloat(Context context, String fileName, String key, float value) {
+        SharedPreferences sp = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putFloat(key, value);
 
@@ -371,8 +331,7 @@ public class SharedPreferencesUtils {
      * @return 返回取到的值
      */
     public static float getFloat(Context context, String key, float defaultValue) {
-        return getFloat(context, getDefaultSharedPreferencesName(context), key,
-                defaultValue);
+        return getFloat(context, getDefaultSharedPreferencesName(context), key, defaultValue);
     }
 
     /**
@@ -384,11 +343,8 @@ public class SharedPreferencesUtils {
      * @param defaultValue 默认值
      * @return 返回取到的值
      */
-    public static float getFloat(Context context, String fileName, String key,
-                                 float defaultValue) {
-
-        SharedPreferences sp = context.getSharedPreferences(fileName,
-                Context.MODE_PRIVATE);
+    public static float getFloat(Context context, String fileName, String key, float defaultValue) {
+        SharedPreferences sp = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
 
         return sp.getFloat(key, defaultValue);
     }
@@ -404,8 +360,7 @@ public class SharedPreferencesUtils {
      * @return 是否保存成功
      */
     public static boolean putLong(Context context, String key, long value) {
-        return putLong(context, getDefaultSharedPreferencesName(context), key,
-                value);
+        return putLong(context, getDefaultSharedPreferencesName(context), key, value);
     }
 
     /**
@@ -417,11 +372,8 @@ public class SharedPreferencesUtils {
      * @param value    要保存的数据
      * @return 是否保存成功
      */
-    public static boolean putLong(Context context, String fileName, String key,
-                                  long value) {
-
-        SharedPreferences sp = context.getSharedPreferences(fileName,
-                Context.MODE_PRIVATE);
+    public static boolean putLong(Context context, String fileName, String key, long value) {
+        SharedPreferences sp = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putLong(key, value);
 
@@ -439,8 +391,7 @@ public class SharedPreferencesUtils {
      * @return 返回取到的值
      */
     public static long getLong(Context context, String key, long defaultValue) {
-        return getLong(context, getDefaultSharedPreferencesName(context), key,
-                defaultValue);
+        return getLong(context, getDefaultSharedPreferencesName(context), key, defaultValue);
     }
 
     /**
@@ -452,11 +403,8 @@ public class SharedPreferencesUtils {
      * @param defaultValue 默认值
      * @return 返回取到的值
      */
-    public static long getLong(Context context, String fileName, String key,
-                               long defaultValue) {
-
-        SharedPreferences sp = context.getSharedPreferences(fileName,
-                Context.MODE_PRIVATE);
+    public static long getLong(Context context, String fileName, String key, long defaultValue) {
+        SharedPreferences sp = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
 
         return sp.getLong(key, defaultValue);
     }
@@ -471,10 +419,8 @@ public class SharedPreferencesUtils {
      * @param value   要保存的数据
      * @return 是否保存成功
      */
-    public static boolean putStringSet(Context context, String key,
-                                       Set<String> value) {
-        return putStringSet(context, getDefaultSharedPreferencesName(context),
-                key, value);
+    public static boolean putStringSet(Context context, String key, Set<String> value) {
+        return putStringSet(context, getDefaultSharedPreferencesName(context), key, value);
     }
 
     /**
@@ -486,11 +432,8 @@ public class SharedPreferencesUtils {
      * @param value    要保存的数据
      * @return 是否保存成功
      */
-    public static boolean putStringSet(Context context, String fileName,
-                                       String key, Set<String> value) {
-
-        SharedPreferences sp = context.getSharedPreferences(fileName,
-                Context.MODE_PRIVATE);
+    public static boolean putStringSet(Context context, String fileName, String key, Set<String> value) {
+        SharedPreferences sp = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putStringSet(key, value);
 
@@ -507,10 +450,8 @@ public class SharedPreferencesUtils {
      * @param defaultValue 默认值
      * @return 返回取到的值
      */
-    public static Set<String> getStringSet(Context context, String key,
-                                           Set<String> defaultValue) {
-        return getStringSet(context, getDefaultSharedPreferencesName(context),
-                key, defaultValue);
+    public static Set<String> getStringSet(Context context, String key, Set<String> defaultValue) {
+        return getStringSet(context, getDefaultSharedPreferencesName(context), key, defaultValue);
     }
 
     /**
@@ -522,11 +463,8 @@ public class SharedPreferencesUtils {
      * @param defaultValue 默认值
      * @return 返回取到的值
      */
-    public static Set<String> getStringSet(Context context, String fileName,
-                                           String key, Set<String> defaultValue) {
-
-        SharedPreferences sp = context.getSharedPreferences(fileName,
-                Context.MODE_PRIVATE);
+    public static Set<String> getStringSet(Context context, String fileName, String key, Set<String> defaultValue) {
+        SharedPreferences sp = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
 
         return sp.getStringSet(key, defaultValue);
     }
@@ -547,8 +485,7 @@ public class SharedPreferencesUtils {
             throw new NullPointerException("obj is null");
         }
         if (!(obj instanceof Serializable)) {
-            throw new IllegalArgumentException(obj.getClass().getSimpleName()
-                    + " must implements Serializable");
+            throw new IllegalArgumentException(obj.getClass().getSimpleName() + " must implements Serializable");
         }
 
         // 这个文件名不要改动，是与getObject中的fileName对应的
@@ -556,8 +493,7 @@ public class SharedPreferencesUtils {
         String key = obj.getClass().getSimpleName();
         try {
             // 保存对象
-            SharedPreferences.Editor sharedata = context.getSharedPreferences(
-                    fileName, Context.MODE_PRIVATE).edit();
+            SharedPreferences.Editor sharedata = context.getSharedPreferences(fileName, Context.MODE_PRIVATE).edit();
             // 先将序列化结果写到byte缓存中，其实就分配一个内存空间
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ObjectOutputStream os = new ObjectOutputStream(bos);
@@ -589,8 +525,7 @@ public class SharedPreferencesUtils {
         String key = foo.getGenericType();
 
         try {
-            SharedPreferences shareData = context.getSharedPreferences(
-                    fileName, Context.MODE_PRIVATE);
+            SharedPreferences shareData = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
             if (shareData.contains(key)) {
                 String data = shareData.getString(key, "");
                 if (TextUtils.isEmpty(data)) {
@@ -598,8 +533,7 @@ public class SharedPreferencesUtils {
                 } else {
                     // 将16进制的数据转为数组，准备反序列化
                     byte[] stringToBytes = StringToBytes(data);
-                    ByteArrayInputStream bis = new ByteArrayInputStream(
-                            stringToBytes);
+                    ByteArrayInputStream bis = new ByteArrayInputStream(stringToBytes);
                     ObjectInputStream is = new ObjectInputStream(bis);
                     // 返回反序列化得到的对象
                     Object obj = is.readObject();

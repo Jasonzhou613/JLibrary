@@ -32,7 +32,7 @@ public final class DisplayUtils {
      * 获取Display
      *
      * @param view 当前view
-     * @return {@link android.view.Display}
+     * @return {@link Display}
      */
     public static Display getDisplay(@NonNull View view) {
         if (Build.VERSION.SDK_INT >= 17) {
@@ -49,7 +49,7 @@ public final class DisplayUtils {
      * 获取Display
      *
      * @param context 上下文
-     * @return {@link android.view.Display}
+     * @return {@link Display}
      */
     public static Display getDisplay(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -131,31 +131,58 @@ public final class DisplayUtils {
      */
     public static int getWindowWidth(Context context) {
         DisplayMetrics dm = new DisplayMetrics();
-        getDisplay(context).getMetrics(dm);
+        Display display = getDisplay(context);
+        if (display == null) {
+            return 0;
+        }
+        display.getMetrics(dm);
+
         return dm.widthPixels;
     }
 
     /**
-     * 返回屏幕高度(px)
+     * 返回屏幕高度(px)<br>
+     * 如果有虚拟按键，则虚拟按键的高度不会包含在这个高度里面，所得的结果是：1920-虚拟按键高度
      *
      * @param context 上下文
      * @return 返回屏幕高度(px)
      */
     public static int getWindowHeight(Context context) {
         DisplayMetrics dm = new DisplayMetrics();
-        getDisplay(context).getMetrics(dm);
+        Display display = getDisplay(context);
+        if (display == null) {
+            return 0;
+        }
+        display.getMetrics(dm);
         return dm.heightPixels;
     }
 
     /**
-     * 获取虚拟按键的高度
-     * 1. 全面屏下
-     * 1.1 开启全面屏开关-返回0
-     * 1.2 关闭全面屏开关-执行非全面屏下处理方式
-     * 2. 非全面屏下
-     * 2.1 没有虚拟键-返回0
-     * 2.1 虚拟键隐藏-返回0
-     * 2.2 虚拟键存在且未隐藏-返回虚拟键实际高度
+     * 返回屏幕高度(px)<br>
+     * 如果有虚拟按键，则虚拟按键的高度也会包含在里面
+     *
+     * @param context 上下文
+     * @return 返回屏幕高度(px)
+     */
+    public static int getWindowHeightWithNavigationBarHeight(Context context) {
+        DisplayMetrics dm = new DisplayMetrics();
+        Display display = getDisplay(context);
+        if (display == null) {
+            return 0;
+        }
+        display.getMetrics(dm);
+        return dm.heightPixels + getNavigationBarHeight(context);
+    }
+
+    /**
+     * 获取虚拟按键的高度<br>
+     * 1. 全面屏下<br>
+     * 1.1 开启全面屏开关-返回0<br>
+     * 1.2 关闭全面屏开关-执行非全面屏下处理方式<br>
+     * 2. 非全面屏下<br>
+     * 2.1 没有虚拟键-返回0<br>
+     * 2.1 虚拟键隐藏-返回0<br>
+     * 2.2 虚拟键存在且未隐藏-返回虚拟键实际高度<br>
      */
     public static int getNavigationBarHeight(Context context) {
         if (isOverallScreen(context)) {
@@ -191,8 +218,7 @@ public final class DisplayUtils {
     public static int getSystemBarHeight(Context context) {
         try {
             Resources res = context.getResources();
-            int systemHeight = res.getIdentifier("system_bar_height", "dimen",
-                    "android");
+            int systemHeight = res.getIdentifier("system_bar_height", "dimen", "android");
             return res.getDimensionPixelSize(systemHeight);
 
         } catch (Exception e) {

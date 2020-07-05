@@ -7,6 +7,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
+import android.os.Build;
+import android.support.v4.content.FileProvider;
 
 import com.ttsea.jlibrary.debug.JLog;
 
@@ -20,7 +22,7 @@ import java.io.File;
  * <b>author:</b> Jason <br>
  * <b>version:</b> 1.0 <br>
  */
-public class ApkUtils {
+final public class ApkUtils {
     private final static String TAG = "Utils.ApkUtils";
 
     /**
@@ -36,8 +38,7 @@ public class ApkUtils {
         }
         try {
             ApplicationInfo info = context.getPackageManager()
-                    .getApplicationInfo(packageName,
-                            PackageManager.GET_UNINSTALLED_PACKAGES);
+                    .getApplicationInfo(packageName, PackageManager.GET_UNINSTALLED_PACKAGES);
             return (null != info);
 
         } catch (NameNotFoundException e) {
@@ -56,13 +57,40 @@ public class ApkUtils {
      * @param activity Activity
      * @param apkFile  APK文件对象
      */
-    public static void install(Activity activity, File apkFile) {
-        Intent intent = new Intent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setAction(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(apkFile),
-                "application/vnd.android.package-archive");
-        activity.startActivity(intent);
+    public static boolean install(Activity activity, File apkFile) {
+        try {
+            if (!apkFile.exists()) {
+                return false;
+            }
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);// 增加读写权限
+            }
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setDataAndType(
+                    getPathUri(activity, apkFile.getAbsolutePath()), "application/vnd.android.package-archive");
+            activity.startActivity(intent);
+
+        } catch (Exception e) {
+            JLog.d("Exception e:" + e.getMessage());
+            return false;
+        } catch (Error error) {
+            JLog.d("Error error:" + error);
+            return false;
+        }
+        return true;
+    }
+
+    public static Uri getPathUri(Context context, String filePath) {
+        Uri uri;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            String packageName = context.getPackageName();
+            uri = FileProvider.getUriForFile(context, packageName + ".fileProvider", new File(filePath));
+        } else {
+            uri = Uri.fromFile(new File(filePath));
+        }
+        return uri;
     }
 
     /**
@@ -72,8 +100,7 @@ public class ApkUtils {
      * @param packageName 包名
      */
     public static void launch(Activity activity, String packageName) {
-        Intent intent = activity.getPackageManager().getLaunchIntentForPackage(
-                packageName);
+        Intent intent = activity.getPackageManager().getLaunchIntentForPackage(packageName);
         if (null != intent) {
             activity.startActivity(intent);
         }

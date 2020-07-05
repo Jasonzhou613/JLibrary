@@ -10,7 +10,7 @@ import java.util.Random;
  * <b>author:</b> Jason <br>
  * <b>version:</b> 1.0 <br>
  */
-public class RandomUtils {
+final public class RandomUtils {
 
     /**
      * 生成指定长度的随机字符内容
@@ -58,5 +58,4 @@ public class RandomUtils {
     public static int limitInt(int limit) {
         return Math.abs(new Random().nextInt(limit));
     }
-
 }

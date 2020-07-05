@@ -12,7 +12,7 @@ import android.widget.Toast;
  * <b>author:</b> Jason <br>
  * <b>version:</b> 1.0 <br>
  */
-public class JToast {
+final public class JToast {
     public static int LIMITS = -0x1010;
 
     public static void makeText(Context context, CharSequence text) {

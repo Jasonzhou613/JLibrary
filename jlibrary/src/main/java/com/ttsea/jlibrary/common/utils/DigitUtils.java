@@ -11,7 +11,7 @@ import java.math.RoundingMode;
  * <b>author:</b> Jason <br>
  * <b>version:</b> 1.0 <br>
  */
-public class DigitUtils {
+final public class DigitUtils {
     private static final String TAG = "Utils.DigitUtils";
 
     // *********************************Integer start*********************************//

@@ -1,13 +1,14 @@
 package com.ttsea.jlibrary.common.utils;
 
 /**
- * // to do <br>
+ * 数据库语句工具类 <br>
+ * 可用于替换特殊字符
  * <p>
  * <b>date:</b> 2017/9/14 20:21 <br>
- * <b>author:</b> zhijian.zhou <br>
+ * <b>author:</b> Jason <br>
  * <b>version:</b> 1.0 <br>
  */
-public class SqlUtils {
+final public class SqlUtils {
 
     /** 转换所有特殊字符 */
     public static String sqliteEscape(String keyWord) {

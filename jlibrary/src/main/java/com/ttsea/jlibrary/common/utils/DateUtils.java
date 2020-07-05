@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-
 /**
  * 时间类 <br>
  * <p>
@@ -16,7 +15,7 @@ import java.util.Locale;
  * <b>author:</b> Jason <br>
  * <b>version:</b> 1.0 <br>
  */
-public class DateUtils {
+final public class DateUtils {
     private final static String TAG = "Utils.DateUtils";
 
     /**
@@ -32,7 +31,7 @@ public class DateUtils {
     /**
      * 得到当前时间
      *
-     * @param pattern 时间格式
+     * @param pattern 时间格式，形如：yyyy-MM-dd 或者yyyy-MM-dd HH:mm:ss
      * @return String
      */
     public static String getCurrentTime(String pattern, Locale locale) {
@@ -124,8 +123,7 @@ public class DateUtils {
      * @return 需要得到的long类型时间
      * @throws ParseException
      */
-    public static long stringToLong(String time, String formatType)
-            throws ParseException {
+    public static long stringToLong(String time, String formatType) throws ParseException {
         return stringToLong(time, formatType, Locale.getDefault());
     }
 
@@ -137,11 +135,8 @@ public class DateUtils {
      * @return 需要得到的long类型时间
      * @throws ParseException
      */
-    public static long stringToLong(String time, String formatType,
-                                    Locale locale) throws ParseException {
-
+    public static long stringToLong(String time, String formatType, Locale locale) throws ParseException {
         Date date = stringToDate(time, formatType, locale);
-
         return date.getTime();
     }
 
@@ -153,8 +148,7 @@ public class DateUtils {
      * @return Date类型时间
      * @throws ParseException
      */
-    public static Date stringToDate(String time, String formatType)
-            throws ParseException {
+    public static Date stringToDate(String time, String formatType) throws ParseException {
         return stringToDate(time, formatType, Locale.getDefault());
     }
 
@@ -166,13 +160,9 @@ public class DateUtils {
      * @return Date类型时间
      * @throws ParseException
      */
-    public static Date stringToDate(String time, String formatType,
-                                    Locale locale) throws ParseException {
-
+    public static Date stringToDate(String time, String formatType, Locale locale) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat(formatType, locale);
-
         Date date = format.parse(time);
-
         return date;
     }
 
@@ -220,72 +210,5 @@ public class DateUtils {
         // 现在的毫秒数%一天总的毫秒数，取余。），理论上等于零点的毫秒数，不过这个毫秒数是UTC+0时区的。
         // 减8个小时的毫秒值是为了解决时区的问题。
         return (date.getTime() - (date.getTime() % l) - 8 * 60 * 60 * 1000);
-    }
-
-    public static class Format {
-        /**
-         * yyyy-MM-dd HH:mm
-         */
-        public static final String DATE_FORMAT_YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
-
-        /**
-         * yyyy-MM-dd HH:mm:ss
-         */
-        public static final String DATE_FORMAT_YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
-
-        /**
-         * yyyy-MM-dd'T'HH:mm:ss
-         */
-        public static final String DATE_FORMAT_YYYY_MM_DD_T_HH_MM_SS = "yyyy-MM-dd'T'HH:mm:ss";
-
-        /**
-         * HH:mm:ss
-         */
-        public static final String DATE_FORMAT_HH_MM_SS = "HH:mm:ss";
-
-        /**
-         * HH:mm
-         */
-        public static final String DATE_FORMAT_HH_MM = "HH:mm";
-
-        /**
-         * yyyy-MM-ddHH
-         */
-        public static final String DATE_FORMAT_YYYY_MM_DDHH = "yyyy-MM-ddHH";
-
-        /**
-         * yyyy-MM-dd
-         */
-        public static final String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
-
-        /**
-         * yyyy年MM月dd日
-         */
-        public static final String DATE_FORMAT_YYYY_MM_DD_CH = "yyyy年MM月dd日";
-
-        // RFC 822 Date Format
-        public static final String RFC822_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss 'GMT'";
-
-        // ISO 8601 format
-        public static final String ISO8601_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-
-        // Alternate ISO 8601 format without fractional seconds
-        public static final String ALTERNATIVE_ISO8601_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-
-        public static final String LOG_FORMAT = "MM_dd-HH";
-
-        public static final String QR_CODE_FORMAT = "MMddHHmm";
-
-        /**
-         * "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"
-         */
-        public static final String[] DAYS_IN_WEEK = {"星期日", "星期一", "星期二", "星期三",
-                "星期四", "星期五", "星期六"};
-
-        /**
-         * 0L, 600000L, 1800000L, 3600000L, 7200000L, 86400000L
-         */
-        public static final long[] ALARM_TIME_POINT = {0L, 600000L, 1800000L,
-                3600000L, 7200000L, 86400000L};
     }
 }
